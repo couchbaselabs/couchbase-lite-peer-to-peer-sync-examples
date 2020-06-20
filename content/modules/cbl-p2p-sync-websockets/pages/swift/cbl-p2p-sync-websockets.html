@@ -502,6 +502,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <!-- toc disabled -->
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The sample app uses pre-release/beta release version of Couchbase Lite software
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -622,7 +634,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="https://drive.google.com/file/d/1fM14NSvtrqcvQ7tWjNyhxNcvQaDKxrDE/view?usp=sharing" alt="List App with p2p Sync][alt=peer to peer sync" width="600" height="480">
+<img src="../../assets/ios-demo.gif" alt="peer to peer sync" width="640" height="480">
 </div>
 </div>
 </div>
@@ -662,7 +674,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Verify that you see the login screen</p>
 <div class="imageblock">
 <div class="content">
-<img src="../../assets/swift-login.png" alt="List App Login Image][alt=app login screen" width="600" height="320">
+<img src="../../assets/swift-login.png" alt="app login screen" width="640" height="480">
 </div>
 </div>
 </li>
@@ -683,7 +695,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../../assets/swift-project-explorer.png" alt="Project Explorer][alt=xcode project explorer" width="600" height="320">
+<img src="../../assets/swift-project-explorer.png" alt="xcode project explorer" width="640" height="480">
 </div>
 </div>
 <div class="ulist">
@@ -699,9 +711,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li>
 <p><code>listener-pinned-cert.cer</code> : This is the public key listener cert (the same cert that is embedded in the <code>listener-cert-pkey.p12</code> file) in DER encoded format. This cert is pinned on the client replicator and is used for validating server cert during connection setup</p>
-</li>
-<li>
-<p><code>pinned-invalid-listener-cert.crt</code>: This is a random invalid cert that can be pinned on the client to validate that clients reject untrusted server certs</p>
 </li>
 </ul>
 </div>
@@ -1319,28 +1328,12 @@ While it is not required or enforced, it is a recommended practice to include a 
 <p>Congratulations on completing this tutorial!</p>
 </div>
 <div class="paragraph">
-<p>This tutorial walked you through an example of how to use a Sync Gateway to synchronize data between Couchbase Lite enabled clients. We discussed how to configure your Sync Gateway to enforce relevat access control, authorization and data routing between Couchbase Lite enabled clients.</p>
-</div>
-<div class="paragraph">
-<p>Check out the following links for further details</p>
+<p>This tutorial walked you through an example of how to directly synchronize data between Couchbase Lite clients. While the tutorial is for iOS, the concepts apply equally to other Couchbase Lite platforms.</p>
 </div>
 <div class="sect2">
 <h3 id="further-reading">Further Reading</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html">Sync Gateway Configuration</a></p>
-</li>
-<li>
-<p><a href="TBD">Sync Function API</a></p>
-</li>
-<li>
-<p><a href="https://blog.couchbase.com/data-replication-couchbase-mobile/">Overview of Replication Protocol 2.0</a></p>
-</li>
-<li>
-<p><a href="https://blog.couchbase.com/using-docker-with-couchbase-mobile/">Installing Sync Gateway using Docker</a></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>TBD</p>
 </div>
 </div>
 </div>
@@ -1348,7 +1341,7 @@ While it is not required or enforced, it is a recommended practice to include a 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-20 06:38:10 -0400
+Last updated 2020-06-20 16:20:22 -0400
 </div>
 </div>
 </body>

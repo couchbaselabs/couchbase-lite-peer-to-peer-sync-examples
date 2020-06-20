@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Inventory Sample: Peer-to-Peer Sync</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment @import statement to use as custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+:not(pre)>code.nobreak{word-wrap:normal}
+:not(pre)>code.nowrap{white-space:nowrap}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details>summary:first-of-type{cursor:pointer;display:list-item;outline:none;margin-bottom:.75em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;padding-right:.5em}
+pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
+pre.pygments .lineno::before{content:"";margin-right:-.125em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
+table.tableblock{max-width:100%;border-collapse:separate}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Inventory Sample: Peer-to-Peer Sync</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#overview">Overview</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#ios-inventory-app-tutorial-in-swift">iOS Inventory App Tutorial in Swift</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#app-overview">App Overview</a></li>
+<li><a href="#app-installation">App Installation</a>
+<ul class="sectlevel2">
+<li><a href="#downloading-zip">Downloading .zip</a></li>
+<li><a href="#try-it-out">Try it Out</a></li>
+</ul>
+</li>
+<li><a href="#exploring-the-app-project">Exploring the App Project</a></li>
+<li><a href="#data-model">Data Model</a>
+<ul class="sectlevel2">
+<li><a href="#the-list-document">The "List" Document</a></li>
+<li><a href="#initializing-local-database">Initializing Local Database</a></li>
+</ul>
+</li>
+<li><a href="#passive-peer-or-server">Passive Peer or Server</a>
+<ul class="sectlevel2">
+<li><a href="#initializing-websockets-listener">Initializing Websockets Listener</a>
+<ul class="sectlevel3">
+<li><a href="#testing-different-tls-modes">Testing Different TLS Modes</a></li>
+</ul>
+</li>
+<li><a href="#start-websockets-listener">Start Websockets Listener</a></li>
+<li><a href="#advertising-listener-service">Advertising Listener Service</a></li>
+<li><a href="#stop-websockets-listener">Stop Websockets Listener</a></li>
+<li><a href="#try-it-out-2">Try it out</a></li>
+</ul>
+</li>
+<li><a href="#active-peer-or-client">Active Peer or Client</a>
+<ul class="sectlevel2">
+<li><a href="#discovering-listeners">Discovering Listeners</a></li>
+<li><a href="#initializing-and-starting-replication">Initializing and Starting Replication</a>
+<ul class="sectlevel3">
+<li><a href="#testing-different-server-validation-modes">Testing Different Server Validation Modes</a></li>
+</ul>
+</li>
+<li><a href="#stopping-replication">Stopping Replication</a></li>
+<li><a href="#try-it-out-3">Try it out</a></li>
+</ul>
+</li>
+<li><a href="#syncing-data">Syncing Data</a>
+<ul class="sectlevel2">
+<li><a href="#try-it-out-4">Try it out</a></li>
+</ul>
+</li>
+<li><a href="#what-next">What Next</a></li>
+<li><a href="#learn-more">Learn More</a>
+<ul class="sectlevel2">
+<li><a href="#further-reading">Further Reading</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<!-- toc disabled -->
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview">Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sample apps that demonstate the out-of-box websockets listener based peer-to-peer functionality that is introduced in Couchbase Lite 2.8. Currently, it includes  an iOS swift sample application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Couchbase Lite 2.8 release supports out-of-the-box support for secure <a href="https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/swift/learn/swift-p2psync-websocket.html">Peer-to-Peer Sync</a>, over websockets, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The sample app uses pre-release/beta release version of Couchbase Lite software
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ios-inventory-app-tutorial-in-swift">iOS Inventory App Tutorial in Swift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This tutorial will demonstrate how to -</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use <a href="https://developer.apple.com/documentation/foundation/netservice">NetService</a> for peer discovery (i.e.to advertise and discover services/devices )</p>
+</li>
+<li>
+<p>Configure a websockets listener to listen to incoming requests. We will walk through various TLS modes and client authentication modes.</p>
+</li>
+<li>
+<p>Start a bi-directional replication from active peer.</p>
+</li>
+<li>
+<p>Sync data between connected peers</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Throughout this tutorial, the terms "passive peer" and "server" will be used interchangeably to refer to the peer on which the websockets listener is started. The "active peer" and "client" will be used interchageably to refer to the peer on which the replicator is initialized.</p>
+</div>
+<div class="paragraph">
+<p>We will be using a simple inventory app in swift as an example to demonstrate the peer-to-peer functionality.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>You can learn more about Couchbase Lite <a href="https://docs.couchbase.com/couchbase-lite/2.7/introduction.html">here</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites">Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This tutorial assumes familiarity with building swift apps with Xcode and with Couchbase Lite.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the <a href="https://docs.couchbase.com/couchbase-lite/2.7/swift.html">Getting Started</a> guides</p>
+</li>
+<li>
+<p>iOS (Xcode 11.4+)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Download latest version from the <a href="https://itunes.apple.com/us/app/xcode/id497799835?mt=12">Mac App Store</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Wi-Fi network that the peers can communicate over</p>
+<div class="ulist">
+<ul>
+<li>
+<p>You could run your peers in multiple simulators. But if you were running the app on real devices, then you will need to ensure that the devices are on the same WiFi network</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="app-overview">App Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is a simple inventory app that can be used as a <a href="https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#passive-peer">passive</a> or <a href="https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#active-peer">active peer</a>.</p>
+</div>
+<div class="paragraph">
+<p>The app uses a local database that is pre-populated with data. There is no Sync Gateway or Couchbase Server installed.</p>
+</div>
+<div class="paragraph">
+<p>When used as a passive peer :-</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Users log in and start websockets listener for the couchbase lite database. A service corresponding to the listener is advertised over Bonjour.</p>
+</li>
+<li>
+<p>View the status of connected clients</p>
+</li>
+<li>
+<p>Directly sync data with connected clients</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When used as a active peer :-</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Users can log in and start browsing for devices</p>
+</li>
+<li>
+<p>Connect to a listener</p>
+</li>
+<li>
+<p>Directly sync data with connected clients</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="content/modules/cbl-p2p-sync-websockets/assets/ios-demo.gif" alt="peer to peer sync" width="640" height="480">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="app-installation">App Installation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading-zip">Downloading .zip</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Download the .zip project from <a href="https://drive.google.com/file/d/1wEit_q5oEc5b0UrWzH418S0_-Sia-30p/view?usp=sharing">here</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The app project comes pre-bundled with Couchbase Lite 2.8 beta framework.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="try-it-out">Try it Out</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the iOS project using Xcode</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">open list-sync.xcodeproj</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build and run the project</p>
+</li>
+<li>
+<p>Verify that you see the login screen</p>
+<div class="imageblock">
+<div class="content">
+<img src="content/modules/cbl-p2p-sync-websockets/assets/swift-login.png" alt="app login screen" width="640" height="480">
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exploring-the-app-project">Exploring the App Project</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The xcode project comes pre-bundled with some resource files that we will examine here</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="content/modules/cbl-p2p-sync-websockets/assets/swift-project-explorer.png" alt="xcode project explorer" width="640" height="480">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>samplelist.json</code> : JSON data that is loaded into the local Couchbase Lite database. It includes the data for a single document. See <a href="#data-model">Data Model</a></p>
+</li>
+<li>
+<p><code>userwhitelist.json</code> : List of valid client users (and passwords) in the system. This list is looked up when the server tries to authenticate credentials associated with incoming connection request.</p>
+</li>
+<li>
+<p><code>listener-cert-pkey.p12</code> : This is <a href="https://en.wikipedia.org/wiki/PKCS_12">PKCS12</a> file archive that includes a public key cert corresponding to the listener and associated private key. The cert is a sample cert that was generated using <a href="https://www.openssl.org">OpenSSL</a> tool.</p>
+</li>
+<li>
+<p><code>listener-pinned-cert.cer</code> : This is the public key listener cert (the same cert that is embedded in the <code>listener-cert-pkey.p12</code> file) in DER encoded format. This cert is pinned on the client replicator and is used for validating server cert during connection setup</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-model">Data Model</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports some special types like <code>Date</code> and <code>Blob</code>.
+While it is not required or enforced, it is a recommended practice to include a <em>"type"</em> property that can serve as a namespace for related.</p>
+</div>
+<div class="sect2">
+<h3 id="the-list-document">The "List" Document</h3>
+<div class="paragraph">
+<p>The app deals with a single Document with a <em>"type"</em> property of <em>"list"</em>.  This document is loaded from the <code>samplelist.json</code> file bundled with the project</p>
+</div>
+<div class="paragraph">
+<p>An example of a document would be</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>type</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">list</span><span style="color:#710">&quot;</span></span>,
+    <span style="color:#606"><span style="color:#404">&quot;</span><span>list</span><span style="color:#404">&quot;</span></span>:[
+      {
+         <span style="color:#606"><span style="color:#404">&quot;</span><span>image</span><span style="color:#404">&quot;</span></span>:{<span style="color:#606"><span style="color:#404">&quot;</span><span>length</span><span style="color:#404">&quot;</span></span>:<span style="color:#00D">16608</span>,<span style="color:#606"><span style="color:#404">&quot;</span><span>digest</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">sha1-LEFKeUfywGIjASSBa0l/cg5rlm8=</span><span style="color:#710">&quot;</span></span>,<span style="color:#606"><span style="color:#404">&quot;</span><span>content_type</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">image/jpeg</span><span style="color:#710">&quot;</span></span>,<span style="color:#606"><span style="color:#404">&quot;</span><span>@type</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">blob</span><span style="color:#710">&quot;</span></span>},
+          <span style="color:#606"><span style="color:#404">&quot;</span><span>value</span><span style="color:#404">&quot;</span></span>:<span style="color:#00D">10</span>,
+          <span style="color:#606"><span style="color:#404">&quot;</span><span>key</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Apples</span><span style="color:#710">&quot;</span></span>
+      },
+      {
+        <span style="color:#606"><span style="color:#404">&quot;</span><span>image</span><span style="color:#404">&quot;</span></span>:{<span style="color:#606"><span style="color:#404">&quot;</span><span>length</span><span style="color:#404">&quot;</span></span>:<span style="color:#00D">16608</span>,<span style="color:#606"><span style="color:#404">&quot;</span><span>digest</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">sha1-LEFKeUsswGIjASssSBa0l/cg5rlm8=</span><span style="color:#710">&quot;</span></span>,<span style="color:#606"><span style="color:#404">&quot;</span><span>content_type</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">image/jpeg</span><span style="color:#710">&quot;</span></span>,<span style="color:#606"><span style="color:#404">&quot;</span><span>@type</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">blob</span><span style="color:#710">&quot;</span></span>},
+        <span style="color:#606"><span style="color:#404">&quot;</span><span>value</span><span style="color:#404">&quot;</span></span>:<span style="color:#00D">110</span>,
+        <span style="color:#606"><span style="color:#404">&quot;</span><span>key</span><span style="color:#404">&quot;</span></span>:<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">oranges</span><span style="color:#710">&quot;</span></span>
+       }
+    ]
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The document is encoded as a <code>ListRecord</code> struct defined in the <code>ListRecord.swift</code> file</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="initializing-local-database">Initializing Local Database</h3>
+<div class="paragraph">
+<p>The app loads the data from the JSON document named <code>samplelist.json</code> the first time the database is created. This is done regardless of whether the app is ;launched in passive or active mode.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>openOrCreateDatabaseForUser()</code> method. This method creates an instance of Couchbase Lite database for the user if one does not exist and loads the empty database with data ready from bundled sample JSON file</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span style="color:#339;font-weight:bold">var</span> exists = <span style="color:#069">false</span>
+        <span style="color:#080;font-weight:bold">if</span> Database.exists(withName: kUserDBName, inDirectory: userFolderPath) == <span style="color:#069">true</span> {
+              _userDb = <span style="color:#080;font-weight:bold">try</span>? Database(name: kUserDBName, config: options)
+            exists = <span style="color:#069">true</span>
+
+        }
+        <span style="color:#080;font-weight:bold">else</span> {
+              _userDb = <span style="color:#080;font-weight:bold">try</span>? Database(name: kUserDBName, config: options)
+
+        }</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>SampleFileLoaderUtils.swift</strong> file and locate the <code>loadSampleJSONDataForUserFromFile()</code> method. This function parses the document in JSON and udpates it to embed the "image" property into every object in the "list" array. The "image" property holds a blob entry to an image asset. The image for the blob is available in the "Assets.xcassets" folder</p>
+</li>
+<li>
+<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>createUserDocumentWithData()</code> method. This is where the document is saved into the database. Again, this is only done if there is no preexisting database for the user</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span style="color:#080;font-weight:bold">for</span> (key,value) in data {
+            let docId = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">\(</span><span style="color:#D20">kDocPrefix)</span><span style="color:#D20">\(</span><span style="color:#D20">key)</span><span style="color:#710">&quot;</span></span>
+            print(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">DocId is </span><span style="color:#D20">\(</span><span style="color:#D20">docId)</span><span style="color:#710">&quot;</span></span>)
+            let doc = MutableDocument(id:docId, data:value as! <span style="color:#0a8;font-weight:bold">Dictionary</span>&lt;<span style="color:#0a8;font-weight:bold">String</span>, Any&gt;)
+            <span style="color:#080;font-weight:bold">try</span> db.saveDocument(doc)
+        }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="passive-peer-or-server">Passive Peer or Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, we will walk through the steps of using the app in passive peer mode</p>
+</div>
+<div class="sect2">
+<h3 id="initializing-websockets-listener">Initializing Websockets Listener</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>initWebsocketsListenerForUserDb()</code> function. This is where the websockets listsner for peer-to-peer sync is initialized</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span style="color:#777">// Include websockets listener initializer code</span>
+        let listenerConfig = URLEndpointListenerConfiguration(database: db) <i class="conum" data-value="1"></i><b>(1)</b>
+
+        <span style="color:#777">// Configure the appropriate auth test mode</span>
+        <span style="color:#080;font-weight:bold">switch</span> listenerTLSSupportMode { <i class="conum" data-value="2"></i><b>(2)</b>
+            <span style="color:#080;font-weight:bold">case</span> .TLSDisabled:
+                listenerConfig.disableTLS  = <span style="color:#069">true</span>
+                listenerConfig.tlsIdentity = nil
+            <span style="color:#080;font-weight:bold">case</span> .TLSWithAnonymousAuth:
+                listenerConfig.disableTLS  = <span style="color:#069">false</span> <span style="color:#777">// Use with anonymous self signed cert</span>
+                listenerConfig.tlsIdentity = nil
+             <span style="color:#080;font-weight:bold">case</span> .TLSWithBundledCert:
+
+                <span style="color:#080;font-weight:bold">if</span> let tlsIdentity = self.getTLSIdentityFromPKCS12DataWithCertLabel(kListenerCertLabel) {
+                    listenerConfig.disableTLS  = <span style="color:#069">false</span> <span style="color:#777">// Use with anonymous self signed cert</span>
+                    listenerConfig.tlsIdentity = tlsIdentity
+                }
+                <span style="color:#080;font-weight:bold">else</span> {
+                    print(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Could not create identity from provided cert</span><span style="color:#710">&quot;</span></span>)
+                    <span style="color:#080;font-weight:bold">throw</span> ListDocError.WebsocketsListenerNotInitialized
+                }
+
+            <span style="color:#777">// UNAVAILABLE FOR BETA</span>
+            <span style="color:#777">//            case .TLSWithGeneratedCert:</span>
+            <span style="color:#777">//                if let tlsIdentity = self.createIdentityWithCertLabel(kListenerCertLabel) {</span>
+            <span style="color:#777">//                    listenerConfig.disableTLS  = false</span>
+            <span style="color:#777">//                    listenerConfig.tlsIdentity = tlsIdentity</span>
+            <span style="color:#777">//                }</span>
+            <span style="color:#777">//                else {</span>
+            <span style="color:#777">//                    print(&quot;Could not create identity from generated self signed cert&quot;)</span>
+            <span style="color:#777">//                    throw ListDocError.WebsocketsListenerNotInitialized</span>
+            <span style="color:#777">//                }</span>
+
+
+
+        }
+
+        listenerConfig.enableDeltaSync = <span style="color:#069">true</span> <i class="conum" data-value="3"></i><b>(3)</b>
+
+        listenerConfig.authenticator = ListenerPasswordAuthenticator.init { <i class="conum" data-value="4"></i><b>(4)</b>
+                   (username, password) -&gt; Bool in
+            <span style="color:#080;font-weight:bold">if</span> (self._whitelistedUsers.contains([<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">password</span><span style="color:#710">&quot;</span></span> : password, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">name</span><span style="color:#710">&quot;</span></span>:username])) {
+                <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">true</span>
+            }
+            <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">false</span>
+               }
+
+        _websocketListener = URLEndpointListener(config: listenerConfig)</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Initialize the <code>URLEndpointListenerConfiguration</code> for the specified database. There is a listener for a given database. You can specify a port to be associated with the listener. In our app, we let Couchbase Lite choose the port</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This is where we configure the TLS mode. In the app, we have a flag named <code>listenerTLSSupportMode</code> that allows the app to switch between the various modes. You can change the mode by changing the value of the variable. See <a href="#testing-different-tls-modes">Testing Different TLS Modes</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Enable delta sync. It is disabled by default</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Configure the password authenticator callback function that authenticates the  username/password received from the client during replication setup. The list of valid users are configured in <code>userwhitelist.json</code> file bundled with the app</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="testing-different-tls-modes">Testing Different TLS Modes</h4>
+<div class="paragraph">
+<p>The app can be configured to test different TLS modes as follows by setting the <code>listenerTLSSupportMode</code> property in the <code>DatabaseManager.swift</code> file</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">         fileprivate let listenerCertValidationMode:ListenerCertValidationTestMode = .TLSEnableValidationWithCertPinning</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. TLS Modes on Listener</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">listenerTLSSupportMode Value</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLSDisabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">There is no TLS. ALl communication is plaintext (insecure mode)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLSWithAnonymousAuth</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The app uses Couchbase Lite APIs to auto-generate an anonymous server cert and to use that as <code>TLSIdentity</code> of the server. Communication is encrypted</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLSWithBundledCert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The app generates <code>TLSIdentity</code> of the server from  public key cert and private key bundled in the`listener-cert-pkey.p12` archive. Communication is encrypted</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="start-websockets-listener">Start Websockets Listener</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>startWebsocketsListenerForUserDb()</code> method.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        DispatchQueue.global().sync {
+            <span style="color:#080;font-weight:bold">do</span> {
+                <span style="color:#080;font-weight:bold">try</span> websocketListener.start()
+                handler(websocketListener.urls,nil)
+            }
+            <span style="color:#080;font-weight:bold">catch</span> {
+                handler(nil,error)
+            }
+
+        }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="advertising-listener-service">Advertising Listener Service</h3>
+<div class="paragraph">
+<p>In the app, we use <a href="https://developer.apple.com/documentation/foundation/netservice">NetService</a> to advertise the websockets listener service listening at the specified listener port. This aspect of the app has nothing to do with Couchbase Lite. In your production app, you can use any suitable mechanism including using a well known URL to advertise your service that active clients can be preconfigured to connect to.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>ServiceAdvertiser.swift</strong> file and look for <code>ServiceAdvertiser</code> class. Here, we advertise a <a href="https://developer.apple.com/bonjour/">Bonjour</a> service with service type of <em>`_cblistservicesync._tcp`</em></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span style="color:#777">/// The Bonjour service name. Setting it to an empty String will be</span>
+  <span style="color:#777">/// mapped to the device's name.</span>
+  <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">var</span> serviceName: <span style="color:#0a8;font-weight:bold">String</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#710">&quot;</span></span>
+
+  <span style="color:#777">/// The Bonjour service type.</span>
+  <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">var</span> serviceType = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">_cblistservicesync._tcp</span><span style="color:#710">&quot;</span></span>
+
+ <span style="color:#777">/// The Bonjour domain type.</span>
+ <span style="color:#088;font-weight:bold">public</span> <span style="color:#339;font-weight:bold">var</span> serviceDomain = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#710">&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The service is published as implemented in the <code>doStart()</code> method.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span style="color:#088;font-weight:bold">private</span> func doStart(database:<span style="color:#0a8;font-weight:bold">String</span>, _ port:UInt16) {
+        let service = NetService(domain: serviceDomain, type: serviceType,
+                                 name: serviceName, port:Int32(port))
+
+        service.delegate = self
+        service.includesPeerToPeer = <span style="color:#069">true</span>
+        service.publish()
+        services[database] = service
+
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Explore the content in the <code>ServiceAdvertiser.swift</code>. It includes implementation of the <code>NetServiceDelegate</code> delegate callback methods to accept incoming connections.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="stop-websockets-listener">Stop Websockets Listener</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>stopWebsocketsListenerForUserDb()</code> method. You can stop the listener at any point. If there are connected clients, it will warn you that there are active connections. If you choose to stop listener, all connected clients will be disonnected</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    func stopWebsocketsListenerForUserDb() <span style="color:#088;font-weight:bold">throws</span>{
+        print(<span style="color:#F00;background-color:#FAA">#</span>function)
+        guard let websocketListener = _websocketListener <span style="color:#080;font-weight:bold">else</span> {
+            <span style="color:#080;font-weight:bold">throw</span> ListDocError.WebsocketsListenerNotInitialized
+        }
+        websocketListener.stop()
+        _websocketListener = nil
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="try-it-out-2">Try it out</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Run the app on a simulator or a real device. If its the latter, make sure you sign your app with the appropriate developer certificate</p>
+</li>
+<li>
+<p>On login screen, sign in as any one of the users configured in the <code>userwhitelist.json</code> file such as "bob" and "password"</p>
+</li>
+<li>
+<p>From the "listener" tab, start the listener by clicking on "Start Listener" button</p>
+</li>
+<li>
+<p>Click on the "action" button to see number of connected clients. It should be 0 if there are no connected clients</p>
+</li>
+<li>
+<p>From the "listener" tab, stop the listener by clicking on "Stop Listener" button</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="content/modules/cbl-p2p-sync-websockets/assets/ios-passive-start-listener.gif" alt="server websockets listener login screen" width="600" height="320">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="active-peer-or-client">Active Peer or Client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We will walk through the steps of using the app in active peer mode</p>
+</div>
+<div class="sect2">
+<h3 id="discovering-listeners">Discovering Listeners</h3>
+<div class="paragraph">
+<p>In the app, we use <a href="https://developer.apple.com/documentation/foundation/netservice">NetService</a>  to browse for devices that are advertising services with name <em>`_cblistservicesync._tcp`</em>. This aspect of the app has nothing to do with Couchbase Lite. In your production app, you could launch your listener at well known URL well and preconfigure your active peer to connect to the URL.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>ServiceBrowser.swift</strong> file and look for <code>ServiceBrowser</code> class. Here, we browse for a service with service type of <em>`_cblistservicesync._tcp`</em> using <a href="https://developer.apple.com/bonjour/">Bonjour</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span style="color:#088;font-weight:bold">public</span> func startSearch(withDelegate delegate:ServiceBrowserDelegate? ){
+         peerBrowserDelegate = delegate
+        self.browser = NetServiceBrowser()
+        self.browser?.delegate = self
+        self.browser?.searchForServices(ofType: serviceType, inDomain: domain)
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Explore the content in the <code>ServiceBrowser.swift</code>. It includes implementation of the <code>NetServiceDelegate</code> delegate callback methods to resolve the service to its IP Address and port that will be used by the client to connnect to the listener.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="initializing-and-starting-replication">Initializing and Starting Replication</h3>
+<div class="paragraph">
+<p>Initialilzing a replicator for peer-to-peer sync is fundamentally not different than if your Couchbase Lite client were to <a href="https://docs.couchbase.com/couchbase-lite/2.7/swift.html#replication">syncing</a> with a remote Sync Gateway.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>startP2PReplicationWithUserDatabaseToRemotePeer()</code> method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we initialize a bi-directional replication to the listener peer in continuous mode. We also register a Replication Listener to be notified of status to the replication status.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span style="color:#080;font-weight:bold">if</span> replicatorForUserDb == nil {
+            <span style="color:#777">// Start replicator to connect to the URLListenerEndpoint</span>
+            guard let targetUrl = <span style="color:#0a8;font-weight:bold">URL</span>(string: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">wss://</span><span style="color:#D20">\(</span><span style="color:#D20">peer)/</span><span style="color:#D20">\(</span><span style="color:#D20">kUserDBName)</span><span style="color:#710">&quot;</span></span>) <span style="color:#080;font-weight:bold">else</span> {
+                <span style="color:#080;font-weight:bold">throw</span> ListDocError.URLInvalid
+            }
+
+
+            let config = ReplicatorConfiguration.init(database: userDb, target: URLEndpoint.init(url:targetUrl)) <i class="conum" data-value="1"></i><b>(1)</b>
+
+            config.replicatorType = .pushAndPull
+            config.continuous =  <span style="color:#069">true</span>
+
+            <span style="color:#777">// Explicitly allows self signed certificates. By default, only</span>
+            <span style="color:#777">// CA signed cert is allowed</span>
+            <span style="color:#080;font-weight:bold">switch</span> listenerCertValidationMode { <i class="conum" data-value="2"></i><b>(2)</b>
+
+                <span style="color:#080;font-weight:bold">case</span> .TLSSkipValidation :
+                    <span style="color:#777">// Use serverCertificateVerificationMode set to .selfSignedCert to disable cert validation</span>
+                    config.serverCertificateVerificationMode = .selfSignedCert
+
+
+                <span style="color:#080;font-weight:bold">case</span> .TLSEnableValidationWithCertPinning:
+                    <span style="color:#777">// Use serverCertificateVerificationMode set to .caCert to enable cert validation</span>
+
+                    config.serverCertificateVerificationMode = .caCert <span style="color:#777">// will likely change post beta</span>
+                    <span style="color:#080;font-weight:bold">if</span> let pinnedCert = self.loadSelfSignedCertForListenerFromBundle() {
+                        config.pinnedServerCertificate = pinnedCert
+                    }
+                    <span style="color:#080;font-weight:bold">else</span> {
+                        print(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Failed to load server cert to pin. Will proceed without pinning</span><span style="color:#710">&quot;</span></span>)
+                    }
+
+                <span style="color:#080;font-weight:bold">case</span> .TLSEnableValidation:
+                    config.serverCertificateVerificationMode = .caCert
+
+
+            }
+
+
+            let authenticator = BasicAuthenticator(username: user, password: password)<i class="conum" data-value="3"></i><b>(3)</b>
+            config.authenticator = authenticator
+
+            replicatorForUserDb = Replicator.init(config: config) <i class="conum" data-value="4"></i><b>(4)</b>
+            _replicatorsToPeers[peer] = replicatorForUserDb
+
+          }
+        <span style="color:#080;font-weight:bold">if</span> let pushPullReplListenerForUserDb = registerForEventsForReplicator(replicatorForUserDb,handler:handler) {
+            _replicatorListenersToPeers[peer] = pushPullReplListenerForUserDb
+
+        }
+
+
+        replicatorForUserDb?.start() <i class="conum" data-value="5"></i><b>(5)</b>
+        handler(PeerConnectionStatus.Connecting)</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Initialize a Repicator Configuration for the specified local database and remote listener URL endpoint</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This is where we configure the TLS server cert validation mode - whether we enable cert validation or skip validation. This would only apply if you had enabled TLS support on listener as discussed in <a href="#TLS Modes on Listener">[TLS Modes on Listener]</a>. If you skip server cert validation,  you still get encrypted communication, but you are communicating with a untrusted listener. In the app, we have a flag named <code>listenerCertValidationMode</code> that allows you to try the various modes. You can change the mode by changing the value of the variable. See <a href="#testing-different-server-validation-modes">Testing Different Server Validation Modes</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The app uses basic client authentication to authenticate with the server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Initialize the Replicator</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Start replication. The app uses the events on the Replicator Listener to listen to monitor the replication.</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="testing-different-server-validation-modes">Testing Different Server Validation Modes</h4>
+<div class="paragraph">
+<p>The app can be configured to test different TLS modes as follows by setting the <code>listenerCertValidationMode</code> property in the <code>DatabaseManager.swift</code> file</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">         fileprivate let listenerCertValidationMode:ListenerCertValidationTestMode = .TLSEnableValidationWithCertPinning</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. TLS Listener Cert Validation</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">listenerCertValidationMode Value</th>
+<th class="tableblock halign-left valign-top">Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLSSkipValidation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">There is no validation of server cert. This is typically in used in dev/test environments with self signed certs. Skipping server cert authentication is discouraged in production environments.  Communication is encrypted</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLSEnableValidation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the listener cert is a well known CA then you use this mode. Of course, in our sample app, the listener cert as specified in <code>listener-cert-pkey</code> is a self signed cert - so you probably will not use this mode to test. But if you have a CA signed cert, you can configure your listener with that cert and use this mode to test.  Communication is encrypted</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TLSEnableValidationWithCertPinning</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In this mode, the app uses the pinned cert,<code>listener-pinned-cert.cer</code> that is bundled in the app to validate the listener identity. Communication is encrypted</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="stopping-replication">Stopping Replication</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>stopP2PReplicationWithUserDatabaseToRemotePeer()</code> method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we remove any listeners attached to the replicator and stop it. You can restart the replicator again in <code>startP2PReplicationWithUserDatabaseToRemotePeer()</code> method</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span style="color:#080;font-weight:bold">if</span> let listener = _replicatorListenersToPeers[peer] {
+            replicator.removeChangeListener(withToken: listener)
+            _replicatorListenersToPeers.removeValue(forKey: peer)
+        }
+
+        replicator.stop()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="try-it-out-3">Try it out</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Follow instructions in "Try It Out" section of <a href="#passive-peer-or-server">Passive Peer or Server</a> to start app in passive mode on a simulator instance or real device.</p>
+</li>
+<li>
+<p>Run the app on a separate simulator instance or a real device. If its the latter, make sure you sign your app with the appropriate developer certificate</p>
+</li>
+<li>
+<p>On login screen, sign in as any one of the users configured in the <code>userwhitelist.json</code> file such as "bob" and "password". An an exercise, try with an invalid user and ensure it fails</p>
+</li>
+<li>
+<p>Tap on the "browser" tab. The app automatically browses for listener and lists it here.</p>
+</li>
+<li>
+<p>Tap on the row corresponding to listener. This will start replication with the listener and it shoud transition to Connected state</p>
+</li>
+<li>
+<p>Verify the connection count on listener</p>
+</li>
+<li>
+<p>Swipe left on the the row. You should see option to remove listener and Disconect. Try Disconnect and then reconnect again</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="content/modules/cbl-p2p-sync-websockets/assets/ios-active-start-replicator.gif" alt="p2p sync" width="600" height="320">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="syncing-data">Syncing Data</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once the connection is established between the peers, you can start syncing. Couchbase Lite takes care of it.</p>
+</div>
+<div class="sect2">
+<h3 id="try-it-out-4">Try it out</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Run the app on two or more simulators or real devices. If its the latter, make sure you sign your app with the appropriate developer certificate</p>
+</li>
+<li>
+<p>Start the listener on one of the app instances. You could also have multiple listeners.</p>
+</li>
+<li>
+<p>Connect the other instances of the app to the listener</p>
+</li>
+<li>
+<p>Tap on the "List" tab</p>
+</li>
+<li>
+<p>Edit the quanity or image on any one of the instances</p>
+</li>
+<li>
+<p>Watch it sync automatically to other connected clients</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="content/modules/cbl-p2p-sync-websockets/assets/ios-sync.gif" alt="server websockets listener login screen" width="600" height="320">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-next">What Next</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As an exercise, switch between the various TLS modes and server cert validation modes and see how the app behaves. You can also try with different topologies to connect the peers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="learn-more">Learn More</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Congratulations on completing this tutorial!</p>
+</div>
+<div class="paragraph">
+<p>This tutorial walked you through an example of how to directly synchronize data between Couchbase Lite clients. While the tutorial is for iOS, the concepts apply equally to other Couchbase Lite platforms.</p>
+</div>
+<div class="sect2">
+<h3 id="further-reading">Further Reading</h3>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-06-20 16:33:14 -0400
+</div>
+</div>
+</body>
+</html>

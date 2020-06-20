@@ -67,7 +67,7 @@ When used as a active peer :-
 * Directly sync data with connected clients
 
 
-image::https://drive.google.com/file/d/1fM14NSvtrqcvQ7tWjNyhxNcvQaDKxrDE/view?usp=sharing[List App with p2p Sync][alt=peer to peer sync,width=600,height=480]
+image::ios-demo.gif[alt=peer to peer sync,width=640,height=480]
 
 == App Installation
 
@@ -88,13 +88,13 @@ open list-sync.xcodeproj
 * Build and run the project 
 * Verify that you see the login screen 
 +
-image::swift-login.png[List App Login Image][alt=app login screen,width=600,height=320]
+image::swift-login.png[alt=app login screen,width=640,height=480]
 
 == Exploring the App Project
 
 - The xcode project comes pre-bundled with some resource files that we will examine here
 
-image::swift-project-explorer.png[Project Explorer][alt=xcode project explorer,width=600,height=320]
+image::swift-project-explorer.png[alt=xcode project explorer,width=640,height=480]
 
 * `samplelist.json` : JSON data that is loaded into the local Couchbase Lite database. It includes the data for a single document. See <<Data Model>>
 * `userwhitelist.json` : List of valid client users (and passwords) in the system. This list is looked up when the server tries to authenticate credentials associated with incoming connection request.
