@@ -32,7 +32,7 @@ class DatabaseManager {
         public let kDocPrefix = "doc::"
     
         fileprivate let kListenerCommonName = "com.example.list-sync-server"
-        fileprivate let kListenerCertLabel = "list-sync-server"
+        fileprivate let kListenerCertLabel = "list-sync-server-cert-label"
         fileprivate let kListenerCertKeyP12File = "listener-cert-pkey"
         fileprivate let kListenerPinnedCertFile = "listener-pinned-cert"
         fileprivate let kListenerCertKeyExportPassword = "couchbase"
@@ -76,7 +76,8 @@ class DatabaseManager {
 
         func initialize() {
             enableCrazyLevelLogging()
-              removeIdentityFromKeychainWithLabel(kListenerCertLabel)
+            // ONLY FOR TESTING PURPOSES
+            removeIdentityFromKeychainWithLabel(kListenerCertLabel)
             
             // load whitelisted user list (used only on listener side)
             _whitelistedUsers = SampleFileLoaderUtils.shared.loadWhitelistUsersFromFile(name: "userwhitelist") ?? []
@@ -279,8 +280,8 @@ extension DatabaseManager {
             //tag::TLSWithBundledCert[]
              case .TLSWithBundledCert:
                 
-                if let tlsIdentity = self.getTLSIdentityFromPKCS12DataWithCertLabel(kListenerCertLabel) {
-                    listenerConfig.disableTLS  = false // Use with anonymous self signed cert
+                if let tlsIdentity = self.getTLSIdentityFromPKCS12DataLoadedIntoKeychainWithCertLabel(kListenerCertLabel) {
+                    listenerConfig.disableTLS  = false
                     listenerConfig.tlsIdentity = tlsIdentity
                 }
                 else {
@@ -539,7 +540,11 @@ extension DatabaseManager {
         return nil
     }
     
-    func getTLSIdentityFromPKCS12DataWithCertLabel(_ label:String)->TLSIdentity? {
+    
+    // This API extracts cert and pkey from the bundled .p12 file and stores it in keychain.
+    // It then creates TLSIdentity from the cert/pkey stored in keychain
+    // This is useful if you want to use predefined credentials stored in keychain
+    func getTLSIdentityFromPKCS12DataLoadedIntoKeychainWithCertLabel(_ label:String)->TLSIdentity? {
            do {
             
                 // Check if identity exists in keychain. If so use that
@@ -564,17 +569,17 @@ extension DatabaseManager {
                 kcStatus = SecPKCS12Import(data as CFData, options as CFDictionary, &result)
                 if kcStatus != errSecSuccess {
                     switch kcStatus {
-                    case errSecDecode :
-                        print("Failed to decode. Blob can't be read or malformed :\(kcStatus)")
-                         return nil
-                    case errSecAuthFailed :
-                        print("Password was incorrect :\(kcStatus)")
-                         return nil
-                    default:
-                    print("failed to import data from provided with error :\(kcStatus) ")
-                    return nil
+                        case errSecDecode :
+                            print("Failed to decode. Blob can't be read or malformed :\(kcStatus)")
+                             return nil
+                        case errSecAuthFailed :
+                            print("Password was incorrect :\(kcStatus)")
+                             return nil
+                        default:
+                        print("failed to import data from provided with error :\(kcStatus) ")
+                        return nil
+                    }
                 }
-            }
               
                       
                 let importedItems = result! as NSArray
@@ -582,25 +587,26 @@ extension DatabaseManager {
                 let item = importedItems[0] as! [String: Any]
                 let secIdentity = item[String(kSecImportItemIdentity)] as! SecIdentity
                   
-                // Get Private Key:
+                // Extract Private Key:
                 var privateKey : SecKey?
                 kcStatus = SecIdentityCopyPrivateKey(secIdentity, &privateKey)
                 if kcStatus != errSecSuccess {
                     print("failed to import private key from provided with error :\(kcStatus) ")
                     return nil
                 }
-                // Get Certs
+                // Extract Certs
                 let certs = item[String(kSecImportItemCertChain)] as? [SecCertificate]
             
                 guard let pKey = privateKey, let pubCerts = certs else {
                     return nil
                 }
             
+                // Save key and private key in keychain
                 kcStatus = storeInKeyChain(privateKey: pKey, certs: pubCerts, label: label)
             
                 print ("Key chain storage status : \(kcStatus)")
                 if kcStatus == errSecSuccess {
-                    // Now create the TLSIdentity with the provided cert identity
+                    // Now create the TLSIdentity with the provided sec identity (that is stored in keychain)
                     return try TLSIdentity.identity(withIdentity: secIdentity, certs: [pubCerts[0]])
                 }
                 else{
@@ -613,7 +619,36 @@ extension DatabaseManager {
                return nil
            }
 
-       }
+    }
+    
+    // This API imports the TLSIdentity from bundled  .p12 file
+    /**** Untested
+    func importTLSIdentityFromPKCS12DataWithCertLabel(_ label:String)->TLSIdentity? {
+         do {
+
+                // Check if identity exists in keychain. If so use that
+                if let identity = try TLSIdentity.identity(withLabel: label) {
+                  print("An identity with label : \(label) already exists in keychain")
+                  return identity
+                }
+                guard let pathToCert = Bundle.main.path(forResource: kListenerCertKeyP12File, ofType: "p12") else {
+                  return nil
+                }
+
+    
+                let data = try NSData(contentsOfFile: pathToCert) as Data
+          
+                // Now import the TLSIdentity with the provided cert identity
+                return try TLSIdentity.importIdentity(withData: data, password: String(kSecImportExportPassphrase), label: label)
+               
+                      
+         } catch {
+             print("Error while loading self signed cert : \(error)")
+             return nil
+         }
+
+     }
+ ****/
     
 
 }

@@ -237,7 +237,7 @@ include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=Stop
 * Click on the "action" button to see number of connected clients. It should be 0 if there are no connected clients
 * From the "listener" tab, stop the listener by clicking on "Stop Listener" button
 
-image::ios-passive-start-listener.gif[Passive Peer][alt=server websockets listener login screen,width=600,height=320]
+image::ios-passive-start-listener.gif[alt=server websockets listener login screen,width=600,height=320]
 
 == Active Peer or Client
 We will walk through the steps of using the app in active peer mode
@@ -315,7 +315,7 @@ include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=Stop
 * Verify the connection count on listener
 * Swipe left on the the row. You should see option to remove listener and Disconect. Try Disconnect and then reconnect again
 
-image::ios-active-start-replicator.gif[Passive Peer][alt=p2p sync,width=600,height=320]
+image::ios-active-start-replicator.gif[alt=p2p sync,width=600,height=320]
 
 == Syncing Data
 Once the connection is established between the peers, you can start syncing. Couchbase Lite takes care of it.
@@ -329,7 +329,7 @@ Once the connection is established between the peers, you can start syncing. Cou
 * Edit the quanity or image on any one of the instances
 * Watch it sync automatically to other connected clients
 
-image::ios-sync.gif[Passive Peer][alt=server websockets listener login screen,width=600,height=320]
+image::ios-sync.gif[alt=server websockets listener login screen,width=600,height=320]
 
 == What Next
 As an exercise, switch between the various TLS modes and server cert validation modes and see how the app behaves. You can also try with different topologies to connect the peers.
