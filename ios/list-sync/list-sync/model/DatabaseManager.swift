@@ -280,7 +280,7 @@ extension DatabaseManager {
             //tag::TLSWithBundledCert[]
              case .TLSWithBundledCert:
                 
-                if let tlsIdentity = self.getTLSIdentityFromPKCS12DataLoadedIntoKeychainWithCertLabel(kListenerCertLabel) {
+                if let tlsIdentity = self.importTLSIdentityFromPKCS12DataWithCertLabel(kListenerCertLabel) {
                     listenerConfig.disableTLS  = false
                     listenerConfig.tlsIdentity = tlsIdentity
                 }
@@ -622,7 +622,6 @@ extension DatabaseManager {
     }
     
     // This API imports the TLSIdentity from bundled  .p12 file
-    /**** Untested
     func importTLSIdentityFromPKCS12DataWithCertLabel(_ label:String)->TLSIdentity? {
          do {
 
@@ -639,18 +638,13 @@ extension DatabaseManager {
                 let data = try NSData(contentsOfFile: pathToCert) as Data
           
                 // Now import the TLSIdentity with the provided cert identity
-                return try TLSIdentity.importIdentity(withData: data, password: String(kSecImportExportPassphrase), label: label)
-               
-                      
+                return try TLSIdentity.importIdentity(withData: data, password: String(kListenerCertKeyExportPassword), label: label)
          } catch {
              print("Error while loading self signed cert : \(error)")
              return nil
          }
 
      }
- ****/
-    
-
 }
 
 // Keychain
