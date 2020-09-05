@@ -118,7 +118,7 @@ extension SampleFileLoaderUtils {
      return jsonEntries
    }
     
-    public func loadWhitelistUsersFromFile(name: String) ->[[String:String]]? {
+    public func loadAllowlistUsersFromFile(name: String) ->[[String:String]]? {
 
           guard let path = Bundle.main.path(forResource: name, ofType: "json") else {
               fatalError("\(name) sample file not found")

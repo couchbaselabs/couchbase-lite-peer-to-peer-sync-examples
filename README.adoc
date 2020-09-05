@@ -100,7 +100,7 @@ image::swift-login.png[alt=app login screen,width=640,height=480]
 image::swift-project-explorer.png[alt=xcode project explorer,width=640,height=480]
 
 * `samplelist.json` : JSON data that is loaded into the local Couchbase Lite database. It includes the data for a single document. See <<Data Model>>
-* `userwhitelist.json` : List of valid client users (and passwords) in the system. This list is looked up when the server tries to authenticate credentials associated with incoming connection request.
+* `userallowlist.json` : List of valid client users (and passwords) in the system. This list is looked up when the server tries to authenticate credentials associated with incoming connection request.
 * `listener-cert-pkey.p12` : This is link:https://en.wikipedia.org/wiki/PKCS_12[PKCS12] file archive that includes a public key cert corresponding to the listener and associated private key. The cert is a sample cert that was generated using link:https://www.openssl.org[OpenSSL] tool.
 * `listener-pinned-cert.cer` : This is the public key listener cert (the same cert that is embedded in the `listener-cert-pkey.p12` file) in DER encoded format. This cert is pinned on the client replicator and is used for validating server cert during connection setup
 
@@ -169,7 +169,7 @@ include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=Init
 <1> Initialize the `URLEndpointListenerConfiguration` for the specified database. There is a listener for a given database. You can specify a port to be associated with the listener. In our app, we let Couchbase Lite choose the port
 <2> This is where we configure the TLS mode. In the app, we have a flag named `listenerTLSSupportMode` that allows the app to switch between the various modes. You can change the mode by changing the value of the variable. See <<Testing Different TLS Modes>>
 <3> Enable delta sync. It is disabled by default
-<4> Configure the password authenticator callback function that authenticates the  username/password received from the client during replication setup. The list of valid users are configured in `userwhitelist.json` file bundled with the app
+<4> Configure the password authenticator callback function that authenticates the  username/password received from the client during replication setup. The list of valid users are configured in `userallowlist.json` file bundled with the app
 
 ==== Testing Different TLS Modes 
 The app can be configured to test different TLS modes as follows by setting the `listenerTLSSupportMode` property in the `DatabaseManager.swift` file
@@ -235,7 +235,7 @@ include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=Stop
 
 === Try it out
 * Run the app on a simulator or a real device. If its the latter, make sure you sign your app with the appropriate developer certificate
-* On login screen, sign in as any one of the users configured in the `userwhitelist.json` file such as "bob" and "password"
+* On login screen, sign in as any one of the users configured in the `userallowlist.json` file such as "bob" and "password"
 * From the "listener" tab, start the listener by clicking on "Start Listener" button
 * Click on the "action" button to see number of connected clients. It should be 0 if there are no connected clients
 * From the "listener" tab, stop the listener by clicking on "Stop Listener" button
@@ -312,7 +312,7 @@ include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=Stop
 === Try it out
 * Follow instructions in "Try It Out" section of <<Passive Peer or Server>> to start app in passive mode on a simulator instance or real device. 
 * Run the app on a separate simulator instance or a real device. If its the latter, make sure you sign your app with the appropriate developer certificate
-* On login screen, sign in as any one of the users configured in the `userwhitelist.json` file such as "bob" and "password". An an exercise, try with an invalid user and ensure it fails
+* On login screen, sign in as any one of the users configured in the `userallowlist.json` file such as "bob" and "password". An an exercise, try with an invalid user and ensure it fails
 * Tap on the "browser" tab. The app automatically browses for listener and lists it here. 
 * Tap on the row corresponding to listener. This will start replication with the listener and it shoud transition to Connected state
 * Verify the connection count on listener

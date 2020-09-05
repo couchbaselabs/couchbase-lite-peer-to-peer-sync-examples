@@ -26,7 +26,6 @@
 		5F44DEE0245F573A00B251F7 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEDF245F573A00B251F7 /* LoginViewController.swift */; };
 		5F44DEE2245F580000B251F7 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEE1245F580000B251F7 /* Notifications.swift */; };
 		5F44DEE4245F6D9300B251F7 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEE3245F6D9300B251F7 /* UIViewControllerExtensions.swift */; };
-		5F44DEE8245F70A700B251F7 /* userwhitelist.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F44DEE7245F70A700B251F7 /* userwhitelist.json */; };
 		5F44DEEA245F77D700B251F7 /* ServiceBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEE9245F77D700B251F7 /* ServiceBrowser.swift */; };
 		5F44DEED245FAF4300B251F7 /* PeerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F44DEEC245FAF4300B251F7 /* PeerTableViewCell.xib */; };
 		5F44DEEF245FAF7200B251F7 /* PeerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEEE245FAF7200B251F7 /* PeerTableViewCell.swift */; };
@@ -36,6 +35,7 @@
 		5F44DEF72460B89500B251F7 /* CustomListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F44DEF62460B89500B251F7 /* CustomListTableViewCell.xib */; };
 		5F7DB712249AC7C30018229F /* listener-cert-pkey.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 5F7DB710249AC7C30018229F /* listener-cert-pkey.p12 */; };
 		5F7DB713249AC7C30018229F /* listener-pinned-cert.cer in Resources */ = {isa = PBXBuildFile; fileRef = 5F7DB711249AC7C30018229F /* listener-pinned-cert.cer */; };
+		5F8273A72504355000D4C514 /* userallowlist.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F8273A62504355000D4C514 /* userallowlist.json */; };
 		5F9E7781249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */; };
 		5F9E7782249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -88,7 +88,6 @@
 		5F44DEDF245F573A00B251F7 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		5F44DEE1245F580000B251F7 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		5F44DEE3245F6D9300B251F7 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
-		5F44DEE7245F70A700B251F7 /* userwhitelist.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = userwhitelist.json; sourceTree = "<group>"; };
 		5F44DEE9245F77D700B251F7 /* ServiceBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceBrowser.swift; sourceTree = "<group>"; };
 		5F44DEEC245FAF4300B251F7 /* PeerTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerTableViewCell.xib; sourceTree = "<group>"; };
 		5F44DEEE245FAF7200B251F7 /* PeerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerTableViewCell.swift; sourceTree = "<group>"; };
@@ -98,6 +97,7 @@
 		5F44DEF62460B89500B251F7 /* CustomListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomListTableViewCell.xib; sourceTree = "<group>"; };
 		5F7DB710249AC7C30018229F /* listener-cert-pkey.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "listener-cert-pkey.p12"; sourceTree = "<group>"; };
 		5F7DB711249AC7C30018229F /* listener-pinned-cert.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "listener-pinned-cert.cer"; sourceTree = "<group>"; };
+		5F8273A62504355000D4C514 /* userallowlist.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = userallowlist.json; sourceTree = "<group>"; };
 		5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = iOS/CouchbaseLiteSwift.framework; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -234,7 +234,7 @@
 			children = (
 				5F7DB710249AC7C30018229F /* listener-cert-pkey.p12 */,
 				5F7DB711249AC7C30018229F /* listener-pinned-cert.cer */,
-				5F44DEE7245F70A700B251F7 /* userwhitelist.json */,
+				5F8273A62504355000D4C514 /* userallowlist.json */,
 				5F385C1624895A53000CE14D /* samplelist.json */,
 			);
 			path = resources;
@@ -326,7 +326,7 @@
 				5F7DB712249AC7C30018229F /* listener-cert-pkey.p12 in Resources */,
 				5F44DEB5245C62E600B251F7 /* LaunchScreen.storyboard in Resources */,
 				5F385C1724895A53000CE14D /* samplelist.json in Resources */,
-				5F44DEE8245F70A700B251F7 /* userwhitelist.json in Resources */,
+				5F8273A72504355000D4C514 /* userallowlist.json in Resources */,
 				5F7DB713249AC7C30018229F /* listener-pinned-cert.cer in Resources */,
 				5F44DEED245FAF4300B251F7 /* PeerTableViewCell.xib in Resources */,
 				5F44DEB2245C62E600B251F7 /* Assets.xcassets in Resources */,

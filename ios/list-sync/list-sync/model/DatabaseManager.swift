@@ -50,7 +50,7 @@ class DatabaseManager {
        
         fileprivate  let kDBPath:String = "cbl"
     
-        fileprivate  var _whitelistedUsers:[[String:String]] = []
+        fileprivate  var _allowlistedUsers:[[String:String]] = []
      
         // Switch between listener auth modes.
         //tag::ListenerTLSTestMode[]
@@ -79,8 +79,8 @@ class DatabaseManager {
             // ONLY FOR TESTING PURPOSES
             removeIdentityFromKeychainWithLabel(kListenerCertLabel)
             
-            // load whitelisted user list (used only on listener side)
-            _whitelistedUsers = SampleFileLoaderUtils.shared.loadWhitelistUsersFromFile(name: "userwhitelist") ?? []
+            // load allow-listed user list (used only on listener side)
+            _allowlistedUsers = SampleFileLoaderUtils.shared.loadAllowlistUsersFromFile(name: "userallowlist") ?? []
 
         }
       
@@ -309,7 +309,7 @@ extension DatabaseManager {
         
         listenerConfig.authenticator = ListenerPasswordAuthenticator.init { // <4>
                    (username, password) -> Bool in
-            if (self._whitelistedUsers.contains(["password" : password, "name":username])) {
+            if (self._allowlistedUsers.contains(["password" : password, "name":username])) {
                 return true
             }
             return false
