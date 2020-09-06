@@ -427,6 +427,9 @@ final public class Replicator {
   final public var status: CouchbaseLiteSwift.Replicator.Status {
     get
   }
+  final public var serverCertificate: Security.SecCertificate? {
+    get
+  }
   final public func start()
   final public func start(reset: Swift.Bool)
   final public func stop()
@@ -871,15 +874,6 @@ public enum ReplicatorType : Swift.UInt8 {
     get
   }
 }
-public enum ServerCertificateVerificationMode : Swift.UInt8 {
-  case caCert
-  case selfSignedCert
-  public typealias RawValue = Swift.UInt8
-  public init?(rawValue: Swift.UInt8)
-  public var rawValue: Swift.UInt8 {
-    get
-  }
-}
 public struct DocumentFlags : Swift.OptionSet {
   public let rawValue: Swift.Int
   public init(rawValue: Swift.Int)
@@ -909,7 +903,7 @@ public typealias ReplicationFilter = (CouchbaseLiteSwift.Document, CouchbaseLite
     get
     set
   }
-  public var serverCertificateVerificationMode: CouchbaseLiteSwift.ServerCertificateVerificationMode {
+  public var acceptOnlySelfSignedServerCertificate: Swift.Bool {
     get
     set
   }
@@ -1634,9 +1628,6 @@ extension CouchbaseLiteSwift.DatabaseEndpoint : CouchbaseLiteSwift.Endpoint {}
 extension CouchbaseLiteSwift.ReplicatorType : Swift.Equatable {}
 extension CouchbaseLiteSwift.ReplicatorType : Swift.Hashable {}
 extension CouchbaseLiteSwift.ReplicatorType : Swift.RawRepresentable {}
-extension CouchbaseLiteSwift.ServerCertificateVerificationMode : Swift.Equatable {}
-extension CouchbaseLiteSwift.ServerCertificateVerificationMode : Swift.Hashable {}
-extension CouchbaseLiteSwift.ServerCertificateVerificationMode : Swift.RawRepresentable {}
 extension CouchbaseLiteSwift.ConcurrencyControl : Swift.Equatable {}
 extension CouchbaseLiteSwift.ConcurrencyControl : Swift.Hashable {}
 extension CouchbaseLiteSwift.ConcurrencyControl : Swift.RawRepresentable {}

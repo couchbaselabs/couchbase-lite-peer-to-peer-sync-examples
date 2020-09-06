@@ -5,7 +5,8 @@ cd Frameworks
 rm -rf iOS
 rm -rf macOS
 rm -rf tvOS
-curl https://packages.couchbase.com/releases/couchbase-lite-ios/2.8.0-beta/couchbase-lite-swift_enterprise_2.8.0.zip > cbl.zip
+#curl https://packages.couchbase.com/releases/couchbase-lite-ios/2.8.0-beta/couchbase-lite-swift_enterprise_2.8.0.zip > cbl.zip
+curl http://latestbuilds.service.couchbase.com/builds/latestbuilds/couchbase-lite-ios/2.8.0/139/couchbase-lite-swift_enterprise_2.8.0-139.zip > cbl.zip
 unzip -n cbl.zip
 rm -rf cbl.zip
 rm -rf cbl

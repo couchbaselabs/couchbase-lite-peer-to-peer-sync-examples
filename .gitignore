@@ -9,6 +9,7 @@
 build/
 DerivedData/
 ios/list-sync/iOS/
+ios/list-sync/macOS/
 
 ## Various settings
 *.pbxuser

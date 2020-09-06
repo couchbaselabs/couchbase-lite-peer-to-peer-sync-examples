@@ -80,6 +80,10 @@ typedef struct {
 /** The replicator's current status: its activity level and progress. Observable. */
 @property (readonly, atomic) CBLReplicatorStatus* status;
 
+/** The SSL/TLS certificate received when connecting to the server. The application code takes responsibility
+    for releasing the certificate object when the application code finishes using the certificate. */
+@property (readonly, copy, atomic, nullable) __attribute__((NSObject)) SecCertificateRef serverCertificate;
+
 /** Initializes a replicator with the given configuration. */
 - (instancetype) initWithConfig: (CBLReplicatorConfiguration*)config;
 
@@ -139,6 +143,10 @@ the replicator change notification.
 /**
  Adds a replication event listener. The replication event will be posted on the main queue.
  
+ According to performance optimization in the replicator, the document replication listeners need to be added
+ before starting the replicator. If the listeners are added after the replicator is started, the replicator needs to be
+ stopped and restarted again to ensure that the listeners will get the document replication events.
+ 
  @param listener The listener to post replication events.
  @return An opaque listener token object for removing the listener.
  */
@@ -148,6 +156,10 @@ the replicator change notification.
  Adds a replication event listener with the dispatch queue on which replication events
  will be posted. If the dispatch queue is not specified, the replication events will be
  posted on the main queue.
+ 
+ According to performance optimization in the replicator, the document replication listeners need to be added
+ before starting the replicator. If the listeners are added after the replicator is started, the replicator needs to be
+ stopped and restarted again to ensure that the listeners will get the document replication events.
  
  @param queue The dispatch queue.
  @param listener The listener to post replication events.

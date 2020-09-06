@@ -21,20 +21,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** Server Certificate Verification Mode to specify how the replicator verifies TLS server certificates. */
-typedef NS_ENUM(NSUInteger, CBLServerCertificateVerificationMode) {
-    kCBLServerCertVerificationModeCACert = 0,       ///< Verify by using trusted anchor CA certs or by using the configured pinned server certs (Default Mode).
-    kCBLServerCertVerificationModeSelfSignedCert    ///< Verify by accepting any and only self-signed certs. Any non-self-signed certs will be rejected.
-};
-
 @interface CBLReplicatorConfiguration (ServerCert)
 
 /**
  ENTERPRISE EDITION ONLY.
  
- Specify how the replicator verifies TLS server certificates. The default mode is kCBLServerCertVerificationModeCACert.
+ Specify the replicator to accept any and only self-signed certs. Any non-self-signed certs will be rejected
+ to avoid accidentally using this mode with the non-self-signed certs in production.
  */
-@property (nonatomic) CBLServerCertificateVerificationMode serverCertificateVerificationMode;
+@property (nonatomic) BOOL acceptOnlySelfSignedServerCertificate;
 
 @end
 

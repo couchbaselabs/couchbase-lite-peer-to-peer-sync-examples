@@ -15,7 +15,7 @@ fileprivate enum ListenerTLSTestMode {
         case TLSDisabled
         case TLSWithAnonymousAuth
         case TLSWithBundledCert // Bring your own cert (self-signed or CA)
-       // case TLSWithGeneratedCert // REMOVE FOR GA.
+        case TLSWithGeneratedSelfSignedCert // Use convenience API to generate cert
 }
 
 // Switch between these various modes to try various auth types
@@ -57,7 +57,7 @@ class DatabaseManager {
         fileprivate let listenerTLSSupportMode:ListenerTLSTestMode = .TLSWithBundledCert
         //end::ListenerTLSTestMode[]
     
-        // Toggle between enabling or disabling server cert auth modes.
+        // Skip validation for self signed certs
         //tag::ListenerValidationTestMode[]
          fileprivate let listenerCertValidationMode:ListenerCertValidationTestMode = .TLSEnableValidationWithCertPinning
         //end::ListenerValidationTestMode[]
@@ -289,18 +289,17 @@ extension DatabaseManager {
                     throw ListDocError.WebsocketsListenerNotInitialized
                 }
             //end::TLSWithBundledCert[]
-                            
-            // UNAVAILABLE FOR BETA
-            //            case .TLSWithGeneratedCert:
-            //                if let tlsIdentity = self.createIdentityWithCertLabel(kListenerCertLabel) {
-            //                    listenerConfig.disableTLS  = false
-            //                    listenerConfig.tlsIdentity = tlsIdentity
-            //                }
-            //                else {
-            //                    print("Could not create identity from generated self signed cert")
-            //                    throw ListDocError.WebsocketsListenerNotInitialized
-            //                }
-                        
+            //tag::TLSWithGeneratedSelfSignedCert[]
+            case .TLSWithGeneratedSelfSignedCert:
+                if let tlsIdentity = self.createIdentityWithCertLabel(kListenerCertLabel) {
+                    listenerConfig.disableTLS  = false
+                    listenerConfig.tlsIdentity = tlsIdentity
+                }
+                else {
+                    print("Could not create identity from generated self signed cert")
+                    throw ListDocError.WebsocketsListenerNotInitialized
+                }
+              //end::TLSWithGeneratedSelfSignedCert[]
 
         
         }
@@ -385,14 +384,19 @@ extension DatabaseManager {
             switch listenerCertValidationMode { //<2>
                   
                 case .TLSSkipValidation :
-                    // Use serverCertificateVerificationMode set to .selfSignedCert to disable cert validation
-                    config.serverCertificateVerificationMode = .selfSignedCert
+                    // Use acceptOnlySelfSignedServerCertificate set to true to only accept self signed certs.
+                    // There is no cert validation
+                    config.acceptOnlySelfSignedServerCertificate = true
                                 
                 
                 case .TLSEnableValidationWithCertPinning:
-                    // Use serverCertificateVerificationMode set to .caCert to enable cert validation
+                    // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
+                    // Self signed certs will fail validation
                    
-                    config.serverCertificateVerificationMode = .caCert // will likely change post beta
+                    config.acceptOnlySelfSignedServerCertificate = false
+                    
+                    // Enable cert pinning to only allow certs that match pinned cert
+                    
                     if let pinnedCert = self.loadSelfSignedCertForListenerFromBundle() {
                         config.pinnedServerCertificate = pinnedCert
                     }
@@ -401,7 +405,9 @@ extension DatabaseManager {
                     }
                 
                 case .TLSEnableValidation:
-                    config.serverCertificateVerificationMode = .caCert
+                     // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
+                     // Self signed certs will fail validation. There is no cert pinning
+                    config.acceptOnlySelfSignedServerCertificate = false
                 
                             
             }
