@@ -74,11 +74,21 @@ image::ios-demo.gif[alt=peer to peer sync,width=640,height=480]
 
 == App Installation
 
-=== Downloading .zip
+- Clone the repo
++
+[source,bash]
+----
+git clone https://github.com/rajagp/couchbase-lite-peer-to-peer-sync-websocket-samples
+----
 
-- Download the .zip project from link:https://drive.google.com/file/d/1wEit_q5oEc5b0UrWzH418S0_-Sia-30p/view?usp=sharing[here]
+- The app project does not come bundled with the Couchbase Lite framework. Run the script to pull down the framework
++
+[source,bash]
+----
+cd /path/to/cloned/repo/couchbase-lite-peer-to-peer-sync-websocket-samples/ios/list-sync
+sh install_11.sh
+----
 
-The app project comes pre-bundled with Couchbase Lite 2.8 beta framework.
 
 === Try it Out
 * Open the iOS project using Xcode

@@ -448,7 +448,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#app-overview">App Overview</a></li>
 <li><a href="#app-installation">App Installation</a>
 <ul class="sectlevel2">
-<li><a href="#downloading-zip">Downloading .zip</a></li>
 <li><a href="#try-it-out">Try it Out</a></li>
 </ul>
 </li>
@@ -642,18 +641,26 @@ The sample app uses pre-release/beta release version of Couchbase Lite software
 <div class="sect1">
 <h2 id="app-installation">App Installation</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="downloading-zip">Downloading .zip</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Download the .zip project from <a href="https://drive.google.com/file/d/1fM14NSvtrqcvQ7tWjNyhxNcvQaDKxrDE/view?usp=sharing">here</a></p>
+<p>Clone the repo</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">git clone https://github.com/rajagp/couchbase-lite-peer-to-peer-sync-websocket-samples</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The app project does not come bundled with the Couchbase Lite framework. Run the script to pull down the framework</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">cd /path/to/cloned/repo/couchbase-lite-peer-to-peer-sync-websocket-samples/ios/list-sync
+sh install_11.sh</code></pre>
+</div>
+</div>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>The app project comes pre-bundled with Couchbase Lite 2.8 beta framework.</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="try-it-out">Try it Out</h3>
@@ -842,18 +849,15 @@ While it is not required or enforced, it is a recommended practice to include a 
                     print(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Could not create identity from provided cert</span><span style="color:#710">&quot;</span></span>)
                     <span style="color:#080;font-weight:bold">throw</span> ListDocError.WebsocketsListenerNotInitialized
                 }
-
-            <span style="color:#777">// UNAVAILABLE FOR BETA</span>
-            <span style="color:#777">//            case .TLSWithGeneratedCert:</span>
-            <span style="color:#777">//                if let tlsIdentity = self.createIdentityWithCertLabel(kListenerCertLabel) {</span>
-            <span style="color:#777">//                    listenerConfig.disableTLS  = false</span>
-            <span style="color:#777">//                    listenerConfig.tlsIdentity = tlsIdentity</span>
-            <span style="color:#777">//                }</span>
-            <span style="color:#777">//                else {</span>
-            <span style="color:#777">//                    print(&quot;Could not create identity from generated self signed cert&quot;)</span>
-            <span style="color:#777">//                    throw ListDocError.WebsocketsListenerNotInitialized</span>
-            <span style="color:#777">//                }</span>
-
+            <span style="color:#080;font-weight:bold">case</span> .TLSWithGeneratedSelfSignedCert:
+                <span style="color:#080;font-weight:bold">if</span> let tlsIdentity = self.createIdentityWithCertLabel(kListenerCertLabel) {
+                    listenerConfig.disableTLS  = <span style="color:#069">false</span>
+                    listenerConfig.tlsIdentity = tlsIdentity
+                }
+                <span style="color:#080;font-weight:bold">else</span> {
+                    print(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Could not create identity from generated self signed cert</span><span style="color:#710">&quot;</span></span>)
+                    <span style="color:#080;font-weight:bold">throw</span> ListDocError.WebsocketsListenerNotInitialized
+                }
 
 
         }
@@ -862,7 +866,7 @@ While it is not required or enforced, it is a recommended practice to include a 
 
         listenerConfig.authenticator = ListenerPasswordAuthenticator.init { <i class="conum" data-value="4"></i><b>(4)</b>
                    (username, password) -&gt; Bool in
-            <span style="color:#080;font-weight:bold">if</span> (self._whitelistedUsers.contains([<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">password</span><span style="color:#710">&quot;</span></span> : password, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">name</span><span style="color:#710">&quot;</span></span>:username])) {
+            <span style="color:#080;font-weight:bold">if</span> (self._allowlistedUsers.contains([<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">password</span><span style="color:#710">&quot;</span></span> : password, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">name</span><span style="color:#710">&quot;</span></span>:username])) {
                 <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">true</span>
             }
             <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">false</span>
@@ -1118,14 +1122,19 @@ While it is not required or enforced, it is a recommended practice to include a 
             <span style="color:#080;font-weight:bold">switch</span> listenerCertValidationMode { <i class="conum" data-value="2"></i><b>(2)</b>
 
                 <span style="color:#080;font-weight:bold">case</span> .TLSSkipValidation :
-                    <span style="color:#777">// Use serverCertificateVerificationMode set to .selfSignedCert to disable cert validation</span>
-                    config.serverCertificateVerificationMode = .selfSignedCert
+                    <span style="color:#777">// Use acceptOnlySelfSignedServerCertificate set to true to only accept self signed certs.</span>
+                    <span style="color:#777">// There is no cert validation</span>
+                    config.acceptOnlySelfSignedServerCertificate = <span style="color:#069">true</span>
 
 
                 <span style="color:#080;font-weight:bold">case</span> .TLSEnableValidationWithCertPinning:
-                    <span style="color:#777">// Use serverCertificateVerificationMode set to .caCert to enable cert validation</span>
+                    <span style="color:#777">// Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs</span>
+                    <span style="color:#777">// Self signed certs will fail validation</span>
 
-                    config.serverCertificateVerificationMode = .caCert <span style="color:#777">// will likely change post beta</span>
+                    config.acceptOnlySelfSignedServerCertificate = <span style="color:#069">false</span>
+
+                    <span style="color:#777">// Enable cert pinning to only allow certs that match pinned cert</span>
+
                     <span style="color:#080;font-weight:bold">if</span> let pinnedCert = self.loadSelfSignedCertForListenerFromBundle() {
                         config.pinnedServerCertificate = pinnedCert
                     }
@@ -1134,7 +1143,9 @@ While it is not required or enforced, it is a recommended practice to include a 
                     }
 
                 <span style="color:#080;font-weight:bold">case</span> .TLSEnableValidation:
-                    config.serverCertificateVerificationMode = .caCert
+                     <span style="color:#777">// Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs</span>
+                     <span style="color:#777">// Self signed certs will fail validation. There is no cert pinning</span>
+                    config.acceptOnlySelfSignedServerCertificate = <span style="color:#069">false</span>
 
 
             }
@@ -1341,7 +1352,7 @@ While it is not required or enforced, it is a recommended practice to include a 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-09-05 17:08:34 -0400
+Last updated 2020-09-09 08:47:45 -0400
 </div>
 </div>
 </body>

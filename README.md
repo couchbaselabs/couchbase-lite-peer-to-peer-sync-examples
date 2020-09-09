@@ -251,13 +251,22 @@ When used as a active peer :-
 
 ## App Installation
 
-<div class="sectionbody">
 
-<div class="sect2">
-
-### Downloading .zip
 
 <div class="ulist">
+
+* Clone the repo
+
+<div class="content">
+git clone https://github.com/rajagp/couchbase-lite-peer-to-peer-sync-websocket-samples
+</div>
+
+* The app project does not come bundled with the Couchbase Lite framework. Run the script to pull down the framework
+
+<div class="content">
+cd /path/to/cloned/repo/couchbase-lite-peer-to-peer-sync-websocket-samples/ios/list-sync
+sh install_11.sh
+</div>
 
 *   Download the .zip project from [here](https://drive.google.com/file/d/1wEit_q5oEc5b0UrWzH418S0_-Sia-30p/view?usp=sharing)
 
@@ -269,7 +278,6 @@ The app project comes pre-bundled with Couchbase Lite 2.8 beta framework.
 
 </div>
 
-</div>
 
 <div class="sect2">
 
