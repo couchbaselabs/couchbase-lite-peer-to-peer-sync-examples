@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ListSync</string>
+    <string name="title_server">Server</string>
+    <string name="title_client">Client</string>
+</resources>

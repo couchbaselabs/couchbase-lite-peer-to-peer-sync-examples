@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_passive"
+        android:icon="@drawable/ic_passive"
+        android:title="@string/title_server"
+        />
+
+    <item
+        android:id="@+id/navigation_active"
+        android:icon="@drawable/ic_active"
+        android:title="@string/title_client"
+        />
+
+</menu>

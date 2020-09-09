@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_passive"
+    >
+
+    <fragment
+        android:id="@+id/navigation_active"
+        android:name="com.couchbase.android.listsync.ui.client.ClientFragment"
+        android:label="@string/title_client"
+        tools:layout="@layout/fragment_client"
+        />
+
+    <fragment
+        android:id="@+id/navigation_passive"
+        android:name="com.couchbase.android.listsync.ui.server.ServerFragment"
+        android:label="@string/title_server"
+        tools:layout="@layout/fragment_server"
+        />
+</navigation>
