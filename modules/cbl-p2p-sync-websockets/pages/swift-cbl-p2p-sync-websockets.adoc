@@ -1,9 +1,10 @@
 = Inventory Sample: Peer-to-Peer Sync
 :source-highlighter: coderay
 :coderay-css: style
-:imagesdir: ../../assets
-:source-language: swift
+:imagesdir!:
+// :imagesdir: ../../assets
 // :examplesdir: ../../../ios/
+:source-language: swift
 :code-examples: ios:example$
 :idprefix:
 :idseparator: -
@@ -175,10 +176,10 @@ First, we will walk through the steps of using the app in passive peer mode
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=InitListener]
 ----
-// <1> Initialize the `URLEndpointListenerConfiguration` for the specified database. There is a listener for a given database. You can specify a port to be associated with the listener. In our app, we let Couchbase Lite choose the port
-// <2> This is where we configure the TLS mode. In the app, we have a flag named `listenerTLSSupportMode` that allows the app to switch between the various modes. You can change the mode by changing the value of the variable. See <<Testing Different TLS Modes>>
-// <3> Enable delta sync. It is disabled by default
-// <4> Configure the password authenticator callback function that authenticates the  username/password received from the client during replication setup. The list of valid users are configured in `userallowlist.json` file bundled with the app
+<1> Initialize the `URLEndpointListenerConfiguration` for the specified database. There is a listener for a given database. You can specify a port to be associated with the listener. In our app, we let Couchbase Lite choose the port
+<2> This is where we configure the TLS mode. In the app, we have a flag named `listenerTLSSupportMode` that allows the app to switch between the various modes. You can change the mode by changing the value of the variable. See <<Testing Different TLS Modes>>
+<3> Enable delta sync. It is disabled by default
+<4> Configure the password authenticator callback function that authenticates the  username/password received from the client during replication setup. The list of valid users are configured in `userallowlist.json` file bundled with the app
 
 ==== Testing Different TLS Modes
 The app can be configured to test different TLS modes as follows by setting the `listenerTLSSupportMode` property in the `DatabaseManager.swift` file
@@ -278,11 +279,11 @@ Initialilzing a replicator for peer-to-peer sync is fundamentally not different 
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=StartReplication]
 ----
 
-// <1> Initialize a Repicator Configuration for the specified local database and remote listener URL endpoint
-// <2> This is where we configure the TLS server cert validation mode - whether we enable cert validation or skip validation. This would only apply if you had enabled TLS support on listener as discussed in <<TLS Modes on Listener>>. If you skip server cert validation,  you still get encrypted communication, but you are communicating with a untrusted listener. In the app, we have a flag named `listenerCertValidationMode` that allows you to try the various modes. You can change the mode by changing the value of the variable. See <<Testing Different Server Validation Modes>>
-// <3> The app uses basic client authentication to authenticate with the server
-// <4> Initialize the Replicator
-// <5> Start replication. The app uses the events on the Replicator Listener to listen to monitor the replication.
+<1> Initialize a Repicator Configuration for the specified local database and remote listener URL endpoint
+<2> This is where we configure the TLS server cert validation mode - whether we enable cert validation or skip validation. This would only apply if you had enabled TLS support on listener as discussed in <<TLS Modes on Listener>>. If you skip server cert validation,  you still get encrypted communication, but you are communicating with a untrusted listener. In the app, we have a flag named `listenerCertValidationMode` that allows you to try the various modes. You can change the mode by changing the value of the variable. See <<Testing Different Server Validation Modes>>
+<3> The app uses basic client authentication to authenticate with the server
+<4> Initialize the Replicator
+<5> Start replication. The app uses the events on the Replicator Listener to listen to monitor the replication.
 
 ====
 

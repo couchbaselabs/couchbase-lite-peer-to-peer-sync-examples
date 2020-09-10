@@ -1,9 +1,10 @@
 = Inventory Sample: Peer-to-Peer Sync
 :source-highlighter: coderay
 :coderay-css: style
-:imagesdir: ../../assets
+:imagesdir!:
 // :examplesdir: ../../../../../csharp/
-:code-examples: csharp:example$
+:source-language: csharp
+:code-examples: {source-language}:example$
 :idprefix:
 :idseparator: -
 :icons: font
@@ -147,7 +148,7 @@ The app loads the data from the JSON document named `samplelist.json` the first 
 
 * Open the *DatabaseManager.swift* file and locate the `openOrCreateDatabaseForUser()` method. This method creates an instance of Couchbase Lite database for the user if one does not exist and loads the empty database with data ready from bundled sample JSON file
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=OpenOrCreateDatabase]
 ----
@@ -157,7 +158,7 @@ include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=Ope
 * Open the *DatabaseManager.swift* file and locate the `createUserDocumentWithData()` method. This is where the document is saved into the database. Again, this is only done if there is no preexisting database for the user
 
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=LoadData]
 ----
@@ -170,7 +171,7 @@ First, we will walk through the steps of using the app in passive peer mode
 * Open the *DatabaseManager.swift* file and locate the `initWebsocketsListenerForUserDb()` function. This is where the websockets listsner for peer-to-peer sync is initialized
 
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=InitListener]
 ----
@@ -182,7 +183,7 @@ include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=Ini
 ==== Testing Different TLS Modes
 The app can be configured to test different TLS modes as follows by setting the `listenerTLSSupportMode` property in the `DatabaseManager.swift` file
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=ListenerValidationTestMode]
 ----
@@ -209,7 +210,7 @@ include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=Lis
 === Start Websockets Listener
 * Open the *DatabaseManager.swift* file and locate the `startWebsocketsListenerForUserDb()` method.
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=StartListener]
 ----
@@ -219,7 +220,7 @@ In the app, we use link:https://developer.apple.com/documentation/foundation/net
 
 * Open the *ServiceAdvertiser.swift* file and look for `ServiceAdvertiser` class. Here, we advertise a link:https://developer.apple.com/bonjour/[Bonjour] service with service type of _`_cblistservicesync._tcp`_
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/discovery/ServiceAdvertiser.swift[tags=ServiceDefinition]
 ----
@@ -227,7 +228,7 @@ include::{code-examples}list-sync/list-sync/discovery/ServiceAdvertiser.swift[ta
 
 * The service is published as implemented in the `doStart()` method.
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/discovery/ServiceAdvertiser.swift[tags=StartAdvertiser]
 ----
@@ -236,7 +237,7 @@ Explore the content in the `ServiceAdvertiser.swift`. It includes implementation
 === Stop Websockets Listener
 * Open the *DatabaseManager.swift* file and locate the `stopWebsocketsListenerForUserDb()` method. You can stop the listener at any point. If there are connected clients, it will warn you that there are active connections. If you choose to stop listener, all connected clients will be disonnected
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=StopListener]
 ----
@@ -258,7 +259,7 @@ In the app, we use link:https://developer.apple.com/documentation/foundation/net
 
 * Open the *ServiceBrowser.swift* file and look for `ServiceBrowser` class. Here, we browse for a service with service type of _`_cblistservicesync._tcp`_ using link:https://developer.apple.com/bonjour/[Bonjour]
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/discovery/ServiceBrowser.swift[tags=StartBrowsing]
 ----
@@ -270,7 +271,7 @@ Initialilzing a replicator for peer-to-peer sync is fundamentally not different 
 
 * Open the *DatabaseManager.swift* file and locate the `startP2PReplicationWithUserDatabaseToRemotePeer()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we initialize a bi-directional replication to the listener peer in continuous mode. We also register a Replication Listener to be notified of status to the replication status.
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=StartReplication]
 ----
@@ -284,7 +285,7 @@ include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=Sta
 ==== Testing Different Server Validation Modes
 The app can be configured to test different TLS modes as follows by setting the `listenerCertValidationMode` property in the `DatabaseManager.swift` file
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=ListenerValidationTestMode]
 ----
@@ -312,7 +313,7 @@ include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=Lis
 
 * Open the *DatabaseManager.swift* file and locate the `stopP2PReplicationWithUserDatabaseToRemotePeer()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we remove any listeners attached to the replicator and stop it. You can restart the replicator again in `startP2PReplicationWithUserDatabaseToRemotePeer()` method
 
-[source,java]
+[source, {source-language}]
 ----
 include::{code-examples}list-sync/list-sync/model/DatabaseManager.swift[tags=StopReplication]
 ----
