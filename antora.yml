@@ -1,0 +1,6 @@
+name: tutorials
+version: 'master'
+title: Tutorials for Mobile and Edge
+start-page: ROOT:index.adoc
+nav:
+  - modules/ROOT/nav.adoc

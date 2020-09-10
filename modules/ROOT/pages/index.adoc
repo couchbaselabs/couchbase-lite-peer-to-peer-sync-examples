@@ -1,0 +1,17 @@
+= Tutorials - Couchbase for Mobile and Edge
+:page-status: Beta
+
+Introduce the tutorials available on this (sub)site
+
+Ut adipisicing dolore consequat occaecat commodo fugiat sunt nulla dolor. Elit exercitation eu pariatur anim nulla cillum do voluptate tempor. Nostrud dolor Lorem ad quis. Eiusmod dolor aliqua id excepteur duis dolore nostrud id cupidatat aute deserunt. Ea tempor occaecat tempor officia.
+
+Occaecat proident aliquip nisi in amet velit pariatur irure eiusmod. Magna sunt sit laborum est dolore excepteur Lorem dolore sit veniam. Nisi id reprehenderit dolor elit sint ut sunt. Ut et duis ex in excepteur adipisicing consequat aliquip officia duis. Velit adipisicing veniam irure duis excepteur ullamco tempor est ut do nisi minim nisi aliquip.
+
+
+Available tutorials are::
+
+xref:cbl-p2p-sync-websockets:index.adoc[Peer-to-Peer Sync]
+
+Platforms covered include::
+
+include::cbl-p2p-sync-websockets:partial$tutorial-nav-items.adoc[]

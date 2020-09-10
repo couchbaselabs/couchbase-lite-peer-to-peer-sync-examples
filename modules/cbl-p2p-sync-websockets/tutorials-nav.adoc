@@ -1,0 +1,3 @@
+// Optional module-level nav - so can hold all the platform level links here in addition to on/in the module's index.adoc 'landing' page
+.Tutorial Platforms
+include::cbl-p2p-sync-websockets:partial$tutorial-nav-items.adoc[]

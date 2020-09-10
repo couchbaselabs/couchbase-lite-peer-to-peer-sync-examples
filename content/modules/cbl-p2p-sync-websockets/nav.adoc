@@ -1,2 +1,0 @@
-** xref:cbl-p2p-sync-websockets:swift/cbl-p2p-sync-websockets.adoc[Peer-to-peer Sync in iOS]
-
