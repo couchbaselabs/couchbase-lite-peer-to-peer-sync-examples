@@ -7,7 +7,7 @@
 :idseparator: -
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
-:page-aliases: tutorials:cbl-p2p-sync-websockets:java/cbl-p2p-sync-websockets
+// :page-aliases: tutorials:cbl-p2p-sync-websockets:java/cbl-p2p-sync-websockets
 :page-hide-view-latest: true
 ifndef::env-site,env-github[]
 :toc: left
