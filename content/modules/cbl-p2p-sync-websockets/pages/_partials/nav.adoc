@@ -1,2 +1,4 @@
 ** xref:cbl-p2p-sync-websockets:swift/cbl-p2p-sync-websockets.adoc[Peer-to-peer Sync in iOS]
-
+** xref:cbl-p2p-sync-websockets:android/cbl-p2p-sync-websockets.adoc[Peer-to-peer Sync in Android]
+** xref:cbl-p2p-sync-websockets:java/cbl-p2p-sync-websockets.adoc[Peer-to-peer Sync in Java]
+** xref:cbl-p2p-sync-websockets:csharp/cbl-p2p-sync-websockets.adoc[Peer-to-peer Sync in C#]
