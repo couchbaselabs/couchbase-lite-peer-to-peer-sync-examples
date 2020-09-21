@@ -1,4 +1,4 @@
-= Inventory Sample: Peer-to-Peer Sync
+= Getting Started with Peer-to-Peer Sync on Android
 :source-highlighter: coderay
 :coderay-css: style
 :imagesdir: ../../assets
@@ -16,14 +16,18 @@ endif::[]
 
 toc::[]
 
+
+[abstract]
+This tutorial uses a simple inventory tracker app to demonstrate the peer-to-peer sync functionality between Couchbase Lite apps
+
 IMPORTANT: The sample app uses pre-release/beta release version of Couchbase Lite software
 
 == Introduction
 
-Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/swift/learn/swift-p2psync-websocket.html[Peer-to-Peer Sync], over websockets, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point. 
+Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/swift/learn/swift-p2psync-websocket.html[Peer-to-Peer Sync], over websockets, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point.
 
 
-This tutorial will demonstrate how to - 
+This tutorial will demonstrate how to -
 
 * Use link:https://developer.apple.com/documentation/foundation/netservice[NetService] for peer discovery (i.e.to advertise and discover services/devices )
 * Configure a websockets listener to listen to incoming requests. We will walk through various TLS modes and client authentication modes.
@@ -38,19 +42,19 @@ You can learn more about Couchbase Lite https://docs.couchbase.com/couchbase-lit
 ====
 
 == Prerequisites
-This tutorial assumes familiarity with building swift apps with Xcode and with Couchbase Lite. 
+This tutorial assumes familiarity with building swift apps with Xcode and with Couchbase Lite.
 
 * If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the link:https://docs.couchbase.com/couchbase-lite/2.7/swift.html[Getting Started] guides
 
 
-* iOS (Xcode 11.4+) 
+* iOS (Xcode 11.4+)
 ** Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
-                        
+
 * Wi-Fi network that the peers can communicate over
 ** You could run your peers in multiple simulators. But if you were running the app on real devices, then you will need to ensure that the devices are on the same WiFi network
 
 == App Overview
-This is a simple inventory app that can be used as a link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#passive-peer[passive] or link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#active-peer[active peer]. 
+This is a simple inventory app that can be used as a link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#passive-peer[passive] or link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#active-peer[active peer].
 
 The app uses a local database that is pre-populated with data. There is no Sync Gateway or Couchbase Server installed.
 
@@ -62,7 +66,7 @@ When used as a passive peer :-
 
 When used as a active peer :-
 
-* Users can log in and start browsing for devices 
+* Users can log in and start browsing for devices
 * Connect to a listener
 * Directly sync data with connected clients
 
@@ -95,8 +99,8 @@ sh install_11.sh
 open list-sync.xcodeproj
 ----
 +
-* Build and run the project 
-* Verify that you see the login screen 
+* Build and run the project
+* Verify that you see the login screen
 +
 image::swift-login.png[alt=app login screen,width=640,height=480]
 
@@ -113,12 +117,12 @@ image::swift-project-explorer.png[alt=xcode project explorer,width=640,height=48
 
 == Data Model
 Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports some special types like `Date` and `Blob`.
-While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related. 
+While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related.
 
 === The "List" Document
 The app deals with a single Document with a _"type"_ property of _"list"_.  This document is loaded from the `samplelist.json` file bundled with the project
 
-An example of a document would be 
+An example of a document would be
 
 ```json
 {
@@ -135,7 +139,7 @@ An example of a document would be
         "key":"oranges"
        }
     ]
-   
+
 }
 ```
 The document is encoded as a `ListRecord` struct defined in the `ListRecord.swift` file
@@ -151,7 +155,7 @@ The app loads the data from the JSON document named `samplelist.json` the first 
 include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=OpenOrCreateDatabase]
 ----
 
-* Open the *SampleFileLoaderUtils.swift* file and locate the `loadSampleJSONDataForUserFromFile()` method. This function parses the document in JSON and udpates it to embed the "image" property into every object in the "list" array. The "image" property holds a blob entry to an image asset. The image for the blob is available in the "Assets.xcassets" folder 
+* Open the *SampleFileLoaderUtils.swift* file and locate the `loadSampleJSONDataForUserFromFile()` method. This function parses the document in JSON and udpates it to embed the "image" property into every object in the "list" array. The "image" property holds a blob entry to an image asset. The image for the blob is available in the "Assets.xcassets" folder
 
 * Open the *DatabaseManager.swift* file and locate the `createUserDocumentWithData()` method. This is where the document is saved into the database. Again, this is only done if there is no preexisting database for the user
 
@@ -178,7 +182,7 @@ include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=Init
 <3> Enable delta sync. It is disabled by default
 <4> Configure the password authenticator callback function that authenticates the  username/password received from the client during replication setup. The list of valid users are configured in `userallowlist.json` file bundled with the app
 
-==== Testing Different TLS Modes 
+==== Testing Different TLS Modes
 The app can be configured to test different TLS modes as follows by setting the `listenerTLSSupportMode` property in the `DatabaseManager.swift` file
 
 [source,java]
@@ -186,10 +190,10 @@ The app can be configured to test different TLS modes as follows by setting the 
 include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=ListenerValidationTestMode]
 ----
 
-[cols="2,2", options="header"] 
+[cols="2,2", options="header"]
 .TLS Modes on Listener
 |===
-|listenerTLSSupportMode Value |Behavior 
+|listenerTLSSupportMode Value |Behavior
 
 | TLSDisabled
 | There is no TLS. ALl communication is plaintext (insecure mode)
@@ -200,13 +204,13 @@ include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=List
 
 
 | TLSWithBundledCert
-| The app generates `TLSIdentity` of the server from  public key cert and private key bundled in the`listener-cert-pkey.p12` archive. Communication is encrypted 
+| The app generates `TLSIdentity` of the server from  public key cert and private key bundled in the`listener-cert-pkey.p12` archive. Communication is encrypted
 
 
 |===
 
 === Start Websockets Listener
-* Open the *DatabaseManager.swift* file and locate the `startWebsocketsListenerForUserDb()` method. 
+* Open the *DatabaseManager.swift* file and locate the `startWebsocketsListenerForUserDb()` method.
 
 [source,java]
 ----
@@ -224,7 +228,7 @@ include::{examplesdir}/list-sync/list-sync/discovery/ServiceAdvertiser.swift[tag
 ----
 
 
-* The service is published as implemented in the `doStart()` method. 
+* The service is published as implemented in the `doStart()` method.
 
 [source,java]
 ----
@@ -265,7 +269,7 @@ Explore the content in the `ServiceBrowser.swift`. It includes implementation of
 
 
 === Initializing and Starting Replication
-Initialilzing a replicator for peer-to-peer sync is fundamentally not different than if your Couchbase Lite client were to link:https://docs.couchbase.com/couchbase-lite/2.7/swift.html#replication[syncing] with a remote Sync Gateway. 
+Initialilzing a replicator for peer-to-peer sync is fundamentally not different than if your Couchbase Lite client were to link:https://docs.couchbase.com/couchbase-lite/2.7/swift.html#replication[syncing] with a remote Sync Gateway.
 
 * Open the *DatabaseManager.swift* file and locate the `startP2PReplicationWithUserDatabaseToRemotePeer()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we initialize a bi-directional replication to the listener peer in continuous mode. We also register a Replication Listener to be notified of status to the replication status.
 
@@ -288,21 +292,21 @@ The app can be configured to test different TLS modes as follows by setting the 
 include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=ListenerValidationTestMode]
 ----
 
-[cols="2,2", options="header"] 
+[cols="2,2", options="header"]
 .TLS Listener Cert Validation
 |===
-|listenerCertValidationMode Value |Behavior 
+|listenerCertValidationMode Value |Behavior
 
 | TLSSkipValidation
-| There is no validation of server cert. This is typically in used in dev/test environments with self signed certs. Skipping server cert authentication is discouraged in production environments.  Communication is encrypted 
+| There is no validation of server cert. This is typically in used in dev/test environments with self signed certs. Skipping server cert authentication is discouraged in production environments.  Communication is encrypted
 
 
 | TLSEnableValidation
-| If the listener cert is a well known CA then you use this mode. Of course, in our sample app, the listener cert as specified in `listener-cert-pkey` is a self signed cert - so you probably will not use this mode to test. But if you have a CA signed cert, you can configure your listener with that cert and use this mode to test.  Communication is encrypted 
+| If the listener cert is a well known CA then you use this mode. Of course, in our sample app, the listener cert as specified in `listener-cert-pkey` is a self signed cert - so you probably will not use this mode to test. But if you have a CA signed cert, you can configure your listener with that cert and use this mode to test.  Communication is encrypted
 
 
 | TLSEnableValidationWithCertPinning
-| In this mode, the app uses the pinned cert,`listener-pinned-cert.cer` that is bundled in the app to validate the listener identity. Communication is encrypted 
+| In this mode, the app uses the pinned cert,`listener-pinned-cert.cer` that is bundled in the app to validate the listener identity. Communication is encrypted
 
 
 |===
@@ -317,10 +321,10 @@ include::{examplesdir}/list-sync/list-sync/model/DatabaseManager.swift[tags=Stop
 ----
 
 === Try it out
-* Follow instructions in "Try It Out" section of <<Passive Peer or Server>> to start app in passive mode on a simulator instance or real device. 
+* Follow instructions in "Try It Out" section of <<Passive Peer or Server>> to start app in passive mode on a simulator instance or real device.
 * Run the app on a separate simulator instance or a real device. If its the latter, make sure you sign your app with the appropriate developer certificate
 * On login screen, sign in as any one of the users configured in the `userallowlist.json` file such as "bob" and "password". An an exercise, try with an invalid user and ensure it fails
-* Tap on the "browser" tab. The app automatically browses for listener and lists it here. 
+* Tap on the "browser" tab. The app automatically browses for listener and lists it here.
 * Tap on the row corresponding to listener. This will start replication with the listener and it shoud transition to Connected state
 * Verify the connection count on listener
 * Swipe left on the the row. You should see option to remove listener and Disconect. Try Disconnect and then reconnect again
@@ -335,7 +339,7 @@ Once the connection is established between the peers, you can start syncing. Cou
 * Run the app on two or more simulators or real devices. If its the latter, make sure you sign your app with the appropriate developer certificate
 * Start the listener on one of the app instances. You could also have multiple listeners.
 * Connect the other instances of the app to the listener
-* Tap on the "List" tab 
+* Tap on the "List" tab
 * Edit the quanity or image on any one of the instances
 * Watch it sync automatically to other connected clients
 
@@ -348,7 +352,7 @@ As an exercise, switch between the various TLS modes and server cert validation 
 Congratulations on completing this tutorial!
 
 This tutorial walked you through an example of how to directly synchronize data between Couchbase Lite clients. While the tutorial is for iOS, the concepts apply equally to other Couchbase Lite platforms.
- 
+
 
 === Further Reading
 TBD

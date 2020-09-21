@@ -1,2 +1,5 @@
-** xref:cbl-p2p-sync-websockets:swift/cbl-p2p-sync-websockets.adoc[Peer-to-peer Sync in iOS]
-
+* Getting Started with Peer-to-Peer Sync
+** xref:cbl-p2p-sync-websockets:swift/cbl-p2p-sync-websockets.adoc[Getting Started with peer-to-Peer sync on iOS]
+** xref:cbl-p2p-sync-websockets:android/cbl-p2p-sync-websockets.adoc[Getting Started with peer-to-Peer sync on Android]
+** xref:cbl-p2p-sync-websockets:java/cbl-p2p-sync-websockets.adoc[Getting Started with peer-to-Peer sync on Java]
+** xref:cbl-p2p-sync-websockets:csharp/cbl-p2p-sync-websockets.adoc[Getting Started with peer-to-Peer sync on Xamarin]

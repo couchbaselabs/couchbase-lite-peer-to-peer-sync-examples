@@ -1,1 +1,2 @@
-:imagesdir: {moduledir}/assets/images
+// No local attributes defined for this module
+// :imagesdir: {moduledir}/assets/images
