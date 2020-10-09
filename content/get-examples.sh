@@ -10,7 +10,7 @@ IFS=$'\n'; set -f
 FILES="$(find list-sync -type f -name '*.swift')"
 for f in $FILES
 do
-    echo $f  # Debug
+    echo $f
 
     printf "\n//\n// Tags from %s\n//\n" $f >> code-samples.swift
 
@@ -21,7 +21,6 @@ do
     # Inner loop
     for t in $tagname
     do
-        #    echo "Debug   " ; echo "$t" ; printf "........ \n"
         awk 'BEGIN { FS = "::"} ($2 == p), ($2 == p && $1 ~ /end/) { print $0 }' p="$t" $f >> code-samples.swift
     done 
 done
