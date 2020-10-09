@@ -73,7 +73,7 @@ extension ListPresenter {
                 .select(SelectResult.all())
                 .from(DataSource.database(db))
                 .where(Meta.id.equalTo(Expression.string(docId))) // <1>
-            
+
                 // V1.0. There should be only one document
                 
         listQueryToken = listQuery?.addChangeListener { [weak self] (change) in
@@ -100,7 +100,8 @@ extension ListPresenter {
                         }
                     }
                 }
-                //end::livequery[]
+                //end::livequerybuilder[]
+
                 self.associatedView?.dataFinishedLoading()
                 self.associatedView?.updateUIWithListRecord(listRecord, error: nil)
                 

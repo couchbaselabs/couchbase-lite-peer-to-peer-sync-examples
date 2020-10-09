@@ -1,4 +1,73 @@
 Complete Swift code samples from which these are extracted can be found in the /ios directory at the top-level of this repo.
+
+//
+// Tags from list-sync/view/PeerTableViewCell.swift
+//
+
+//
+// Tags from list-sync/view/CustomListTableViewCell.swift
+//
+
+//
+// Tags from list-sync/presenter/ListPresenter.swift
+//
+            //tag::livequerybuilder[]
+            guard let db = dbMgr.userDB else {
+                fatalError("db is not initialized at this point!")
+            }
+            
+            listQuery = QueryBuilder
+                .select(SelectResult.all())
+                .from(DataSource.database(db))
+                .where(Meta.id.equalTo(Expression.string(docId))) // <1>
+
+                // V1.0. There should be only one document
+                
+        listQueryToken = listQuery?.addChangeListener { [weak self] (change) in
+            guard let `self` = self else {return}
+            switch change.error {
+            case nil:
+                var listRecord = ListRecord.init(items: [])
+                
+                for (_, row) in (change.results?.enumerated())! {
+                    // There should be only one user profile document for a user
+                    print(row.toDictionary())
+                    if let listVal = row.dictionary(forKey: self.dbMgr.kUserDBName) {
+                        if let listItems = listVal.array(forKey: ListDocumentKeys.items.rawValue)?.toArray() as? [[String:Any]]{
+                            
+                            for item in listItems{
+                                let key =  item[ListItemDocumentKeys.key.rawValue] as? String
+                                let value =  item[ListItemDocumentKeys.value.rawValue]
+                                let image = item[ListItemDocumentKeys.image.rawValue] as? Blob
+                                
+                                listRecord.items.append((image: image?.content, key: key, value: value))
+                                
+                                
+                            }
+                        }
+                    }
+                }
+                //end::livequerybuilder[]
+
+//
+// Tags from list-sync/presenter/PresenterProtocol.swift
+//
+
+//
+// Tags from list-sync/discovery/ServiceBrowser.swift
+//
+    //tag::StartBrowsing[]
+    public func startSearch(withDelegate delegate:ServiceBrowserDelegate? ){
+         peerBrowserDelegate = delegate
+        self.browser = NetServiceBrowser()
+        self.browser?.delegate = self
+        self.browser?.searchForServices(ofType: serviceType, inDomain: domain)
+    }
+    //end::StartBrowsing[]
+
+//
+// Tags from list-sync/discovery/ServiceAdvertiser.swift
+//
   //tag::ServiceDefinition[]
   /// The Bonjour service name. Setting it to an empty String will be
   /// mapped to the device's name.
@@ -22,14 +91,10 @@ Complete Swift code samples from which these are extracted can be found in the /
 
     }
     //end::StartAdvertiser[]
-    //tag::StartBrowsing[]
-    public func startSearch(withDelegate delegate:ServiceBrowserDelegate? ){
-         peerBrowserDelegate = delegate
-        self.browser = NetServiceBrowser()
-        self.browser?.delegate = self
-        self.browser?.searchForServices(ofType: serviceType, inDomain: domain)
-    }
-    //end::StartBrowsing[]
+
+//
+// Tags from list-sync/model/DatabaseManager.swift
+//
         //tag::ListenerTLSTestMode[]
         fileprivate let listenerTLSSupportMode:ListenerTLSTestMode = .TLSWithBundledCert
         //end::ListenerTLSTestMode[]
@@ -54,6 +119,55 @@ Complete Swift code samples from which these are extracted can be found in the /
         
         // Configure the appropriate auth test mode
         switch listenerTLSSupportMode { //<2>
+            //tag::TLSDisabled[]
+            case .TLSDisabled:
+                listenerConfig.disableTLS  = true
+                listenerConfig.tlsIdentity = nil
+            //end::TLSDisabled[]
+            //tag::TLSWithAnonymousAuth[]
+            case .TLSWithAnonymousAuth:
+                listenerConfig.disableTLS  = false // Use with anonymous self signed cert
+                listenerConfig.tlsIdentity = nil
+            //end::TLSWithAnonymousAuth[]
+            //tag::TLSWithBundledCert[]
+             case .TLSWithBundledCert:
+                
+                if let tlsIdentity = self.importTLSIdentityFromPKCS12DataWithCertLabel(kListenerCertLabel) {
+                    listenerConfig.disableTLS  = false
+                    listenerConfig.tlsIdentity = tlsIdentity
+                }
+                else {
+                    print("Could not create identity from provided cert")
+                    throw ListDocError.WebsocketsListenerNotInitialized
+                }
+            //end::TLSWithBundledCert[]
+            //tag::TLSWithGeneratedSelfSignedCert[]
+            case .TLSWithGeneratedSelfSignedCert:
+                if let tlsIdentity = self.createIdentityWithCertLabel(kListenerCertLabel) {
+                    listenerConfig.disableTLS  = false
+                    listenerConfig.tlsIdentity = tlsIdentity
+                }
+                else {
+                    print("Could not create identity from generated self signed cert")
+                    throw ListDocError.WebsocketsListenerNotInitialized
+                }
+              //end::TLSWithGeneratedSelfSignedCert[]
+
+        
+        }
+        
+        listenerConfig.enableDeltaSync = true // <3>
+        
+        listenerConfig.authenticator = ListenerPasswordAuthenticator.init { // <4>
+                   (username, password) -> Bool in
+            if (self._allowlistedUsers.contains(["password" : password, "name":username])) {
+                return true
+            }
+            return false
+               }
+        
+        _websocketListener = URLEndpointListener(config: listenerConfig)
+        //end::InitListener[]
             //tag::TLSDisabled[]
             case .TLSDisabled:
                 listenerConfig.disableTLS  = true
@@ -188,6 +302,10 @@ Complete Swift code samples from which these are extracted can be found in the /
             try db.saveDocument(doc)
         }
         //end::LoadData[]
+
+//
+// Tags from list-sync/model/ListRecord.swift
+//
 //tag::ListRecord[]
 let kListRecordDocumentType = "list"
 typealias ListRecords = [ListRecord]
@@ -207,33 +325,47 @@ struct ListRecord : CustomStringConvertible{
     }
 }
 //end::ListRecord[]
-            //tag::livequerybuilder[]
-            guard let db = dbMgr.userDB else {
-                fatalError("db is not initialized at this point!")
-            }
-            
-            listQuery = QueryBuilder
-                .select(SelectResult.all())
-                .from(DataSource.database(db))
-                .where(Meta.id.equalTo(Expression.string(docId))) // <1>
-            
-                // V1.0. There should be only one document
-                
-        listQueryToken = listQuery?.addChangeListener { [weak self] (change) in
-            guard let `self` = self else {return}
-            switch change.error {
-            case nil:
-                var listRecord = ListRecord.init(items: [])
-                
-                for (_, row) in (change.results?.enumerated())! {
-                    // There should be only one user profile document for a user
-                    print(row.toDictionary())
-                    if let listVal = row.dictionary(forKey: self.dbMgr.kUserDBName) {
-                        if let listItems = listVal.array(forKey: ListDocumentKeys.items.rawValue)?.toArray() as? [[String:Any]]{
-                            
-                            for item in listItems{
-                                let key =  item[ListItemDocumentKeys.key.rawValue] as? String
-                                let value =  item[ListItemDocumentKeys.value.rawValue]
-                                let image = item[ListItemDocumentKeys.image.rawValue] as? Blob
-                                
-                                listRecord.items.append((image: image?.content, key: key, value: value))
+
+//
+// Tags from list-sync/AppDelegate.swift
+//
+
+//
+// Tags from list-sync/utilities/DictionaryExtensions.swift
+//
+
+//
+// Tags from list-sync/utilities/SpinnerViewController.swift
+//
+
+//
+// Tags from list-sync/utilities/UIViewControllerExtensions.swift
+//
+
+//
+// Tags from list-sync/utilities/CustomErrors.swift
+//
+
+//
+// Tags from list-sync/utilities/SampleFileLoaderUtils.swift
+//
+
+//
+// Tags from list-sync/utilities/Notifications.swift
+//
+
+//
+// Tags from list-sync/view controllers/ActiveViewController.swift
+//
+
+//
+// Tags from list-sync/view controllers/PassiveViewController.swift
+//
+
+//
+// Tags from list-sync/view controllers/ListViewController.swift
+//
+
+//
+// Tags from list-sync/view controllers/LoginViewController.swift
+//
