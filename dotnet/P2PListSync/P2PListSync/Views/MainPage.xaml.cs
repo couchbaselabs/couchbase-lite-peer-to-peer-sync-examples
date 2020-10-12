@@ -1,4 +1,14 @@
-﻿using P2PListSync.Models;
+﻿//
+// MainPage.cs
+//
+// Author:
+// 	Sandy Chuang
+//
+//  Copyright © 2020 Couchbase Inc. All rights reserved.
+//
+//
+
+using P2PListSync.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;

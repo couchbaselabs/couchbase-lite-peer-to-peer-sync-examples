@@ -1,5 +1,14 @@
-﻿using P2PListSync.Models;
-using System;
+﻿//
+// MenuPage.cs
+//
+// Author:
+// 	Sandy Chuang
+//
+//  Copyright © 2020 Couchbase Inc. All rights reserved.
+//
+//
+
+using P2PListSync.Models;
 using System.Collections.Generic;
 
 using Xamarin.Forms;
@@ -34,7 +43,7 @@ namespace P2PListSync.Views
                 
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 if (id == 3) {
-                    //do logout
+                    Application.Current.MainPage = new LoginPage();
                     return;
                 }
                 

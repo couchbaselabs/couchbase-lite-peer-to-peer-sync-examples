@@ -13,8 +13,6 @@ using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using P2PListSync.ViewModels;
-using System.IO;
-using P2PListSync.Services;
 using P2PListSync.Models;
 using System.Collections.Generic;
 

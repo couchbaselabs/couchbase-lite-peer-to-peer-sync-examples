@@ -1,20 +1,25 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using P2PListSync.Views;
-using P2PListSync.ViewModels;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace P2PListSync
 {
     public partial class App : Application
     {
+        public static bool IsUserLoggedIn { get; set; }
+
         public App()
         {
             InitializeComponent();
 
-            CoreApp.LoadAndInitDB();
-            
-            MainPage = new MainPage();
+            CoreApp.LoadUserAllowList();
+            if (!IsUserLoggedIn) {
+                MainPage = new LoginPage();
+            } else {
+                CoreApp.LoadAndInitDB();
+                MainPage = new MainPage();
+            }
         }
 
         protected override void OnStart()
