@@ -13,30 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package com.couchbase.android.listsync.app;
+package com.couchbase.android.listsync.ui.vm;
 
-import android.app.Activity;
-import android.app.Application;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
+import com.couchbase.android.listsync.db.DatabaseManager;
 
 
-public class ListSync extends Application implements HasActivityInjector {
+@Singleton
+public class MainViewModel extends BaseViewModel {
+    @SuppressWarnings("WeakerAccess")
     @Inject
-    DispatchingAndroidInjector<Activity> dispatchingActivityInjector;
-
-    public void onCreate() {
-        super.onCreate();
-
-        DaggerAppFactory.builder().create(this).inject(this);
-    }
-
-    @Override
-    public AndroidInjector<Activity> activityInjector() {
-        return dispatchingActivityInjector;
-    }
+    public MainViewModel(@NonNull final DatabaseManager db) { super(db); }
 }

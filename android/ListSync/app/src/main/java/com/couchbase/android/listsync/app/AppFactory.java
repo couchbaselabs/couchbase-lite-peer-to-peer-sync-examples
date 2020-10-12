@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2020 Couchbase, Inc All rights reserved.
+// Copyright (c) 2019 Couchbase, Inc All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,28 +15,19 @@
 //
 package com.couchbase.android.listsync.app;
 
-import android.app.Activity;
-import android.app.Application;
+import javax.inject.Singleton;
 
-import javax.inject.Inject;
-
+import dagger.Component;
+import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
+
+import com.couchbase.android.listsync.ui.ActivityBuilder;
+import com.couchbase.android.listsync.ui.vm.VMModule;
 
 
-public class ListSync extends Application implements HasActivityInjector {
-    @Inject
-    DispatchingAndroidInjector<Activity> dispatchingActivityInjector;
-
-    public void onCreate() {
-        super.onCreate();
-
-        DaggerAppFactory.builder().create(this).inject(this);
-    }
-
-    @Override
-    public AndroidInjector<Activity> activityInjector() {
-        return dispatchingActivityInjector;
-    }
+@Singleton
+@Component(modules = {AndroidInjectionModule.class, ActivityBuilder.class, VMModule.class})
+public interface AppFactory extends AndroidInjector<ListSync> {
+    @Component.Builder
+    abstract class Builder extends AndroidInjector.Builder<ListSync> {}
 }

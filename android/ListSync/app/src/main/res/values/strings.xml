@@ -2,4 +2,9 @@
     <string name="app_name">ListSync</string>
     <string name="title_server">Server</string>
     <string name="title_client">Client</string>
+    <string name="username">User Name</string>
+    <string name="password">Password</string>
+    <string name="contentTracker">Content Tracker</string>
+    <string name="login">Sign In</string>
+    <string name="logout">Logout</string>
 </resources>
