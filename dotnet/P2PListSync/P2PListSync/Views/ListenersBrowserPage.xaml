@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="P2PListSync.Views.ListenersBrowserPage"
+              Title="{Binding Title}"
+             x:Name="ListenersPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Refresh" Clicked="Refresh_Clicked">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="UWP" Value="refresh.png"/>
+                </OnPlatform>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+    <StackLayout>
+        <ListView x:Name="ItemsListView"
+                ItemsSource="{Binding Items}"
+                VerticalOptions="FillAndExpand"
+                HasUnevenRows="true"
+                RefreshCommand="{Binding LoadItemsCommand}"
+                IsPullToRefreshEnabled="true"
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                CachingStrategy="RecycleElement"
+                ItemSelected="OnItemSelected">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="Fill">
+                            <Label Text="{Binding ListenerEndpointString}" 
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                   HorizontalOptions="StartAndExpand"
+                                FontSize="16" />
+                            <Label Text="{Binding ConnectionStatus}" 
+                                LineBreakMode="NoWrap"
+                                TextColor="{Binding ConnectionStatusColor}"
+                                Style="{DynamicResource ListItemDetailTextStyle}"
+                                   HorizontalOptions="EndAndExpand"
+                                FontSize="14" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+    </ScrollView>
+</ContentPage>
