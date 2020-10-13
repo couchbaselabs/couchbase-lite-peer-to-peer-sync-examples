@@ -18,14 +18,12 @@ toc::[]
 
 
 [abstract]
-This tutorial uses a simple inventory tracker app to demonstrate the peer-to-peer sync functionality between Couchbase Lite apps
+This tutorial uses a simple inventory tracker app to demonstrate the peer-to-peer database sync functionality introduced in Couchbase Lite 2.8.
 
-
-IMPORTANT: The sample app uses pre-release/beta release version of Couchbase Lite software
 
 == Introduction
 
-Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/swift/learn/swift-p2psync-websocket.html[Peer-to-Peer Sync], over websockets, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point.
+Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https://docs.couchbase.com/couchbase-lite/2.8/swift/learn/swift-landing-p2psync.html[Peer-to-Peer Sync], over websockets, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point (i.e. you do not need a Sync Gateway or Couchbase Server to get peer-to-peer database sync going)
 
 
 This tutorial will demonstrate how to -
@@ -35,7 +33,7 @@ This tutorial will demonstrate how to -
 * Start a bi-directional replication from active peer.
 * Sync data between connected peers
 
-Throughout this tutorial, the terms "passive peer" and "server" will be used interchangeably to refer to the peer on which the websockets listener is started. The "active peer" and "client" will be used interchageably to refer to the peer on which the replicator is initialized.
+Throughout this tutorial, the terms "passive peer" and "server" and "listener" will be used interchangeably to refer to the peer on which the websockets listener is started. The "active peer" and "client" will be used interchageably to refer to the peer on which the replicator is initialized.
 
 We will be using a simple inventory app in swift as an example to demonstrate the peer-to-peer functionality.
 ====
@@ -45,8 +43,7 @@ You can learn more about Couchbase Lite https://docs.couchbase.com/couchbase-lit
 == Prerequisites
 This tutorial assumes familiarity with building swift apps with Xcode and with Couchbase Lite.
 
-* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the link:https://docs.couchbase.com/couchbase-lite/2.7/swift.html[Getting Started] guides
-
+* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the link:https://docs.couchbase.com/couchbase-lite/2.8/swift/start/swift-gs-install.html[Getting Started] guides
 
 * iOS (Xcode 11.4+)
 ** Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
@@ -55,7 +52,7 @@ This tutorial assumes familiarity with building swift apps with Xcode and with C
 ** You could run your peers in multiple simulators. But if you were running the app on real devices, then you will need to ensure that the devices are on the same WiFi network
 
 == App Overview
-This is a simple inventory app that can be used as a link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#passive-peer[passive] or link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#active-peer[active peer].
+This is a simple inventory app that can be used as a link:https://docs.couchbase.com/couchbase-lite/2.8/swift/advance/swift-p2psync-websocket-using-passive.html[passive] or link:https://docs.couchbase.com/couchbase-lite/2.8/swift/advance/swift-p2psync-websocket-using-active.html[active peer].
 
 The app uses a local database that is pre-populated with data. There is no Sync Gateway or Couchbase Server installed.
 
@@ -80,7 +77,7 @@ image::ios-demo.gif[alt=peer to peer sync,width=640,height=480]
 +
 [source,bash]
 ----
-git clone https://github.com/rajagp/couchbase-lite-peer-to-peer-sync-websocket-samples
+git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-websocket-samples/
 ----
 
 - The app project does not come bundled with the Couchbase Lite framework. Run the script to pull down the framework
@@ -147,7 +144,7 @@ The document is encoded as a `ListRecord` struct defined in the `ListRecord.swif
 
 === Initializing Local Database
 
-The app loads the data from the JSON document named `samplelist.json` the first time the database is created. This is done regardless of whether the app is ;launched in passive or active mode.
+The app loads the data from the JSON document named `samplelist.json` the first time the database is created. This is done regardless of whether the app is launched in passive or active mode.
 
 * Open the *DatabaseManager.swift* file and locate the `openOrCreateDatabaseForUser()` method. This method creates an instance of Couchbase Lite database for the user if one does not exist and loads the empty database with data ready from bundled sample JSON file
 
@@ -197,15 +194,19 @@ include::example$code-samples.swift[tags=ListenerValidationTestMode]
 |listenerTLSSupportMode Value |Behavior
 
 | TLSDisabled
-| There is no TLS. ALl communication is plaintext (insecure mode)
+| There is no TLS. All communication is plaintext (insecure mode and not recommended in production)
 
 
 | TLSWithAnonymousAuth
-| The app uses Couchbase Lite APIs to auto-generate an anonymous server cert and to use that as `TLSIdentity` of the server. Communication is encrypted
+| The app uses self-signed cert that is auto-generated by Couchbase Lite as `TLSIdentity` of the server. While server authentication is skipped, all encryption is still encrypted. This is the default mode of Couchbase Lite.
 
 
 | TLSWithBundledCert
-| The app generates `TLSIdentity` of the server from  public key cert and private key bundled in the`listener-cert-pkey.p12` archive. Communication is encrypted
+| The app generates `TLSIdentity` of the server from  public key cert and private key bundled in the `listener-cert-pkey.p12` archive. Communication is encrypted
+
+
+| TLSWithGeneratedSelfSignedCert
+| The app uses Couchbase Lite `createIdentity` convenience API to generate the `TLSIdentity` of the server. Communication is encrypted
 
 
 |===
@@ -270,7 +271,7 @@ Explore the content in the `ServiceBrowser.swift`. It includes implementation of
 
 
 === Initializing and Starting Replication
-Initialilzing a replicator for peer-to-peer sync is fundamentally not different than if your Couchbase Lite client were to link:https://docs.couchbase.com/couchbase-lite/2.7/swift.html#replication[syncing] with a remote Sync Gateway.
+Initialilzing a replicator for peer-to-peer sync is fundamentally the same as the case if the Couchbase Lite client were to link:https://staging.couchbase.com/couchbase-lite/2.8/swift/learn/swift-replication.html#starting-a-replication[sync] with a remote Sync Gateway. 
 
 * Open the *DatabaseManager.swift* file and locate the `startP2PReplicationWithUserDatabaseToRemotePeer()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we initialize a bi-directional replication to the listener peer in continuous mode. We also register a Replication Listener to be notified of status to the replication status.
 
@@ -280,13 +281,15 @@ include::example$code-samples.swift[tags=StartReplication]
 ----
 
 <1> Initialize a Repicator Configuration for the specified local database and remote listener URL endpoint
-<2> This is where we configure the TLS server cert validation mode - whether we enable cert validation or skip validation. This would only apply if you had enabled TLS support on listener as discussed in <<TLS Modes on Listener>>. If you skip server cert validation,  you still get encrypted communication, but you are communicating with a untrusted listener. In the app, we have a flag named `listenerCertValidationMode` that allows you to try the various modes. You can change the mode by changing the value of the variable. See <<Testing Different Server Validation Modes>>
+<2> This is where we configure the TLS server cert validation mode - whether we enable cert validation or skip validation. This would only apply if you had enabled TLS support on listener as discussed in <<TLS Modes on Listener>>. If you skip server cert validation,  you still get encrypted communication, but you are communicating with a untrusted listener. In the app, we have a flag named `listenerCertValidationMode` that allows you to try the various modes. You can change the mode by changing the value of the variable. See <<Testing Different Server Authentication Modes>>
 <3> The app uses basic client authentication to authenticate with the server
 <4> Initialize the Replicator
 <5> Start replication. The app uses the events on the Replicator Listener to listen to monitor the replication.
 
-==== Testing Different Server Validation Modes
-The app can be configured to test different TLS modes as follows by setting the `listenerCertValidationMode` property in the `DatabaseManager.swift` file
+==== Testing Different Server Authentication Modes
+In <<Initializing Websockets Listener>> section, we discussed the various ways the listener TLSIdentity can be configured. Here, we describe the corresponding changes on the replicator side to authenticate the server identity. The app can be configured to test different TLS modes as follows by setting the `listenerCertValidationMode` property in the `DatabaseManager.swift` file.
+
+Naturally, if you had initialized the listener with `TLSDisabled` mode, then skip this section as there is no TLS.
 
 [source,swift]
 ----
@@ -294,20 +297,20 @@ include::example$code-samples.swift[tags=ListenerValidationTestMode]
 ----
 
 [cols="2,2", options="header"]
-.TLS Listener Cert Validation
+.TLS Listener Cert Authentication
 |===
 |listenerCertValidationMode Value |Behavior
 
 | TLSSkipValidation
-| There is no validation of server cert. This is typically in used in dev/test environments with self signed certs. Skipping server cert authentication is discouraged in production environments.  Communication is encrypted
+| There is no authentication of server cert. The server cert is a self-signed cert. This is typically in used in dev or test environments. Skipping server cert authentication is discouraged in production environments. Communication is encrypted.
 
 
 | TLSEnableValidation
-| If the listener cert is a well known CA then you use this mode. Of course, in our sample app, the listener cert as specified in `listener-cert-pkey` is a self signed cert - so you probably will not use this mode to test. But if you have a CA signed cert, you can configure your listener with that cert and use this mode to test.  Communication is encrypted
+| If the listener cert is from well known CA then you will use this mode. Of course, in our sample app, the listener cert as specified in `listener-cert-pkey` is a self signed cert - so you probably will not use this mode to test. But if you have a CA signed cert, you can configure your listener with the CA signed cert and use this mode to test. Communication is encrypted
 
 
 | TLSEnableValidationWithCertPinning
-| In this mode, the app uses the pinned cert,`listener-pinned-cert.cer` that is bundled in the app to validate the listener identity. Communication is encrypted
+| In this mode, the app uses the pinned cert,`listener-pinned-cert.cer` that is bundled in the app to validate the listener identity. Only the server cert that exactly matches the pinned cert will be authenticated. Communication is encrypted
 
 
 |===
@@ -352,10 +355,11 @@ As an exercise, switch between the various TLS modes and server cert validation 
 == Learn More
 Congratulations on completing this tutorial!
 
-This tutorial walked you through an example of how to directly synchronize data between Couchbase Lite clients. While the tutorial is for iOS, the concepts apply equally to other Couchbase Lite platforms.
+This tutorial walked you through an example of how to directly synchronize data between Couchbase Lite enabled clients. While the tutorial is for iOS, the concepts apply equally to other Couchbase Lite platforms.
 
 
 === Further Reading
-TBD
+
+Complete documentation is available link:https://docs.couchbase.com/couchbase-lite/2.8/swift/learn/swift-landing-p2psync.html[here]
 
 
