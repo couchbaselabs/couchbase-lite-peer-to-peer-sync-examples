@@ -7,14 +7,12 @@ namespace P2PListSync
 {
     public partial class App : Application
     {
-        public static bool IsUserLoggedIn { get; set; }
-
         public App()
         {
             InitializeComponent();
+            CoreApp.RequiresUserAuth = false;
 
-            CoreApp.LoadUserAllowList();
-            if (!IsUserLoggedIn) {
+            if (CoreApp.RequiresUserAuth) {
                 MainPage = new LoginPage();
             } else {
                 CoreApp.LoadAndInitDB();

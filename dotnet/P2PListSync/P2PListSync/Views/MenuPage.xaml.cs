@@ -29,9 +29,12 @@ namespace P2PListSync.Views
             {
                 new HomeMenuItem {Id = MenuItemType.SeasonalItemsList, Title="What's in Season?" },
                 new HomeMenuItem {Id = MenuItemType.Listener, Title="Listener" },
-                new HomeMenuItem {Id = MenuItemType.ListenersBrowser, Title="Browser" },
-                new HomeMenuItem {Id = MenuItemType.Logout, Title="Logout" }
+                new HomeMenuItem {Id = MenuItemType.ListenersBrowser, Title="Browser" }
             };
+
+            if(CoreApp.RequiresUserAuth) {
+                menuItems.Add(new HomeMenuItem { Id = MenuItemType.Logout, Title = "Logout" });
+            }
 
             ListViewMenu.ItemsSource = menuItems;
 

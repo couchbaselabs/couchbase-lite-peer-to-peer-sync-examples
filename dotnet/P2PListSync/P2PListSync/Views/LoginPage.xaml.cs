@@ -27,7 +27,7 @@ namespace P2PListSync.Views
 
             var isValid = AreCredentialsCorrect(user);
             if (isValid) {
-                App.IsUserLoggedIn = true;
+                CoreApp.CurrentUser = user;
                 CoreApp.LoadAndInitDB();
                 Application.Current.MainPage = new MainPage();
             } else {
@@ -38,7 +38,7 @@ namespace P2PListSync.Views
 
         bool AreCredentialsCorrect(User user)
         {
-            var found = CoreApp.Users.Where(u => u.Username == user.Username && u.Password == user.Password).SingleOrDefault();
+            var found = CoreApp.AllowedUsers.Where(u => u.Username == user.Username && u.Password == user.Password).SingleOrDefault();
             return found != null;
         }
     }

@@ -45,7 +45,7 @@ namespace P2PListSync.Views
                         MenuPages.Add(id, new NavigationPage(new ListenersBrowserPage()));
                         break;
                     case (int)MenuItemType.Logout:
-                        //Do Logout
+                        //Do Logout logic
                         break;
                 }
             }

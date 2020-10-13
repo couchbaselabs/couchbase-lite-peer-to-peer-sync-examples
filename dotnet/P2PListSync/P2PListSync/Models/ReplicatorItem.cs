@@ -11,13 +11,19 @@ using Couchbase.Lite;
 using Couchbase.Lite.Sync;
 using P2PListSync.ViewModels;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Xamarin.Forms;
 
 namespace P2PListSync.Models
 {
     public class ReplicatorItem : BaseViewModel
     {
+        const string ListenerPinnedCertFile = "listener-pinned-cert";
+
         private Database _db = CoreApp.DB;
         private ListenerToken listenerToken;
         private Replicator _repl;
@@ -61,6 +67,7 @@ namespace P2PListSync.Models
             set { SetProperty(ref _connectionStatusColor, value); }
         }
 
+        //tag::StartReplication[]
         public ReplicatorItem(IPEndPoint listenerEndpoint)
         {
             _listenerEndpoint = listenerEndpoint;
@@ -80,6 +87,42 @@ namespace P2PListSync.Models
             replicatorConfig.ReplicatorType = ReplicatorType.PushAndPull;
             replicatorConfig.Continuous = true;
 
+            // Explicitly allows self signed certificates. By default, only
+            // CA signed cert is allowed
+            switch (CoreApp.ListenerCertValidationMode) {
+                case LISTENER_CERT_VALIDATION_MODE.SKIP_VALIDATION:
+                    // Use acceptOnlySelfSignedServerCertificate set to true to only accept self signed certs.
+                    // There is no cert validation
+                    replicatorConfig.AcceptOnlySelfSignedServerCertificate = true;
+                    break;
+
+                case LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION_WITH_CERT_PINNING:
+                    // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
+                    // Self signed certs will fail validation
+
+                    replicatorConfig.AcceptOnlySelfSignedServerCertificate = false;
+
+                    // Enable cert pinning to only allow certs that match pinned cert
+
+                    try { 
+                    var pinnedCert = LoadSelfSignedCertForListenerFromBundle();
+                    replicatorConfig.PinnedServerCertificate = pinnedCert;
+                    } catch (Exception ex) {
+                        Debug.WriteLine($"Failed to load server cert to pin. Will proceed without pinning. {ex}");
+                    }
+
+                    break;
+
+                case LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION:
+                    // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
+                    // Self signed certs will fail validation. There is no cert pinning
+                    replicatorConfig.AcceptOnlySelfSignedServerCertificate = false;
+                    break;
+            }
+
+            var user = CoreApp.CurrentUser;
+            replicatorConfig.Authenticator = new BasicAuthenticator(user.Username, user.Password);
+
             _repl = new Replicator(replicatorConfig);
         }
 
@@ -89,15 +132,28 @@ namespace P2PListSync.Models
                 listenerToken = _repl.AddChangeListener(ReplicationStatusUpdate);
 
                 _repl.Start();
+                //end::StartReplication[]
                 IsStarted = true;
             } else {
+                //tag::StopReplication[]
                 _repl?.RemoveChangeListener(listenerToken);
                 _repl?.Stop();
+                //end::StopReplication[]
 
                 IsStarted = false;
 
                 ConnectionStatus = "DISCONNECTED";
                 ConnectionStatusColor = Color.Black;
+            }
+        }
+        
+        private X509Certificate2 LoadSelfSignedCertForListenerFromBundle()
+        {
+            using (var cert = ResourceLoader.GetEmbeddedResourceStream(typeof(ListenerViewModel).GetTypeInfo().Assembly, $"{ListenerPinnedCertFile}.cer")) {
+                using (var ms = new MemoryStream()) {
+                    cert.CopyTo(ms);
+                    return new X509Certificate2(ms.ToArray());
+                }
             }
         }
 
