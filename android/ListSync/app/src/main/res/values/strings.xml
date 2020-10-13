@@ -7,4 +7,5 @@
     <string name="contentTracker">Content Tracker</string>
     <string name="login">Sign In</string>
     <string name="logout">Logout</string>
+    <string name="in_season">What\'s in Season?</string>
 </resources>

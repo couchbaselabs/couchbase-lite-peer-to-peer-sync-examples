@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package com.couchbase.android.listsync.ui.vm;
+package com.couchbase.android.listsync.ui;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -22,6 +22,9 @@ import androidx.lifecycle.ViewModelProvider;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
+
+import com.couchbase.android.listsync.ui.login.LoginViewModel;
+import com.couchbase.android.listsync.ui.main.MainViewModel;
 
 
 @SuppressWarnings({"WeakerAccess"})

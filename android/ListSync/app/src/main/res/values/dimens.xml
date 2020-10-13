@@ -8,12 +8,18 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="frame_margin">4dp</dimen>
+
     <dimen name="button_corner_radius">12dp</dimen>
     <dimen name="button_pad">32dp</dimen>
 
+    <dimen name="image_size">80dp</dimen>
+
     <dimen name="textbox_pad">12dp</dimen>
 
-    <dimen name="text_small">12sp</dimen>
-    <dimen name="text_mid">18sp</dimen>
+    <dimen name="done_box_width">80dp</dimen>
+
+    <dimen name="text_small">18sp</dimen>
+    <dimen name="text_mid">24sp</dimen>
     <dimen name="text_big">36sp</dimen>
 </resources>

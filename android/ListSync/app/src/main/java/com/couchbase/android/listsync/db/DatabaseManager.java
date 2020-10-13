@@ -16,6 +16,7 @@
 package com.couchbase.android.listsync.db;
 
 import android.content.Context;
+import android.text.TextUtils;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,25 +24,43 @@ import androidx.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import com.couchbase.android.listsync.model.Produce;
 import com.couchbase.android.listsync.util.FileUtils;
+import com.couchbase.lite.Array;
+import com.couchbase.lite.Blob;
 import com.couchbase.lite.ConsoleLogger;
 import com.couchbase.lite.CouchbaseLite;
 import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.DataSource;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.EncryptionKey;
+import com.couchbase.lite.Expression;
+import com.couchbase.lite.ListenerToken;
 import com.couchbase.lite.LogDomain;
 import com.couchbase.lite.LogLevel;
+import com.couchbase.lite.Meta;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryBuilder;
+import com.couchbase.lite.Result;
+import com.couchbase.lite.ResultSet;
+import com.couchbase.lite.SelectResult;
 
 
 @Singleton
@@ -54,9 +73,18 @@ public final class DatabaseManager {
     private static final String DB_ASSET = DB_FILE + ".zip";
     private static final String TMP_DIR = "couchbase";
 
+    private static final String DOC_ID = "doc::list";
+
+    private static final String PROP_ITEMS = "items";
+
+    private static final String PROP_KEY = "key";
+    private static final String PROP_IMAGE = "image";
+    private static final String PROP_VALUE = "value";
 
     @NonNull
-    private final Scheduler dbScheduler = Schedulers.from(Executors.newSingleThreadExecutor());
+    private final Executor dbExecutor = Executors.newSingleThreadExecutor();
+    @NonNull
+    private final Scheduler dbScheduler = Schedulers.from(dbExecutor);
 
     // Note:
     // The database is now used from multiple threads: access to it must be synchronized.
@@ -89,9 +117,7 @@ public final class DatabaseManager {
         FileUtils.erase(dbFile);
     }
 
-    public boolean isLoggedIn() {
-        synchronized (this) { return database != null; }
-    }
+    public boolean isLoggedIn() { return getDb() != null; }
 
     public Completable openDb(@NonNull String user, @NonNull String pwd) {
         return Completable
@@ -103,6 +129,36 @@ public final class DatabaseManager {
     public Completable closeDb() {
         return Completable
             .fromAction(this::closeDbAsync)
+            .subscribeOn(dbScheduler)
+            .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<List<Produce>> getInSeason() {
+        final Query query = QueryBuilder.select(SelectResult.property(PROP_ITEMS))
+            .from(DataSource.database(getDb()))
+            .where((Meta.id).equalTo(Expression.string(DOC_ID)));
+
+        return Observable.<List<Produce>>create(emitter -> {
+            final ListenerToken token = query.addChangeListener(
+                dbExecutor,
+                change -> {
+                    final Throwable error = change.getError();
+                    if (error != null) { emitter.onError(error); }
+                    else { emitter.onNext(toProduce(change.getResults())); }
+                });
+            emitter.setDisposable(new Disposable() {
+                private volatile boolean disposed;
+
+                @Override
+                public void dispose() {
+                    disposed = true;
+                    query.removeChangeListener(token);
+                }
+
+                @Override
+                public boolean isDisposed() { return disposed; }
+            });
+        })
             .subscribeOn(dbScheduler)
             .observeOn(AndroidSchedulers.mainThread());
     }
@@ -137,6 +193,35 @@ public final class DatabaseManager {
         }
 
         if (db != null) { db.close(); }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private List<Produce> toProduce(@Nullable ResultSet resultSet) {
+        final List<Produce> produce = new ArrayList<>();
+
+        if (resultSet == null) { return produce; }
+
+        final Result result = resultSet.next();
+        if (result == null) { return produce; }
+
+        final Array items = result.getArray(PROP_ITEMS);
+        if (items == null) { return produce; }
+
+        List rawProduce = items.toList();
+        for (Map<String, ?> veg: (List<Map<String, ?>>) rawProduce) { produce.add(toProduce(veg)); }
+
+        return produce;
+    }
+
+    private Produce toProduce(Map<String, ?> rawProduce) {
+        final String name = (String) rawProduce.get(PROP_KEY);
+        if (TextUtils.isEmpty(name)) { throw new IllegalStateException("Empty name (key) in DB"); }
+        final Long done = (Long) rawProduce.get(PROP_VALUE);
+        return new Produce(name, (Blob) rawProduce.get(PROP_IMAGE), (done == null) ? 0 : done);
+    }
+
+    private Database getDb() {
+        synchronized (this) { return database; }
     }
 }
 

@@ -1,10 +1,8 @@
-package com.couchbase.android.listsync;
+package com.couchbase.android.listsync.ui.login;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +13,8 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 
-import com.couchbase.android.listsync.ui.vm.LoginViewModel;
+import com.couchbase.android.listsync.databinding.ActivityLoginBinding;
+import com.couchbase.android.listsync.ui.main.MainActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,9 +27,9 @@ public class LoginActivity extends AppCompatActivity {
     @NonNull
     private LoginViewModel viewModel;
 
-    private EditText usernameView;
-    private EditText passwordView;
-    private Button loginButton;
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel.class);
         if (viewModel.isLoggedIn()) { nextPage(LoginViewModel.STATUS_OK); }
 
-        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(this.getLayoutInflater());
+        setContentView(binding.getRoot());
 
         final TextWatcher buttonEnabler = new TextWatcher() {
             @Override
@@ -53,25 +53,23 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) { enableLoginButton(); }
         };
 
-        usernameView = findViewById(R.id.username);
-        usernameView.addTextChangedListener(buttonEnabler);
-        passwordView = findViewById(R.id.password);
-        passwordView.addTextChangedListener(buttonEnabler);
+        binding.username.addTextChangedListener(buttonEnabler);
+        binding.password.addTextChangedListener(buttonEnabler);
 
-        loginButton = findViewById(R.id.login);
-        loginButton.setOnClickListener(v -> login());
+        binding.login.setOnClickListener(v -> login());
     }
 
     private void enableLoginButton() {
-        loginButton.setEnabled((usernameView.getText().length() > 2) && (passwordView.getText().length() > 2));
+        binding.login.setEnabled(
+            (binding.username.getText().length() > 2) && (binding.password.getText().length() > 2));
     }
 
     private void login() {
-        viewModel.login(usernameView.getText().toString(), passwordView.getText().toString())
+        viewModel.login(binding.username.getText().toString(), binding.password.getText().toString())
             .observe(this, this::nextPage);
     }
 
-    private void nextPage(String status) {
+    private void nextPage(@NonNull String status) {
         if (!LoginViewModel.STATUS_OK.equals(status)) {
             Toast.makeText(this, status, Toast.LENGTH_LONG).show();
             return;

@@ -1,10 +1,11 @@
-package com.couchbase.android.listsync;
+package com.couchbase.android.listsync.ui.p2p;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -16,14 +17,13 @@ import javax.inject.Inject;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import com.couchbase.android.listsync.ui.BaseActivity;
-import com.couchbase.android.listsync.ui.vm.BaseViewModel;
-import com.couchbase.android.listsync.ui.vm.MainViewModel;
+import com.couchbase.android.listsync.R;
+import com.couchbase.android.listsync.ui.main.MainViewModel;
 
 
-public class MainActivity extends BaseActivity {
+public class P2PActivity extends AppCompatActivity {
     public static void start(Activity activity) {
-        final Intent intent = new Intent(activity, MainActivity.class);
+        final Intent intent = new Intent(activity, P2PActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         activity.startActivity(intent);
     }
@@ -36,9 +36,6 @@ public class MainActivity extends BaseActivity {
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private MainViewModel viewModel;
-
-    @Override
-    protected BaseViewModel getViewModel() { return viewModel; }
 
     @Override
     protected void onCreate(@Nullable Bundle state) {

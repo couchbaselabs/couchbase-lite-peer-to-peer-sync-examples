@@ -22,7 +22,7 @@ import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
 
 import com.couchbase.android.listsync.ui.ActivityBuilder;
-import com.couchbase.android.listsync.ui.vm.VMModule;
+import com.couchbase.android.listsync.ui.VMModule;
 
 
 @Singleton

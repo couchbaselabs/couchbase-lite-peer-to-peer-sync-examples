@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2020 Couchbase, Inc All rights reserved.
+// Copyright (c) 2019 Couchbase, Inc All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,24 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package com.couchbase.android.listsync.ui.vm;
+package com.couchbase.android.listsync.ui;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
-import org.jetbrains.annotations.NotNull;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.couchbase.android.listsync.db.DatabaseManager;
+import dagger.MapKey;
 
 
-public abstract class BaseViewModel extends ViewModel {
-    @NonNull
-    private final DatabaseManager db;
-
-    protected BaseViewModel(@NonNull final DatabaseManager db) { this.db = db; }
-
-    @NotNull
-    public DatabaseManager getDb() { return db; }
-
-    public void logout() { db.closeDb(); }
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@MapKey
+public @interface ViewModelKey {
+    Class<? extends ViewModel> value();
 }

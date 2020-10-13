@@ -13,9 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package com.couchbase.android.listsync.ui.vm;
+package com.couchbase.android.listsync.ui.p2p;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,8 +25,11 @@ import com.couchbase.android.listsync.db.DatabaseManager;
 
 
 @Singleton
-public class MainViewModel extends BaseViewModel {
+public class P2PViewModel extends ViewModel {
+    @NonNull
+    private final DatabaseManager db;
+
     @SuppressWarnings("WeakerAccess")
     @Inject
-    public MainViewModel(@NonNull final DatabaseManager db) { super(db); }
+    protected P2PViewModel(@NonNull final DatabaseManager db) { this.db = db; }
 }

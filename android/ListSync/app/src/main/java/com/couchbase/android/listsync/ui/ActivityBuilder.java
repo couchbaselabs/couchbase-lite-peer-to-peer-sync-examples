@@ -22,8 +22,8 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
-import com.couchbase.android.listsync.LoginActivity;
-import com.couchbase.android.listsync.MainActivity;
+import com.couchbase.android.listsync.ui.login.LoginActivity;
+import com.couchbase.android.listsync.ui.main.MainActivity;
 import com.couchbase.android.listsync.app.ListSync;
 
 

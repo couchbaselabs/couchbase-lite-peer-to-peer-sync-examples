@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package com.couchbase.android.listsync.ui.vm;
+package com.couchbase.android.listsync.ui.login;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
