@@ -1,4 +1,13 @@
-﻿using Xamarin.Forms;
+﻿//
+// App.cs
+//
+// Author:
+// 	Sandy Chuang
+//
+//  Copyright © 2020 Couchbase Inc. All rights reserved.
+//
+
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using P2PListSync.Views;
 

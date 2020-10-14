@@ -25,6 +25,7 @@ namespace P2PListSync.ViewModels
         private Database _db = CoreApp.DB;
 
         public HashSet<int> DocsChangeIndexes { get; set; }
+
         public Command SaveDocumentsCommand { get; set; }
 
         ObservableConcurrentDictionary<int, SeasonalItem> _items = new ObservableConcurrentDictionary<int, SeasonalItem>();
@@ -44,25 +45,26 @@ namespace P2PListSync.ViewModels
             DocsChangeIndexes = new HashSet<int>();
             SaveDocumentsCommand = new Command(async () => await ExecuteSaveDocumentsCommand());
 
+            //tag::LoadData[]
             var q = QueryBuilder.Select(SelectResult.All())
                 .From(DataSource.Database(_db))
                 .Where(Meta.ID.EqualTo(Expression.String(CoreApp.DocId)))
                 .AddChangeListener((sender, args) =>
                 {
                     var allResult = args.Results.AllResults();
-                    var v = allResult[0];
-                    var v1 = v[CoreApp.DB.Name].Dictionary;
-                    var v2 = v1.GetArray(CoreApp.ArrKey);
+                    var result = allResult[0];
+                    var dict = result[CoreApp.DB.Name].Dictionary;
+                    var arr = dict.GetArray(CoreApp.ArrKey);
 
-                    if (v2.Count < Items.Count)
+                    if (arr.Count < Items.Count)
                         Items = new ObservableConcurrentDictionary<int, SeasonalItem>();
 
-                    Parallel.For(0, v2.Count, i =>
+                    Parallel.For(0, arr.Count, i =>
                     {
-                        var result = v2[i].Dictionary;
-                        var name = result.GetString("key");
-                        var cnt = result.GetInt("value");
-                        var image = result.GetBlob("image");
+                        var item = arr[i].Dictionary;
+                        var name = item.GetString("key");
+                        var cnt = item.GetInt("value");
+                        var image = item.GetBlob("image");
                         var img = ImageSource.FromStream(() =>
                         {
                             return image?.ContentStream;
@@ -85,6 +87,7 @@ namespace P2PListSync.ViewModels
 
                     });
                 });
+            //end::LoadData[]
         }
 
         private async Task<bool> ExecuteSaveDocumentsCommand()

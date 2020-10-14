@@ -201,6 +201,7 @@ namespace P2PListSync.ViewModels
         #endregion
 
         #region Broadcast
+        //tag::StartAdvertiser
         public void Broadcast()
         {
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp)) {
@@ -213,9 +214,11 @@ namespace P2PListSync.ViewModels
                         socket.SendTo(hi, group);
                     }
                 }
+
                 socket.Close();
             }
         }
+        //end::StartAdvertiser
         #endregion
     }
 }

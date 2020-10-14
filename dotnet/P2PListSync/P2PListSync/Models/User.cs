@@ -1,4 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿//
+// User.cs
+//
+// Author:
+// 	Sandy Chuang
+//
+//  Copyright © 2020 Couchbase Inc. All rights reserved.
+//
+
+using Newtonsoft.Json;
 
 namespace P2PListSync.Models
 {
