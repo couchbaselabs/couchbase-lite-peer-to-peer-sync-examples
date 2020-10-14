@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toStartOf="@+id/name"
         app:layout_constraintVertical_chainStyle="packed"
         android:src="@mipmap/ic_launcher_foreground"
-        android:contentDescription="@string/contentTracker"
+        android:contentDescription="@string/inventory_tracker"
         />
 
     <TextView

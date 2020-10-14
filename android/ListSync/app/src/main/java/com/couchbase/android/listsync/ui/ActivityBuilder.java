@@ -25,6 +25,7 @@ import dagger.android.ContributesAndroidInjector;
 import com.couchbase.android.listsync.ui.login.LoginActivity;
 import com.couchbase.android.listsync.ui.main.MainActivity;
 import com.couchbase.android.listsync.app.ListSync;
+import com.couchbase.android.listsync.ui.p2p.P2PActivity;
 
 
 @Module
@@ -40,4 +41,8 @@ public interface ActivityBuilder {
     @NonNull
     @ContributesAndroidInjector
     MainActivity bindMainActivity();
+
+    @NonNull
+    @ContributesAndroidInjector
+    P2PActivity bindP2PActivity();
 }

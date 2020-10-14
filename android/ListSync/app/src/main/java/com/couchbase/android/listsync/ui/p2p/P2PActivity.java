@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -16,9 +15,11 @@ import androidx.navigation.ui.NavigationUI;
 import javax.inject.Inject;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import dagger.android.AndroidInjection;
 
 import com.couchbase.android.listsync.R;
-import com.couchbase.android.listsync.ui.main.MainViewModel;
+import com.couchbase.android.listsync.databinding.ActivityMainBinding;
+import com.couchbase.android.listsync.databinding.ActivityP2pBinding;
 
 
 public class P2PActivity extends AppCompatActivity {
@@ -35,19 +36,25 @@ public class P2PActivity extends AppCompatActivity {
 
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
-    private MainViewModel viewModel;
+    private P2PViewModel viewModel;
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
+    private ActivityP2pBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle state) {
         super.onCreate(state);
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
+        AndroidInjection.inject(this);
 
-        setContentView(R.layout.activity_main);
+        binding = ActivityP2pBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         AppBarConfiguration appBarConfiguration
-            = new AppBarConfiguration.Builder(R.id.navigation_active, R.id.navigation_passive).build();
+            = new AppBarConfiguration.Builder(R.id.nav_active, R.id.nav_passive).build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 

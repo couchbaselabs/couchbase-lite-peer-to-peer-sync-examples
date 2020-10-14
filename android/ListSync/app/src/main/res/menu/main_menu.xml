@@ -5,9 +5,16 @@
     >
 
     <item
+        android:id="@+id/menu_p2p"
+        android:title="@string/p2p"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
         android:id="@+id/menu_logout"
         android:title="@string/logout"
-        android:orderInCategory="100"
+        android:orderInCategory="200"
         app:showAsAction="ifRoom"
         />
 

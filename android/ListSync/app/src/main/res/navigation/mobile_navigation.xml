@@ -4,20 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_passive"
+    app:startDestination="@+id/nav_passive"
     >
 
     <fragment
-        android:id="@+id/navigation_active"
+        android:id="@+id/nav_active"
         android:name="com.couchbase.android.listsync.ui.client.ClientFragment"
-        android:label="@string/title_client"
+        android:label="@string/title_active"
         tools:layout="@layout/fragment_client"
         />
 
     <fragment
-        android:id="@+id/navigation_passive"
+        android:id="@+id/nav_passive"
         android:name="com.couchbase.android.listsync.ui.server.ServerFragment"
-        android:label="@string/title_server"
+        android:label="@string/title_passive"
         tools:layout="@layout/fragment_server"
         />
 </navigation>

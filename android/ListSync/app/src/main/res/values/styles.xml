@@ -21,6 +21,13 @@
 
     <style name="Theme.ListSync.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Theme.ListSync.BottomNav">
+        <item name="android:background">?android:attr/windowBackground</item>
+        <item name="itemBackground">?android:attr/windowBackground</item>
+        <item name="itemIconTint">@drawable/selector_p2p_bottom_nav</item>
+        <item name="itemTextColor">@drawable/selector_p2p_bottom_nav</item>
+    </style>
+
     <style name="ListSync.Button" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/button_background</item>
         <item name="android:paddingStart">@dimen/button_pad</item>

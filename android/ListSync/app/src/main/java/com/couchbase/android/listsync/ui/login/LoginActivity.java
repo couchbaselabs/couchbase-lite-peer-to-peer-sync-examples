@@ -1,5 +1,7 @@
 package com.couchbase.android.listsync.ui.login;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +20,12 @@ import com.couchbase.android.listsync.ui.main.MainActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
+    public static void start(Activity activity) {
+        final Intent intent = new Intent(activity, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
+    }
+
     @SuppressWarnings({"WeakerAccess", "NotNullFieldNotInitialized"})
     @NonNull
     @Inject
@@ -36,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         AndroidInjection.inject(this);
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel.class);
         if (viewModel.isLoggedIn()) { nextPage(LoginViewModel.STATUS_OK); }
 
@@ -67,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         viewModel.login(binding.username.getText().toString(), binding.password.getText().toString())
             .observe(this, this::nextPage);
-    }
+    };
 
     private void nextPage(@NonNull String status) {
         if (!LoginViewModel.STATUS_OK.equals(status)) {

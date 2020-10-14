@@ -29,6 +29,8 @@ import io.reactivex.disposables.CompositeDisposable;
 
 import com.couchbase.android.listsync.db.DatabaseManager;
 import com.couchbase.android.listsync.model.Produce;
+import com.couchbase.android.listsync.ui.login.LoginActivity;
+import com.couchbase.android.listsync.ui.p2p.P2PActivity;
 
 
 @Singleton
@@ -44,15 +46,24 @@ public class MainViewModel extends ViewModel {
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    protected MainViewModel(@NonNull final DatabaseManager db) { this.db = db; }
+    public MainViewModel(@NonNull DatabaseManager db) { this.db = db; }
 
+    @NonNull
     public LiveData<List<Produce>> getInSeason() {
         disposables.add(db.getInSeason().subscribe(inSeason::setValue));
         return inSeason;
     }
 
+    public void p2p(MainActivity activity) {
+        db.closeDb();
+        P2PActivity.start(activity);
+    }
+
+    public void logout(MainActivity activity) {
+        db.closeDb();
+        LoginActivity.start(activity);
+        activity.finish();
+    }
+
     public void cancel() { disposables.clear(); }
-
-
-    public void logout() { db.closeDb(); }
 }

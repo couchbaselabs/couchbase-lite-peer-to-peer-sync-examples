@@ -31,5 +31,5 @@ public class P2PViewModel extends ViewModel {
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    protected P2PViewModel(@NonNull final DatabaseManager db) { this.db = db; }
+    public P2PViewModel(@NonNull final DatabaseManager db) { this.db = db; }
 }

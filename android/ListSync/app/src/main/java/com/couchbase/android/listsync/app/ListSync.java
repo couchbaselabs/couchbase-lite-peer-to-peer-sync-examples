@@ -36,7 +36,5 @@ public class ListSync extends Application implements HasActivityInjector {
     }
 
     @Override
-    public AndroidInjector<Activity> activityInjector() {
-        return dispatchingActivityInjector;
-    }
+    public AndroidInjector<Activity> activityInjector() { return dispatchingActivityInjector; }
 }

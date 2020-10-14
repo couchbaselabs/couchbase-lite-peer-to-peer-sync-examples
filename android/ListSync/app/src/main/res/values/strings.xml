@@ -1,11 +1,19 @@
 <resources>
     <string name="app_name">ListSync</string>
-    <string name="title_server">Server</string>
-    <string name="title_client">Client</string>
+
+    <!-- Login page -->
+    <string name="inventory_tracker">Content Tracker</string>
     <string name="username">User Name</string>
     <string name="password">Password</string>
-    <string name="contentTracker">Content Tracker</string>
     <string name="login">Sign In</string>
-    <string name="logout">Logout</string>
+
+    <!-- In Season page -->
     <string name="in_season">What\'s in Season?</string>
+    <string name="logout">Logout</string>
+
+    <!-- P2P page -->
+    <string name="p2p">p2p</string>
+    <string name="title_passive">Passive</string>
+    <string name="title_active">Active</string>
+
 </resources>

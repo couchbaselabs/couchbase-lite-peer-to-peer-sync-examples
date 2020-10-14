@@ -51,8 +51,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+        if (item.getItemId() == R.id.menu_p2p) {
+            viewModel.p2p(this);
+            return true;
+        }
+
         if (item.getItemId() == R.id.menu_logout) {
-            viewModel.logout();
+            viewModel.logout(this);
             return true;
         }
 
@@ -65,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
         AndroidInjection.inject(this);
 
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
 
         adapter = InSeasonAdapter.setup(this, binding.inSeason);
     }

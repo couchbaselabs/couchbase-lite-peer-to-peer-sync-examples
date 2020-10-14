@@ -25,6 +25,7 @@ import dagger.multibindings.IntoMap;
 
 import com.couchbase.android.listsync.ui.login.LoginViewModel;
 import com.couchbase.android.listsync.ui.main.MainViewModel;
+import com.couchbase.android.listsync.ui.p2p.P2PViewModel;
 
 
 @SuppressWarnings({"WeakerAccess"})
@@ -45,4 +46,10 @@ public interface VMModule {
     @IntoMap
     @ViewModelKey(MainViewModel.class)
     ViewModel bindMainViewModel(@NonNull MainViewModel mainViewModel);
+
+    @NonNull
+    @Binds
+    @IntoMap
+    @ViewModelKey(P2PViewModel.class)
+    ViewModel bindP2PViewModel(@NonNull P2PViewModel p2pViewModel);
 }

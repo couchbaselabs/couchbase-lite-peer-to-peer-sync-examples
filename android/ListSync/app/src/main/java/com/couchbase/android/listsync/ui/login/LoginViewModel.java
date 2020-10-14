@@ -16,7 +16,6 @@
 package com.couchbase.android.listsync.ui.login;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -28,6 +27,7 @@ import javax.inject.Singleton;
 
 import com.couchbase.android.listsync.db.DatabaseManager;
 
+
 @Singleton
 public class LoginViewModel extends ViewModel {
     private static final String TAG = "LoginVM";
@@ -38,12 +38,13 @@ public class LoginViewModel extends ViewModel {
     public final MutableLiveData<String> login = new MutableLiveData<>();
 
     @NonNull
-    final DatabaseManager db;
+    private final DatabaseManager db;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    public LoginViewModel(@NonNull final DatabaseManager db) { this.db = db; }
+    public LoginViewModel(@NonNull DatabaseManager db) { this.db = db; }
 
+    @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
     public LiveData<String> login(@NonNull String user, @NonNull String pwd) {
