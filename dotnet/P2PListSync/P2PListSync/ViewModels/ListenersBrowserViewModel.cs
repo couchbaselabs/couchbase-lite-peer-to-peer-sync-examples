@@ -30,6 +30,7 @@ namespace P2PListSync.ViewModels
             Title = "Browser";
             Items = new ObservableCollection<ReplicatorItem>();
 
+            //tag::StartBrowsing
             _discovery = new UdpListener(CoreApp.UdpPort);
             _discovery.UdpPacketReceived += DiscoveryOnUdpPacketReceived;
             _discovery.Start();
@@ -47,6 +48,7 @@ namespace P2PListSync.ViewModels
 
             AddReplicator(remoteEndpoint);
         }
+        //tag::StartBrowsing
         #endregion
 
         public void AddReplicator(IPEndPoint ep)

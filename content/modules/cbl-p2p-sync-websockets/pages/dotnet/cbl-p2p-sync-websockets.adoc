@@ -82,22 +82,16 @@ git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-webs
 
 === Try it Out
 * Open the Xamarin .Net project using Visual Studio
-+
-[source]
-----
-open P2PListSync.sln
-----
-+
 * Build and run the project
 * Verify that you see the login screen
 +
-image::swift-login.png[alt=app login screen,width=640,height=480]
+image::cs-login.png[alt=app login screen,width=640,height=537]
 
 == Exploring the App Project
 
 - The Xamarin .Net project comes pre-bundled with some resource files that we will examine here
 
-image::swift-project-explorer.png[alt=xcode project explorer,width=640,height=480]
+image::cs-project-explorer.png[alt=xcode project explorer,width=640,height=480]
 
 * `userdb.cblite2.zip` : A zip file contains prebuild Couchbase Lite database. It includes the data for a single document. See <<Data Model>>
 * `userallowlist.json` : List of valid client users (and passwords) in the system. This list is looked up when the server tries to authenticate credentials associated with incoming connection request.
@@ -309,7 +303,7 @@ include::example$code-samples.cs[tags=StopReplication]
 * Select "Broswer" menu. The app automatically browses for listener and lists it here when there is any listener is broadcasting.
 * Tap on the row corresponding to listener. This will start replication with the listener and it shoud transition to Connected state
 * Verify the connection count on listener
-* Swipe left on the the row. You should see option to remove listener and Disconect. Try Disconnect and then reconnect again
+* Tap on the row corresponding to listener. This will stop replication with the listener and it shoud transition to Disonnected state. Try Disconnect and then reconnect again
 
 image::ios-active-start-replicator.gif[alt=p2p sync,width=600,height=320]
 

@@ -4,7 +4,7 @@
              x:Class="P2PListSync.Views.LoginPage">
     <ContentPage.Content>
         <StackLayout VerticalOptions="StartAndExpand" Padding="5" Margin="5">
-        <Label Text="Inventory Tracker" FontSize="Large" HorizontalOptions="EndAndExpand" />
+        <Label Text="Inventory Tracker" FontSize="Large" HorizontalOptions="CenterAndExpand" />
         <StackLayout VerticalOptions="StartAndExpand" Padding="5" Margin="5">
             <Label Text="Username" />
             <Entry x:Name="usernameEntry" Placeholder="username" />
