@@ -65,13 +65,13 @@
                                        Grid.Column="1"
                                        FontSize="Small"
                                        HorizontalOptions="Fill"
-                                       VerticalOptions="CenterAndExpand"/>
+                                       VerticalOptions="FillAndExpand"/>
                                 <Entry Text="{Binding Value.Quantity}" 
                                        TextChanged="OnQuantityChanged"
                                        Grid.Column="2"
                                        FontSize="Small"
                                        HorizontalOptions="Fill"
-                                       VerticalOptions="CenterAndExpand"/>
+                                       VerticalOptions="FillAndExpand"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
