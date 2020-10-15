@@ -11,7 +11,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Reset" Command="{Binding LoadItemsCommand}">
+        <ToolbarItem Text="X" Command="{Binding LoadItemsCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="UWP" Value="refresh.png"/>
@@ -26,7 +26,6 @@
             </ToolbarItem.Icon>
         </ToolbarItem>
     </ContentPage.ToolbarItems>
-
     <ScrollView>
         <StackLayout>
             <ListView x:Name="ItemsListView"
@@ -49,8 +48,8 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="{Binding Value.ImageByteArray, Converter={StaticResource ImageSourceConverter}}"
                                        Aspect="AspectFill" 
-                                       HeightRequest="60" 
-                                       WidthRequest="60"
+                                       HeightRequest="52"
+                                       WidthRequest="52"
                                        BackgroundColor="LightGray">
                                     <Image.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnImageTapped" />

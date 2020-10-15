@@ -53,14 +53,14 @@ namespace P2PListSync.ViewModels
 
         public void AddReplicator(IPEndPoint ep)
         {
-            var ips = Items.Where(x => x.ListenerEndpoint.Equals(ep)).SingleOrDefault();
-
-            if (ips == null) {
-                Device.BeginInvokeOnMainThread(() =>
-                {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var ips = Items.Where(x => x.ListenerEndpoint.Equals(ep)).SingleOrDefault();
+                if (ips == null) {
                     Items.Add(new ReplicatorItem(ep));
-                });
-            }
+                }
+            });
+
         }
     }
 }

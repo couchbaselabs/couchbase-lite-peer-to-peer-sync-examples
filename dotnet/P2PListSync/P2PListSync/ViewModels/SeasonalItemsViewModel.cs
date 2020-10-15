@@ -17,6 +17,8 @@ using Couchbase.Lite;
 using Couchbase.Lite.Query;
 using P2PListSync.Utils;
 using System.IO;
+using System;
+using System.Diagnostics;
 
 namespace P2PListSync.ViewModels
 {
@@ -25,6 +27,8 @@ namespace P2PListSync.ViewModels
         private Database _db = CoreApp.DB;
 
         public HashSet<int> DocsChangeIndexes { get; set; }
+
+        public Command LoadItemsCommand { get; set; }
 
         public Command SaveDocumentsCommand { get; set; }
 
@@ -43,6 +47,7 @@ namespace P2PListSync.ViewModels
             Title = "What's in Season?";
             Items = new ObservableConcurrentDictionary<int, SeasonalItem>();
             DocsChangeIndexes = new HashSet<int>();
+            LoadItemsCommand = new Command(() => ExecuteLoadItemsCommand());
             SaveDocumentsCommand = new Command(async () => await ExecuteSaveDocumentsCommand());
 
             //tag::LoadData[]
@@ -65,10 +70,6 @@ namespace P2PListSync.ViewModels
                         var name = item.GetString("key");
                         var cnt = item.GetInt("value");
                         var image = item.GetBlob("image");
-                        var img = ImageSource.FromStream(() =>
-                        {
-                            return image?.ContentStream;
-                        }) ?? Image("default_food.png");
 
                         if (_items.ContainsKey(i)) {
                             _items[i].Name = name;
@@ -88,6 +89,31 @@ namespace P2PListSync.ViewModels
                     });
                 });
             //end::LoadData[]
+        }
+
+        private void ExecuteLoadItemsCommand()
+        {
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+
+            try {
+                using(var dict = _db.GetDocument(CoreApp.DocId)) {
+                    var arr = dict.GetArray(CoreApp.ArrKey);
+                    for(int i = 0; i< arr.Count; i++) {
+                        DictionaryObject d = arr.GetDictionary(i);
+                        _items[i].Name = d.GetString("key");
+                        _items[i].Quantity = d.GetInt("value");
+                        _items[i].ImageByteArray = d.GetBlob("image")?.Content;
+                    }
+                }
+
+            } catch (Exception ex) {
+                Debug.WriteLine(ex);
+            } finally {
+                IsBusy = false;
+            }
         }
 
         private async Task<bool> ExecuteSaveDocumentsCommand()
