@@ -90,7 +90,7 @@ namespace P2PListSync.ViewModels
 
                 Broadcast();
                 IsListening = true;
-                ListenerStatus = $"Listening on ws://localhost:{_urlEndpointListener.Port}/{_db.Name}";
+                ListenerStatus = $"Listening on {_urlEndpointListener.Urls[0]}";
             } else {
                 //tag::StopListener[]
                 _urlEndpointListener.Stop();
@@ -207,13 +207,8 @@ namespace P2PListSync.ViewModels
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp)) {
                 socket.EnableBroadcast = true;
                 var group = new IPEndPoint(IPAddress.Broadcast, CoreApp.UdpPort);
-                var host = Dns.GetHostEntry(Dns.GetHostName());
-                foreach (var ip in host.AddressList) {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork) {
-                        var hi = Encoding.ASCII.GetBytes(CoreApp.Guid + ":" + ip + ":" + _urlEndpointListener.Port);
-                        socket.SendTo(hi, group);
-                    }
-                }
+                var hi = Encoding.ASCII.GetBytes($"{CoreApp.Guid}:{_urlEndpointListener.Urls[0].Host}:{_urlEndpointListener.Port}");
+                socket.SendTo(hi, group);
 
                 socket.Close();
             }
