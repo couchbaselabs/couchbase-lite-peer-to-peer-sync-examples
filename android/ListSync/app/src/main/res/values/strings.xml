@@ -15,5 +15,8 @@
     <string name="p2p">p2p</string>
     <string name="title_passive">Passive</string>
     <string name="title_active">Active</string>
+    <string name="start">Start Listener</string>
+    <string name="stop">Stop Listener</string>
+    <string name="endpoint">Endpoint:</string>
 
 </resources>

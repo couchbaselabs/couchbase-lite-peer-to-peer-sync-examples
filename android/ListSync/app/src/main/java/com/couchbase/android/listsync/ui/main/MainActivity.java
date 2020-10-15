@@ -37,10 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
-    private ActivityMainBinding binding;
-
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NonNull
     private InSeasonAdapter adapter;
 
     @Override
@@ -72,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        final ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
-        adapter = InSeasonAdapter.setup(this, binding.inSeason);
+        adapter = InSeasonAdapter.setup(this, binding.inSeason, viewModel);
     }
 
     @Override

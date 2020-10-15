@@ -19,31 +19,57 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.couchbase.android.listsync.R;
+import com.couchbase.android.listsync.databinding.FragmentServerBinding;
+import com.couchbase.android.listsync.ui.p2p.BaseFragment;
 
 
-public final class ServerFragment extends Fragment {
-    private ServerViewModel vm;
+public final class ServerFragment extends BaseFragment {
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
+    private ServerViewModel viewModel;
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
+    private FragmentServerBinding binding;
 
     @NonNull
     public View onCreateView(@NotNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
+        viewModel = getViewModel(ServerViewModel.class);
 
-        vm = ViewModelProviders.of(this).get(ServerViewModel.class);
+        binding = FragmentServerBinding.inflate(inflater, container, false);
+        final View root = binding.getRoot();
 
-        View root = inflater.inflate(R.layout.fragment_server, container, false);
-
-        final TextView textView = root.findViewById(R.id.text_dashboard);
-
-        vm.getText().observe(getViewLifecycleOwner(), textView::setText);
+        binding.start.setOnClickListener(v -> startListener());
+        binding.stop.setOnClickListener(v -> stopListener());
 
         return root;
+    }
+
+    private void startListener() {
+        final LiveData<String> endpointData = viewModel.startListener();
+        endpointData.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String endpoint) {
+                binding.start.setEnabled(false);
+                binding.stop.setEnabled(true);
+                binding.endpoint.setText(endpoint);
+                endpointData.removeObserver(this);
+            }
+        });
+    }
+
+    private void stopListener() {
+        viewModel.stopListener();
+        binding.start.setEnabled(true);
+        binding.stop.setEnabled(false);
+        binding.endpoint.setText("");
     }
 }

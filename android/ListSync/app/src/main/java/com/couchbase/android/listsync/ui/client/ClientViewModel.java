@@ -19,9 +19,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+
+@Singleton
 public class ClientViewModel extends ViewModel {
     private final MutableLiveData<String> text = new MutableLiveData<>();
+
+    @Inject
+    public ClientViewModel() {}
 
     public LiveData<String> getText() { return text; }
 }

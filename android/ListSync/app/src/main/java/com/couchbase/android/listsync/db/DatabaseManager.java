@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,17 +51,23 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
+import com.couchbase.lite.Dictionary;
+import com.couchbase.lite.Document;
 import com.couchbase.lite.EncryptionKey;
 import com.couchbase.lite.Expression;
 import com.couchbase.lite.ListenerToken;
 import com.couchbase.lite.LogDomain;
 import com.couchbase.lite.LogLevel;
 import com.couchbase.lite.Meta;
+import com.couchbase.lite.MutableArray;
+import com.couchbase.lite.MutableDictionary;
+import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
+import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 
 @Singleton
@@ -117,6 +124,10 @@ public final class DatabaseManager {
         FileUtils.erase(dbFile);
     }
 
+    public URLEndpointListenerConfiguration getListenerConfig() {
+        return new URLEndpointListenerConfiguration(getDb());
+    }
+
     public boolean isLoggedIn() { return getDb() != null; }
 
     public Completable openDb(@NonNull String user, @NonNull String pwd) {
@@ -163,6 +174,14 @@ public final class DatabaseManager {
             .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Completable updateDone(String name, long done) {
+        return Completable
+            .fromAction(() -> updateDoneAsync(name, done))
+            .subscribeOn(dbScheduler)
+            .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @WorkerThread
     private void openDbAsync(@NonNull String user, @NonNull String pwd)
         throws CouchbaseLiteException {
 
@@ -185,6 +204,7 @@ public final class DatabaseManager {
         synchronized (this) { database = db; }
     }
 
+    @WorkerThread
     private void closeDbAsync() throws CouchbaseLiteException {
         final Database db;
         synchronized (this) {
@@ -193,6 +213,26 @@ public final class DatabaseManager {
         }
 
         if (db != null) { db.close(); }
+    }
+
+    // ??? O(n) lookup.
+    @WorkerThread
+    private void updateDoneAsync(String name, long done) throws CouchbaseLiteException {
+        final Document doc = getDb().getDocument(DOC_ID);
+        final MutableArray items = doc.getArray(PROP_ITEMS).toMutable();
+        final int n = items.count();
+        for (int i = 0; i < n; i++) {
+            final Dictionary produce = items.getDictionary(i);
+            if (name.equals(produce.getString(PROP_KEY))) {
+                final MutableDictionary mutableProduce = produce.toMutable();
+                mutableProduce.setLong(PROP_VALUE, done);
+                items.setDictionary(i, mutableProduce);
+                break;
+            }
+        }
+        final MutableDocument mDoc = doc.toMutable();
+        mDoc.setArray(PROP_ITEMS, items);
+        getDb().save(mDoc);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

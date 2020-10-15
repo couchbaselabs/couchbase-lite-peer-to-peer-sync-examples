@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(this.getLayoutInflater());
         setContentView(binding.getRoot());
 
+        if (binding.password.getText().length() > 0) { return; }
         final TextWatcher buttonEnabler = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int i, int i1, int i2) { }
@@ -76,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         viewModel.login(binding.username.getText().toString(), binding.password.getText().toString())
             .observe(this, this::nextPage);
-    };
+    }
 
     private void nextPage(@NonNull String status) {
         if (!LoginViewModel.STATUS_OK.equals(status)) {

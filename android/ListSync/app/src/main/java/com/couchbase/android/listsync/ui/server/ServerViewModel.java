@@ -15,13 +15,44 @@
 //
 package com.couchbase.android.listsync.ui.server;
 
+import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import io.reactivex.disposables.CompositeDisposable;
+
+import com.couchbase.android.listsync.p2p.SyncManager;
+
+
+@Singleton
 public class ServerViewModel extends ViewModel {
-    private final MutableLiveData<String> text = new MutableLiveData<>();
+    private static final String TAG = "SRV_VM";
 
-    public LiveData<String> getText() { return text; }
+    @NonNull
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
+    @NonNull
+    private final MutableLiveData<String> endpoint = new MutableLiveData<>();
+
+    @NonNull
+    private final SyncManager sync;
+
+    @Inject
+    public ServerViewModel(@NonNull SyncManager sync) { this.sync = sync; }
+
+    public LiveData<String> startListener() {
+        disposables.add(sync.startListener().subscribe(endpoint::setValue));
+        return endpoint;
+    }
+
+    public void stopListener() {
+        sync.stopListener().subscribe(() -> {}, e -> Log.w(TAG, "failed to stop listener", e));
+    }
+
+    public void cancel() { disposables.clear(); }
 }

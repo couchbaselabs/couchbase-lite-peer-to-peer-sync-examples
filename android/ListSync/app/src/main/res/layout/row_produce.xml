@@ -16,8 +16,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/name"
         app:layout_constraintVertical_chainStyle="packed"
-        android:src="@mipmap/ic_launcher_foreground"
         android:contentDescription="@string/inventory_tracker"
+        android:src="@mipmap/ic_launcher_foreground"
         />
 
     <TextView
@@ -28,10 +28,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/photo"
         app:layout_constraintEnd_toStartOf="@+id/done"
-        android:theme="@style/Text"
+        style="@style/Text"
         />
 
-    <TextView
+    <EditText
         android:id="@+id/done"
         android:layout_width="@dimen/done_box_width"
         android:layout_height="0dp"
@@ -39,7 +39,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/name"
         app:layout_constraintEnd_toEndOf="parent"
-        android:theme="@style/Text.Small"
+        android:inputType="numberDecimal"
+        android:focusedByDefault="false"
+        style="@style/Text.Small"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,11 +18,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import dagger.android.AndroidInjection;
 
 import com.couchbase.android.listsync.R;
-import com.couchbase.android.listsync.databinding.ActivityMainBinding;
 import com.couchbase.android.listsync.databinding.ActivityP2pBinding;
 
 
-public class P2PActivity extends AppCompatActivity {
+public class P2PActivity extends AppCompatActivity implements BaseFragment.VMProvider {
     public static void start(Activity activity) {
         final Intent intent = new Intent(activity, P2PActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
@@ -36,11 +35,10 @@ public class P2PActivity extends AppCompatActivity {
 
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
-    private P2PViewModel viewModel;
-
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NonNull
     private ActivityP2pBinding binding;
+
+    @NonNull
+    public ViewModelProvider.Factory getViewModelFactory() { return viewModelFactory; }
 
     @Override
     protected void onCreate(@Nullable Bundle state) {

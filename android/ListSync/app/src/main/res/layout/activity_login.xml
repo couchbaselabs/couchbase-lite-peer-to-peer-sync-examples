@@ -79,7 +79,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.600"
         android:layout_marginTop="@dimen/textbox_pad"
-        style="@style/ListSync.Button"
+        style="@style/ListSync.Button.Login"
         android:text="@string/login"
         android:enabled="false"
         />

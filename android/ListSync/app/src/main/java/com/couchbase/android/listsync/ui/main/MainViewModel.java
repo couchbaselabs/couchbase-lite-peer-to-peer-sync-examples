@@ -15,6 +15,8 @@
 //
 package com.couchbase.android.listsync.ui.main;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -35,6 +37,8 @@ import com.couchbase.android.listsync.ui.p2p.P2PActivity;
 
 @Singleton
 public class MainViewModel extends ViewModel {
+    private static final String TAG = "MAIN_VM";
+
     @NonNull
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -52,6 +56,21 @@ public class MainViewModel extends ViewModel {
     public LiveData<List<Produce>> getInSeason() {
         disposables.add(db.getInSeason().subscribe(inSeason::setValue));
         return inSeason;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressLint("CheckResult")
+    public void updateDone(@NonNull String name, @NonNull String done) {
+        try {
+            db.updateDone(name, Long.parseLong(done))
+                .subscribe(
+                    () -> {},
+                    (e) -> Log.w(TAG, "DB save failed for: " + name + " => " + done));
+        }
+        catch (NumberFormatException e) {
+            // this should never happen: input type on the edit text should prevent it.
+            Log.w(TAG, "'done' string is not a number: " + done);
+        }
     }
 
     public void p2p(MainActivity activity) {

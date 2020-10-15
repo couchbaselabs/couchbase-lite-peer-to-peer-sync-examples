@@ -11,7 +11,9 @@
     <dimen name="frame_margin">4dp</dimen>
 
     <dimen name="button_corner_radius">12dp</dimen>
-    <dimen name="button_pad">32dp</dimen>
+    <dimen name="button_pad_horizontal">32dp</dimen>
+    <dimen name="button_pad_vertical">8dp</dimen>
+    <dimen name="button_margin">8dp</dimen>
 
     <dimen name="image_size">80dp</dimen>
 

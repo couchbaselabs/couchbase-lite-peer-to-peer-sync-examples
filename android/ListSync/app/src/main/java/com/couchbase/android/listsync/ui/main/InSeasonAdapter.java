@@ -19,8 +19,6 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -34,37 +32,57 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
 import com.couchbase.android.listsync.R;
+import com.couchbase.android.listsync.databinding.RowProduceBinding;
 import com.couchbase.android.listsync.model.Produce;
 
 
 public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeasonViewHolder> {
     static final class InSeasonViewHolder extends RecyclerView.ViewHolder {
         @NonNull
+        private final RowProduceBinding bindings;
+        @NonNull
+        private final MainViewModel viewModel;
+        @NonNull
         private final RequestManager glide;
-        @NonNull
-        private final ImageView photoView;
-        @NonNull
-        private final TextView nameView;
-        @NonNull
-        private final TextView doneView;
 
-        public InSeasonViewHolder(@NonNull View view, @NonNull RequestManager glide) {
-            super(view);
+        public InSeasonViewHolder(
+            @NonNull MainViewModel viewModel,
+            @NonNull RowProduceBinding bindings,
+            @NonNull RequestManager glide) {
+            super(bindings.getRoot());
+
+            this.bindings = bindings;
+            this.viewModel = viewModel;
             this.glide = glide;
-            this.photoView = view.findViewById(R.id.photo);
-            this.nameView = view.findViewById(R.id.name);
-            this.doneView = view.findViewById(R.id.done);
         }
 
         public final void setProduce(@Nullable Produce produce) {
-            nameView.setText((produce == null) ? "" : produce.getName());
-            doneView.setText((produce == null) ? "" : String.valueOf(produce.getDone()));
-            glide.load(produce).into(photoView);
+            if (produce == null) {
+                bindings.name.setText("");
+                bindings.done.setText("");
+                return;
+            }
+
+            final String name = produce.getName();
+            bindings.name.setText(name);
+
+            bindings.done.setText(String.valueOf(produce.getDone()));
+            bindings.done.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) { viewModel.updateDone(name, bindings.done.getText().toString()); }
+                }
+            });
+
+            glide.load(produce).into(bindings.photo);
         }
     }
 
     @NonNull
-    public static InSeasonAdapter setup(@NonNull Activity ctxt, @NonNull RecyclerView listView) {
+    public static InSeasonAdapter setup(
+        @NonNull Activity ctxt,
+        @NonNull RecyclerView listView,
+        @NonNull MainViewModel viewModel) {
         listView.hasFixedSize();
 
         final LinearLayoutManager layoutMgr = new LinearLayoutManager(ctxt);
@@ -74,7 +92,7 @@ public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeas
         divider.setDrawable(ContextCompat.getDrawable(ctxt, R.drawable.divider));
         listView.addItemDecoration(divider);
 
-        final InSeasonAdapter adapter = new InSeasonAdapter(ctxt);
+        final InSeasonAdapter adapter = new InSeasonAdapter(ctxt, viewModel);
         listView.setAdapter(adapter);
 
         return adapter;
@@ -82,19 +100,26 @@ public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeas
 
 
     @NonNull
+    private final MainViewModel viewModel;
+
+    @NonNull
     private final RequestManager glide;
 
     @Nullable
     private List<Produce> produce;
 
-    public InSeasonAdapter(@NonNull Activity activity) { glide = Glide.with(activity); }
+    public InSeasonAdapter(@NonNull Activity activity, @NonNull MainViewModel viewModel) {
+        this.viewModel = viewModel;
+        glide = Glide.with(activity);
+    }
 
     public int getItemCount() { return (produce == null) ? 0 : produce.size(); }
 
     @NonNull
     public InSeasonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new InSeasonViewHolder(
-            LayoutInflater.from(parent.getContext()).inflate(R.layout.row_produce, parent, false),
+            viewModel,
+            RowProduceBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false),
             glide);
     }
 

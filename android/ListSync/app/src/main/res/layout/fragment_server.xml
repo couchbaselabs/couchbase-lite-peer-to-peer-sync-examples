@@ -5,21 +5,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/frame_margin"
     tools:context=".ui.server.ServerFragment"
     >
 
-    <TextView
-        android:id="@+id/text_dashboard"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/start"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/endpoint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/stop"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.60"
+        android:text="@string/start"
+        style="@style/ListSync.Button.Start"
         />
+
+    <Button
+        android:id="@+id/stop"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/start"
+        app:layout_constraintStart_toEndOf="@+id/start"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/stop"
+        style="@style/ListSync.Button.Stop"
+        android:enabled="false"
+        />
+
+    <TextView
+        android:id="@+id/endpointLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/endpoint"
+        app:layout_constraintVertical_bias="0.10"
+        android:text="@string/endpoint"
+        style="@style/Text.Label"
+        />
+
+    <TextView
+        android:id="@+id/endpoint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/endpointLabel"
+        app:layout_constraintStart_toEndOf="@+id/endpointLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/textbox_pad"
+        android:textAlignment="center"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
