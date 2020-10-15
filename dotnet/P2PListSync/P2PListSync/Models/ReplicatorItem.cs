@@ -87,41 +87,46 @@ namespace P2PListSync.Models
             replicatorConfig.ReplicatorType = ReplicatorType.PushAndPull;
             replicatorConfig.Continuous = true;
 
-            // Explicitly allows self signed certificates. By default, only
-            // CA signed cert is allowed
-            switch (CoreApp.ListenerCertValidationMode) {
-                case LISTENER_CERT_VALIDATION_MODE.SKIP_VALIDATION:
-                    // Use acceptOnlySelfSignedServerCertificate set to true to only accept self signed certs.
-                    // There is no cert validation
-                    replicatorConfig.AcceptOnlySelfSignedServerCertificate = true;
-                    break;
+            if (CoreApp.ListenerTLSMode > 0) {
 
-                case LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION_WITH_CERT_PINNING:
-                    // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
-                    // Self signed certs will fail validation
+                // Explicitly allows self signed certificates. By default, only
+                // CA signed cert is allowed
+                switch (CoreApp.ListenerCertValidationMode) {
+                    case LISTENER_CERT_VALIDATION_MODE.SKIP_VALIDATION:
+                        // Use acceptOnlySelfSignedServerCertificate set to true to only accept self signed certs.
+                        // There is no cert validation
+                        replicatorConfig.AcceptOnlySelfSignedServerCertificate = true;
+                        break;
 
-                    replicatorConfig.AcceptOnlySelfSignedServerCertificate = false;
+                    case LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION_WITH_CERT_PINNING:
+                        // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
+                        // Self signed certs will fail validation
 
-                    // Enable cert pinning to only allow certs that match pinned cert
+                        replicatorConfig.AcceptOnlySelfSignedServerCertificate = false;
 
-                    try { 
-                    var pinnedCert = LoadSelfSignedCertForListenerFromBundle();
-                    replicatorConfig.PinnedServerCertificate = pinnedCert;
-                    } catch (Exception ex) {
-                        Debug.WriteLine($"Failed to load server cert to pin. Will proceed without pinning. {ex}");
-                    }
+                        // Enable cert pinning to only allow certs that match pinned cert
 
-                    break;
+                        try {
+                            var pinnedCert = LoadSelfSignedCertForListenerFromBundle();
+                            replicatorConfig.PinnedServerCertificate = pinnedCert;
+                        } catch (Exception ex) {
+                            Debug.WriteLine($"Failed to load server cert to pin. Will proceed without pinning. {ex}");
+                        }
 
-                case LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION:
-                    // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
-                    // Self signed certs will fail validation. There is no cert pinning
-                    replicatorConfig.AcceptOnlySelfSignedServerCertificate = false;
-                    break;
+                        break;
+
+                    case LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION:
+                        // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
+                        // Self signed certs will fail validation. There is no cert pinning
+                        replicatorConfig.AcceptOnlySelfSignedServerCertificate = false;
+                        break;
+                }
             }
 
-            var user = CoreApp.CurrentUser;
-            replicatorConfig.Authenticator = new BasicAuthenticator(user.Username, user.Password);
+            if (CoreApp.RequiresUserAuth) {
+                var user = CoreApp.CurrentUser;
+                replicatorConfig.Authenticator = new BasicAuthenticator(user.Username, user.Password);
+            }
 
             _repl = new Replicator(replicatorConfig);
         }
