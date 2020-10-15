@@ -61,7 +61,15 @@ namespace P2PListSync.ViewModels
                     Items.Add(new ReplicatorItem(ep));
                 }
             });
+        }
 
+        public void RemoveReplicator(ReplicatorItem repl)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                Items.Remove(repl);
+                repl.RemoveReplicator();
+            });
         }
     }
 }

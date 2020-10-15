@@ -140,18 +140,31 @@ namespace P2PListSync.Models
                 //end::StartReplication[]
                 IsStarted = true;
             } else {
-                //tag::StopReplication[]
-                _repl?.RemoveChangeListener(listenerToken);
-                _repl?.Stop();
-                //end::StopReplication[]
-
-                IsStarted = false;
-
+                StopReplicator();
                 ConnectionStatus = "DISCONNECTED";
                 ConnectionStatusColor = Color.Black;
             }
         }
-        
+
+        public void RemoveReplicator()
+        {
+            if (IsStarted) {
+                StopReplicator();
+            }
+            
+            _repl.Dispose();
+        }
+
+        private void StopReplicator()
+        {
+            //tag::StopReplication[]
+            _repl?.RemoveChangeListener(listenerToken);
+            _repl?.Stop();
+            //end::StopReplication[]
+
+            IsStarted = false;
+        }
+
         private X509Certificate2 LoadSelfSignedCertForListenerFromBundle()
         {
             using (var cert = ResourceLoader.GetEmbeddedResourceStream(typeof(ListenerViewModel).GetTypeInfo().Assembly, $"{ListenerPinnedCertFile}.cer")) {

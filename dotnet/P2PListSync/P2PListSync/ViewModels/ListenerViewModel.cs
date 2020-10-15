@@ -63,6 +63,7 @@ namespace P2PListSync.ViewModels
         }
 
         public ICommand StartListenerCommand { get; }
+        public ICommand BroadcastCommand { get; }
 
         public ListenerViewModel()
         {
@@ -71,6 +72,7 @@ namespace P2PListSync.ViewModels
             _store = new X509Store(StoreName.My);
 
             StartListenerCommand = new Command(() => ExecuteStartListenerCommand());
+            BroadcastCommand = new Command(() => Broadcast());
 
             TLSIdentity.DeleteIdentity(_store, ListenerCertLabel, null);
         }
@@ -87,9 +89,9 @@ namespace P2PListSync.ViewModels
                     Debug.WriteLine($"Fail starting listener : {ex}");
                     return;
                 }
-
-                Broadcast();
+                
                 IsListening = true;
+                Broadcast();
                 ListenerStatus = $"Listening on {_urlEndpointListener.Urls[0]}";
             } else {
                 //tag::StopListener[]
@@ -204,6 +206,9 @@ namespace P2PListSync.ViewModels
         //tag::StartAdvertiser
         public void Broadcast()
         {
+            if (!IsListening)
+                return;
+
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp)) {
                 socket.EnableBroadcast = true;
                 var group = new IPEndPoint(IPAddress.Broadcast, CoreApp.UdpPort);

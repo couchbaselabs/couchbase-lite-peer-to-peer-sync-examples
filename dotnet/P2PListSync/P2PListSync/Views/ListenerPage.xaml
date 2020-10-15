@@ -17,7 +17,15 @@
             <Color x:Key="LightTextColor">#999999</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Broadcast" Command="{Binding BroadcastCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="UWP" Value="refresh.png"/>
+                </OnPlatform>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -28,7 +36,7 @@
                         Command="{Binding StartListenerCommand}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
-                <Label FontSize="22" Text="{Binding ListenerStatus}" />
+                <Label FontSize="Small" Text="{Binding ListenerStatus}" />
             </StackLayout>
         </ScrollView>
     </Grid>

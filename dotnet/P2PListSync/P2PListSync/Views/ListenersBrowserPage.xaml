@@ -16,30 +16,38 @@
 
     <ScrollView>
     <StackLayout>
-        <ListView x:Name="ItemsListView"
+            <Grid MinimumHeightRequest="30" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Entry x:Name="newItemName" Placeholder="Listener IP: ex. 192.168.0.14:59840" />
+                <Button Padding="0" Grid.Column="1" Text="+" MinimumHeightRequest="30" Clicked="Add_Clicked" />
+            </Grid>
+            <ListView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
-                RefreshCommand="{Binding LoadItemsCommand}"
-                IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 CachingStrategy="RecycleElement"
                 ItemSelected="OnItemSelected">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="Fill">
+                            <ViewCell.ContextActions>
+                                <MenuItem Clicked="OnItemClicked" Text="Delete" IsDestructive="True" />
+                            </ViewCell.ContextActions>
+                            <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="Fill">
                             <Label Text="{Binding ListenerEndpointString}" 
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
-                                   HorizontalOptions="StartAndExpand"
-                                FontSize="16" />
+                                HorizontalOptions="StartAndExpand"
+                                FontSize="Small" />
                             <Label Text="{Binding ConnectionStatus}" 
                                 LineBreakMode="NoWrap"
                                 TextColor="{Binding ConnectionStatusColor}"
                                 Style="{DynamicResource ListItemDetailTextStyle}"
-                                   HorizontalOptions="EndAndExpand"
-                                FontSize="14" />
+                                HorizontalOptions="EndAndExpand"
+                                FontSize="Small" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
