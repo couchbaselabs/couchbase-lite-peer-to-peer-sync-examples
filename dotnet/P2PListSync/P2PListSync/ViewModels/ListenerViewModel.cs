@@ -104,7 +104,7 @@ namespace P2PListSync.ViewModels
         {
             //tag::InitListener[]
             var listenerConfig = new URLEndpointListenerConfiguration(_db);
-            listenerConfig.Port = (ushort)CoreApp.PeerPort;
+            listenerConfig.Port = 0; // Dynamic port
             TLSIdentity tlsId = null;
 
             switch (CoreApp.ListenerTLSMode) {
@@ -210,7 +210,7 @@ namespace P2PListSync.ViewModels
                 var host = Dns.GetHostEntry(Dns.GetHostName());
                 foreach (var ip in host.AddressList) {
                     if (ip.AddressFamily == AddressFamily.InterNetwork) {
-                        var hi = Encoding.ASCII.GetBytes(CoreApp.Guid + ":" + ip + ":" + CoreApp.PeerPort);
+                        var hi = Encoding.ASCII.GetBytes(CoreApp.Guid + ":" + ip + ":" + _urlEndpointListener.Port);
                         socket.SendTo(hi, group);
                     }
                 }

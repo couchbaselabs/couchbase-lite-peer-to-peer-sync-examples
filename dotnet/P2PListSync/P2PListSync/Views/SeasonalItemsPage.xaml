@@ -12,6 +12,11 @@
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="X" Command="{Binding LoadItemsCommand}">
+            <ToolbarItem.Text>
+                <OnPlatform x:TypeArguments="x:String">
+                    <On Platform="UWP" Value="Reset" />
+                </OnPlatform>
+            </ToolbarItem.Text>
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="UWP" Value="refresh.png"/>

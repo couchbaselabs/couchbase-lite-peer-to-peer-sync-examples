@@ -44,7 +44,8 @@ namespace P2PListSync.ViewModels
             var remoteId = Guid.Parse(msgArr[0]);
             if (remoteId == CoreApp.Guid) return;
             var remoteIP = IPAddress.Parse(msgArr[1]);
-            var remoteEndpoint = new IPEndPoint(remoteIP, CoreApp.PeerPort);
+            var remotePort = Int32.Parse(msgArr[2]);
+            var remoteEndpoint = new IPEndPoint(remoteIP, remotePort);
 
             AddReplicator(remoteEndpoint);
         }

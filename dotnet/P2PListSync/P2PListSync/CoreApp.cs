@@ -42,7 +42,6 @@ namespace P2PListSync
 
     public sealed class CoreApp : Application
     {
-        public static int PeerPort = 59840;
         public static int UdpPort = 15000;
         public static Guid Guid = Guid.NewGuid();
 
