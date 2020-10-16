@@ -17,7 +17,6 @@ package com.couchbase.android.listsync.ui.main;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,8 +35,8 @@ import com.couchbase.android.listsync.databinding.RowProduceBinding;
 import com.couchbase.android.listsync.model.Produce;
 
 
-public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeasonViewHolder> {
-    static final class InSeasonViewHolder extends RecyclerView.ViewHolder {
+public class ProduceAdapter extends RecyclerView.Adapter<ProduceAdapter.ProduceViewHolder> {
+    static final class ProduceViewHolder extends RecyclerView.ViewHolder {
         @NonNull
         private final RowProduceBinding bindings;
         @NonNull
@@ -45,7 +44,7 @@ public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeas
         @NonNull
         private final RequestManager glide;
 
-        public InSeasonViewHolder(
+        public ProduceViewHolder(
             @NonNull MainViewModel viewModel,
             @NonNull RowProduceBinding bindings,
             @NonNull RequestManager glide) {
@@ -67,11 +66,8 @@ public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeas
             bindings.name.setText(name);
 
             bindings.done.setText(String.valueOf(produce.getDone()));
-            bindings.done.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) { viewModel.updateDone(name, bindings.done.getText().toString()); }
-                }
+            bindings.done.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) { viewModel.updateDone(name, bindings.done.getText().toString()); }
             });
 
             glide.load(produce).into(bindings.photo);
@@ -79,7 +75,7 @@ public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeas
     }
 
     @NonNull
-    public static InSeasonAdapter setup(
+    public static ProduceAdapter setup(
         @NonNull Activity ctxt,
         @NonNull RecyclerView listView,
         @NonNull MainViewModel viewModel) {
@@ -92,7 +88,7 @@ public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeas
         divider.setDrawable(ContextCompat.getDrawable(ctxt, R.drawable.divider));
         listView.addItemDecoration(divider);
 
-        final InSeasonAdapter adapter = new InSeasonAdapter(ctxt, viewModel);
+        final ProduceAdapter adapter = new ProduceAdapter(ctxt, viewModel);
         listView.setAdapter(adapter);
 
         return adapter;
@@ -108,7 +104,7 @@ public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeas
     @Nullable
     private List<Produce> produce;
 
-    public InSeasonAdapter(@NonNull Activity activity, @NonNull MainViewModel viewModel) {
+    public ProduceAdapter(@NonNull Activity activity, @NonNull MainViewModel viewModel) {
         this.viewModel = viewModel;
         glide = Glide.with(activity);
     }
@@ -116,14 +112,14 @@ public class InSeasonAdapter extends RecyclerView.Adapter<InSeasonAdapter.InSeas
     public int getItemCount() { return (produce == null) ? 0 : produce.size(); }
 
     @NonNull
-    public InSeasonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new InSeasonViewHolder(
+    public ProduceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ProduceViewHolder(
             viewModel,
             RowProduceBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false),
             glide);
     }
 
-    public void onBindViewHolder(@NonNull InSeasonViewHolder vh, int pos) {
+    public void onBindViewHolder(@NonNull ProduceViewHolder vh, int pos) {
         vh.setProduce(((produce == null) || (pos < 0) || (pos >= produce.size())) ? null : produce.get(pos));
     }
 

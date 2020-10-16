@@ -16,7 +16,6 @@
 package com.couchbase.android.listsync.ui.login;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -34,27 +33,27 @@ public class LoginViewModel extends ViewModel {
 
     public static final String STATUS_OK = "OK";
 
+
     @NonNull
     public final MutableLiveData<String> login = new MutableLiveData<>();
 
     @NonNull
     private final DatabaseManager db;
 
-    @SuppressWarnings("WeakerAccess")
     @Inject
     public LoginViewModel(@NonNull DatabaseManager db) { this.db = db; }
 
-    @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")
+    @NonNull
     public LiveData<String> login(@NonNull String user, @NonNull String pwd) {
+        login.setValue(null);
+
         db.openDb(user, pwd)
             .subscribe(
                 () -> login.setValue(STATUS_OK),
-                e -> {
-                    Log.w(TAG, "Failed opening db", e);
-                    login.setValue(e.toString());
-                });
+                e -> login.setValue(e.toString()));
+
         return login;
     }
 

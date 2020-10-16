@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -20,7 +21,7 @@ import com.couchbase.android.listsync.ui.main.MainActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
-    public static void start(Activity activity) {
+    public static void start(@NonNull Activity activity) {
         final Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
@@ -40,8 +41,8 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(@Nullable Bundle state) {
+        super.onCreate(state);
 
         AndroidInjection.inject(this);
 
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         if (viewModel.isLoggedIn()) { nextPage(LoginViewModel.STATUS_OK); }
 
         binding = ActivityLoginBinding.inflate(this.getLayoutInflater());
+
         setContentView(binding.getRoot());
 
         if (binding.password.getText().length() > 0) { return; }
@@ -71,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void enableLoginButton() {
         binding.login.setEnabled(
-            (binding.username.getText().length() > 2) && (binding.password.getText().length() > 2));
+            (binding.username.getText().length() >= 2) && (binding.password.getText().length() > 2));
     }
 
     private void login() {
@@ -79,7 +81,9 @@ public class LoginActivity extends AppCompatActivity {
             .observe(this, this::nextPage);
     }
 
-    private void nextPage(@NonNull String status) {
+    private void nextPage(@Nullable String status) {
+        if (status == null) { return; }
+
         if (!LoginViewModel.STATUS_OK.equals(status)) {
             Toast.makeText(this, status, Toast.LENGTH_LONG).show();
             return;

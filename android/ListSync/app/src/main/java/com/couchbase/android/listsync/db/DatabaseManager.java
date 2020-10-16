@@ -17,7 +17,9 @@ package com.couchbase.android.listsync.db;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.annotation.GuardedBy;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -64,9 +66,11 @@ import com.couchbase.lite.MutableDictionary;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
+import com.couchbase.lite.ReplicatorConfiguration;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
+import com.couchbase.lite.URLEndpoint;
 import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 
@@ -93,8 +97,6 @@ public final class DatabaseManager {
     @NonNull
     private final Scheduler dbScheduler = Schedulers.from(dbExecutor);
 
-    // Note:
-    // The database is now used from multiple threads: access to it must be synchronized.
     @GuardedBy("this")
     @Nullable
     private Database database;
@@ -124,12 +126,20 @@ public final class DatabaseManager {
         FileUtils.erase(dbFile);
     }
 
+    @NonNull
     public URLEndpointListenerConfiguration getListenerConfig() {
         return new URLEndpointListenerConfiguration(getDb());
     }
 
+    @NonNull
+    public ReplicatorConfiguration getReplicatorConfig(URLEndpoint endpoint) {
+        return new ReplicatorConfiguration(getDb(), endpoint);
+    }
+
     public boolean isLoggedIn() { return getDb() != null; }
 
+    @MainThread
+    @NonNull
     public Completable openDb(@NonNull String user, @NonNull String pwd) {
         return Completable
             .fromAction(() -> openDbAsync(user, pwd))
@@ -137,6 +147,8 @@ public final class DatabaseManager {
             .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @MainThread
+    @NonNull
     public Completable closeDb() {
         return Completable
             .fromAction(this::closeDbAsync)
@@ -144,7 +156,9 @@ public final class DatabaseManager {
             .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<Produce>> getInSeason() {
+    @MainThread
+    @NonNull
+    public Observable<List<Produce>> getProduce() {
         final Query query = QueryBuilder.select(SelectResult.property(PROP_ITEMS))
             .from(DataSource.database(getDb()))
             .where((Meta.id).equalTo(Expression.string(DOC_ID)));
@@ -153,8 +167,9 @@ public final class DatabaseManager {
             final ListenerToken token = query.addChangeListener(
                 dbExecutor,
                 change -> {
-                    final Throwable error = change.getError();
-                    if (error != null) { emitter.onError(error); }
+                    final Throwable err = change.getError();
+                    Log.d(TAG, "Query update", err);
+                    if (err != null) { emitter.onError(err); }
                     else { emitter.onNext(toProduce(change.getResults())); }
                 });
             emitter.setDisposable(new Disposable() {
@@ -174,6 +189,8 @@ public final class DatabaseManager {
             .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @MainThread
+    @NonNull
     public Completable updateDone(String name, long done) {
         return Completable
             .fromAction(() -> updateDoneAsync(name, done))
@@ -182,9 +199,7 @@ public final class DatabaseManager {
     }
 
     @WorkerThread
-    private void openDbAsync(@NonNull String user, @NonNull String pwd)
-        throws CouchbaseLiteException {
-
+    private void openDbAsync(@NonNull String user, @NonNull String pwd) throws CouchbaseLiteException {
         final DatabaseConfiguration config = new DatabaseConfiguration();
         final EncryptionKey encryptionKey = new EncryptionKey(pwd);
 
@@ -202,6 +217,7 @@ public final class DatabaseManager {
         }
 
         synchronized (this) { database = db; }
+        Log.i(TAG, "DB open: " + user);
     }
 
     @WorkerThread
@@ -212,14 +228,16 @@ public final class DatabaseManager {
             database = null;
         }
 
+        Log.i(TAG, "DB closing: " + db.getName());
         if (db != null) { db.close(); }
     }
 
-    // ??? O(n) lookup.
+    // ??? O(n) lookup. Feh.
     @WorkerThread
     private void updateDoneAsync(String name, long done) throws CouchbaseLiteException {
         final Document doc = getDb().getDocument(DOC_ID);
         final MutableArray items = doc.getArray(PROP_ITEMS).toMutable();
+
         final int n = items.count();
         for (int i = 0; i < n; i++) {
             final Dictionary produce = items.getDictionary(i);
@@ -230,11 +248,13 @@ public final class DatabaseManager {
                 break;
             }
         }
+
         final MutableDocument mDoc = doc.toMutable();
         mDoc.setArray(PROP_ITEMS, items);
         getDb().save(mDoc);
     }
 
+    @NonNull
     @SuppressWarnings({"unchecked", "rawtypes"})
     private List<Produce> toProduce(@Nullable ResultSet resultSet) {
         final List<Produce> produce = new ArrayList<>();
@@ -253,13 +273,15 @@ public final class DatabaseManager {
         return produce;
     }
 
-    private Produce toProduce(Map<String, ?> rawProduce) {
+    @NonNull
+    private Produce toProduce(@NonNull Map<String, ?> rawProduce) {
         final String name = (String) rawProduce.get(PROP_KEY);
         if (TextUtils.isEmpty(name)) { throw new IllegalStateException("Empty name (key) in DB"); }
         final Long done = (Long) rawProduce.get(PROP_VALUE);
         return new Produce(name, (Blob) rawProduce.get(PROP_IMAGE), (done == null) ? 0 : done);
     }
 
+    @Nullable
     private Database getDb() {
         synchronized (this) { return database; }
     }

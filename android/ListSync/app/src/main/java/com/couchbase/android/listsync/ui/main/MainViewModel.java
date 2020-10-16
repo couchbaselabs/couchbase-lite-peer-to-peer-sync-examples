@@ -43,7 +43,7 @@ public class MainViewModel extends ViewModel {
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     @NonNull
-    private final MutableLiveData<List<Produce>> inSeason = new MutableLiveData<>();
+    private final MutableLiveData<List<Produce>> produce = new MutableLiveData<>();
 
     @NonNull
     private final DatabaseManager db;
@@ -53,9 +53,9 @@ public class MainViewModel extends ViewModel {
     public MainViewModel(@NonNull DatabaseManager db) { this.db = db; }
 
     @NonNull
-    public LiveData<List<Produce>> getInSeason() {
-        disposables.add(db.getInSeason().subscribe(inSeason::setValue));
-        return inSeason;
+    public LiveData<List<Produce>> getProduce() {
+        disposables.add(db.getProduce().subscribe(produce::setValue));
+        return produce;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -73,16 +73,21 @@ public class MainViewModel extends ViewModel {
         }
     }
 
-    public void p2p(MainActivity activity) {
-        db.closeDb();
-        P2PActivity.start(activity);
-    }
+    public void p2p(MainActivity activity) { P2PActivity.start(activity); }
 
     public void logout(MainActivity activity) {
-        db.closeDb();
+        closeDb();
         LoginActivity.start(activity);
         activity.finish();
     }
 
     public void cancel() { disposables.clear(); }
+
+    @SuppressLint("CheckResult")
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void closeDb() {
+        db.closeDb().subscribe(
+            () -> Log.w(TAG, "Db closed"),
+            (e) -> Log.w(TAG, "Failed to close db", e));
+    }
 }

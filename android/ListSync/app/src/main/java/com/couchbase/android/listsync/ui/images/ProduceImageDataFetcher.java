@@ -50,9 +50,7 @@ class ProduceImageDataFetcher implements DataFetcher<InputStream> {
         if (blobStream == null) { return; }
 
         try { blobStream.close(); }
-        catch (IOException e) {
-            Log.w(TAG, "Failed closing blob input stream for " + produce.getName());
-        }
+        catch (IOException e) { Log.w(TAG, "Failed closing blob input stream for " + produce.getName()); }
     }
 
 

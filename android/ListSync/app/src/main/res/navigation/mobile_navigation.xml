@@ -9,14 +9,14 @@
 
     <fragment
         android:id="@+id/nav_active"
-        android:name="com.couchbase.android.listsync.ui.client.ClientFragment"
+        android:name="com.couchbase.android.listsync.ui.p2p.client.ClientFragment"
         android:label="@string/title_active"
         tools:layout="@layout/fragment_client"
         />
 
     <fragment
         android:id="@+id/nav_passive"
-        android:name="com.couchbase.android.listsync.ui.server.ServerFragment"
+        android:name="com.couchbase.android.listsync.ui.p2p.server.ServerFragment"
         android:label="@string/title_passive"
         tools:layout="@layout/fragment_server"
         />

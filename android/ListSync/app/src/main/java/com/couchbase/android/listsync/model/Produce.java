@@ -44,13 +44,6 @@ public class Produce {
 
     public long getDone() { return done; }
 
-    public Produce update(@Nullable Blob photo, @NonNull String photoMimeType, long done) {
-        return new Produce(
-            this.name,
-            (photo != null) ? photo : this.photo,
-            (done >= 0) ? done : this.done);
-    }
-
     @Override
     public int hashCode() { return Objects.hash(name); }
 

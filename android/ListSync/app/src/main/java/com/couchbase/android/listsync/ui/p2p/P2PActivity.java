@@ -22,7 +22,7 @@ import com.couchbase.android.listsync.databinding.ActivityP2pBinding;
 
 
 public class P2PActivity extends AppCompatActivity implements BaseFragment.VMProvider {
-    public static void start(Activity activity) {
+    public static void start(@NonNull Activity activity) {
         final Intent intent = new Intent(activity, P2PActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         activity.startActivity(intent);
@@ -33,10 +33,6 @@ public class P2PActivity extends AppCompatActivity implements BaseFragment.VMPro
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NonNull
-    private ActivityP2pBinding binding;
-
     @NonNull
     public ViewModelProvider.Factory getViewModelFactory() { return viewModelFactory; }
 
@@ -46,17 +42,17 @@ public class P2PActivity extends AppCompatActivity implements BaseFragment.VMPro
 
         AndroidInjection.inject(this);
 
-        binding = ActivityP2pBinding.inflate(getLayoutInflater());
+        ActivityP2pBinding binding = ActivityP2pBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         AppBarConfiguration appBarConfiguration
             = new AppBarConfiguration.Builder(R.id.nav_active, R.id.nav_passive).build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        final BottomNavigationView navView = findViewById(R.id.nav_view);
         NavigationUI.setupWithNavController(navView, navController);
     }
 }

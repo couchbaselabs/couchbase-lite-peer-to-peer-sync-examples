@@ -13,13 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package com.couchbase.android.listsync.ui.server;
+package com.couchbase.android.listsync.ui.p2p.client;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import java.net.URI;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,28 +33,40 @@ import com.couchbase.android.listsync.p2p.SyncManager;
 
 
 @Singleton
-public class ServerViewModel extends ViewModel {
-    private static final String TAG = "SRV_VM";
+public class ClientViewModel extends ViewModel {
+    private static final String TAG = "CLI_VM";
+
+    public static final String SCHEME_WSS = "wss";
+
+
+    @NonNull
+    private final MutableLiveData<Set<URI>> clients = new MutableLiveData<>();
 
     @NonNull
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     @NonNull
-    private final MutableLiveData<String> endpoint = new MutableLiveData<>();
-
-    @NonNull
     private final SyncManager sync;
 
     @Inject
-    public ServerViewModel(@NonNull SyncManager sync) { this.sync = sync; }
+    public ClientViewModel(@NonNull SyncManager sync) { this.sync = sync; }
 
-    public LiveData<String> startListener() {
-        disposables.add(sync.startListener().subscribe(endpoint::setValue));
-        return endpoint;
+    @NonNull
+    public LiveData<Set<URI>> getClients() {
+        disposables.add(sync.observeClients().subscribe(clients::setValue));
+        return clients;
     }
 
-    public void stopListener() {
-        sync.stopListener().subscribe(() -> {}, e -> Log.w(TAG, "failed to stop listener", e));
+    public void startClient(@NonNull URI uri) {
+        disposables.add(sync.startClient(uri).subscribe(
+            () -> Log.i(TAG, "Client started @" + uri),
+            e -> Log.w(TAG, "Failed to start client @" + uri, e)));
+    }
+
+    public void stopClient(@NonNull URI uri) {
+        disposables.add(sync.stopClient(uri).subscribe(
+            () -> Log.i(TAG, "Client stopped @" + uri),
+            e -> Log.w(TAG, "Failed to stop client @" + uri, e)));
     }
 
     public void cancel() { disposables.clear(); }

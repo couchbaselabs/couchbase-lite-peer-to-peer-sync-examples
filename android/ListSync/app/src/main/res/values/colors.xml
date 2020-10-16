@@ -11,10 +11,10 @@
     <color name="light_green">#88FF33</color>
     <color name="mid_green">#00CC00</color>
     <color name="dark_green">#009933</color>
-    <color name="light_red">#FFAA66</color>
+    <color name="light_red">#FFAA88</color>
     <color name="mid_red">#FF3300</color>
     <color name="dark_red">#CC0000</color>
-    <color name="light_grey">#bbbbbb</color>
+    <color name="light_grey">#BBBBBB</color>
     <color name="mid_grey">#888888</color>
     <color name="dark_grey">#555555</color>
 </resources>

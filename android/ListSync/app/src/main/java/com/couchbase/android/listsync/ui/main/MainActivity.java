@@ -20,7 +20,7 @@ import com.couchbase.android.listsync.databinding.ActivityMainBinding;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static void start(Activity activity) {
+    public static void start(@NonNull Activity activity) {
         final Intent intent = new Intent(activity, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         activity.startActivity(intent);
@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
-    private InSeasonAdapter adapter;
+    private ProduceAdapter adapter;
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
-        adapter = InSeasonAdapter.setup(this, binding.inSeason, viewModel);
+        adapter = ProduceAdapter.setup(this, binding.produce, viewModel);
     }
 
     @Override
@@ -85,6 +85,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        viewModel.getInSeason().observe(this, adapter::populate);
+        viewModel.getProduce().observe(this, adapter::populate);
     }
 }

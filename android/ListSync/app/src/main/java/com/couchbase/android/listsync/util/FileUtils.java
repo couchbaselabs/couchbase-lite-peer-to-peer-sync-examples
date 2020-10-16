@@ -40,18 +40,7 @@ public final class FileUtils {
                 while (ze != null) {
                     File newFile = new File(destDir, ze.getName());
                     if (ze.isDirectory()) { makeDir(newFile); }
-                    else {
-                        File parent = newFile.getParentFile();
-                        if (parent == null) { continue; }
-                        makeDir(parent);
-
-                        try (OutputStream fos = new FileOutputStream(newFile)) {
-                            int len;
-                            while ((len = zis.read(buffer)) > 0) {
-                                fos.write(buffer, 0, len);
-                            }
-                        }
-                    }
+                    else if (!unzipFile(zis, buffer, newFile)) { continue; }
                     ze = zis.getNextEntry();
                 }
             }
@@ -81,5 +70,19 @@ public final class FileUtils {
 
     private static void makeDir(@NonNull File dir) throws IOException {
         if (!(dir.isDirectory() || dir.mkdirs())) { throw new IOException("Failed to create directory: " + dir); }
+    }
+
+    private static boolean unzipFile(ZipInputStream zis, byte[] buffer, File newFile) throws IOException {
+        File parent = newFile.getParentFile();
+        if (parent == null) { return false; }
+
+        makeDir(parent);
+
+        try (OutputStream fos = new FileOutputStream(newFile)) {
+            int len;
+            while ((len = zis.read(buffer)) > 0) { fos.write(buffer, 0, len); }
+        }
+
+        return true;
     }
 }

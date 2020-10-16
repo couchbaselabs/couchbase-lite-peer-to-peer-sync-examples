@@ -16,20 +16,45 @@
 package com.couchbase.android.listsync.ui.p2p;
 
 import android.content.Context;
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.couchbase.lite.internal.utils.Fn;
 
-public class BaseFragment extends Fragment {
+
+public abstract class BaseFragment extends Fragment {
     public interface VMProvider {
         ViewModelProvider.Factory getViewModelFactory();
     }
 
+    public static class OneShotObserver<T> implements Observer<T> {
+        private final LiveData<T> liveData;
+        private final Fn.Consumer<T> consumer;
+
+        public OneShotObserver(@NonNull LiveData<T> liveData, @NonNull Fn.Consumer<T> consumer) {
+            this.liveData = liveData;
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void onChanged(T data) {
+            consumer.accept(data);
+            liveData.removeObserver(this);
+        }
+    }
+
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
     private ViewModelProvider.Factory viewModelFactory;
 
+    @CallSuper
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -42,11 +67,7 @@ public class BaseFragment extends Fragment {
     }
 
     @NonNull
-    public <T extends ViewModel> T getViewModel(Class<T> klass) {
-        if (viewModelFactory == null) {
-            throw new IllegalStateException("getViewModel called before onAttach");
-        }
-
+    public final <T extends ViewModel> T getViewModel(@NonNull Class<T> klass) {
         return ViewModelProviders.of(this, viewModelFactory).get(klass);
     }
 }

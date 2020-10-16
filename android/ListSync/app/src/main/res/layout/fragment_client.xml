@@ -5,21 +5,120 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.client.ClientFragment"
+    android:layout_margin="@dimen/frame_margin"
+    tools:context=".ui.p2p.server.ServerFragment"
     >
 
     <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
+        android:id="@+id/hostLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/portLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/host"
+        android:layout_margin="@dimen/frame_margin"
+        android:text="@string/host"
+        style="@style/Text.Small.Label"
         />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/host"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/hostLabel"
+        app:layout_constraintStart_toEndOf="@+id/hostLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:inputType="text|textNoSuggestions"
+        style="@style/Text"
+        />
+
+    <TextView
+        android:id="@+id/portLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/hostLabel"
+        app:layout_constraintBottom_toTopOf="@+id/databaseLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/port"
+        android:layout_margin="@dimen/frame_margin"
+        android:text="@string/port"
+        style="@style/Text.Small.Label"
+        />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/port"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/portLabel"
+        app:layout_constraintStart_toEndOf="@+id/portLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:inputType="numberDecimal"
+        style="@style/Text"
+        />
+
+    <TextView
+        android:id="@+id/databaseLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/portLabel"
+        app:layout_constraintBottom_toTopOf="@+id/start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/database"
+        android:layout_marginTop="@dimen/frame_margin"
+        android:layout_marginLeft="@dimen/frame_margin"
+        android:layout_marginRight="@dimen/frame_margin"
+        android:layout_marginBottom="@dimen/textbox_pad"
+        android:text="@string/database"
+        style="@style/Text.Small.Label"
+        />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/database"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/databaseLabel"
+        app:layout_constraintStart_toEndOf="@+id/databaseLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:inputType="text|textNoSuggestions"
+        style="@style/Text"
+        />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/host"
+        app:layout_constraintBottom_toTopOf="@+id/clients"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/stop"
+        android:layout_marginTop="@dimen/textbox_pad"
+        android:text="@string/start_client"
+        style="@style/ListSync.Button.Start"
+        android:enabled="false"
+        />
+
+    <Button
+        android:id="@+id/stop"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/start"
+        app:layout_constraintStart_toEndOf="@+id/start"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/stop_client"
+        style="@style/ListSync.Button.Stop"
+        android:enabled="false"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/clients"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/textbox_pad"
+        app:layout_constraintTop_toBottomOf="@+id/start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

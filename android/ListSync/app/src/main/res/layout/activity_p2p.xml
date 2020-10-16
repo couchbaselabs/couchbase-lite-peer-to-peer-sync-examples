@@ -16,7 +16,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         style="@style/Theme.ListSync.BottomNav"
-        app:menu="@menu/bottom_nav_menu"
+        app:menu="@menu/menu_bottom_nav"
         />
 
     <fragment

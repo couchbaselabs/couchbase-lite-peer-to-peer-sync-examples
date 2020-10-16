@@ -17,6 +17,7 @@ package com.couchbase.android.listsync.app;
 
 import android.app.Activity;
 import android.app.Application;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 
@@ -26,6 +27,8 @@ import dagger.android.HasActivityInjector;
 
 
 public class ListSync extends Application implements HasActivityInjector {
+    @SuppressWarnings({"WeakerAccess", "NotNullFieldNotInitialized"})
+    @NonNull
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingActivityInjector;
 
@@ -35,6 +38,7 @@ public class ListSync extends Application implements HasActivityInjector {
         DaggerAppFactory.builder().create(this).inject(this);
     }
 
+    @NonNull
     @Override
     public AndroidInjector<Activity> activityInjector() { return dispatchingActivityInjector; }
 }

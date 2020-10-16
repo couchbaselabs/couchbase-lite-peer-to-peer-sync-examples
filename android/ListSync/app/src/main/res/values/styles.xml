@@ -24,8 +24,8 @@
     <style name="Theme.ListSync.BottomNav">
         <item name="android:background">?android:attr/windowBackground</item>
         <item name="itemBackground">?android:attr/windowBackground</item>
-        <item name="itemIconTint">@drawable/selector_p2p_bottom_nav</item>
-        <item name="itemTextColor">@drawable/selector_p2p_bottom_nav</item>
+        <item name="itemIconTint">@color/color_p2p_bottom_nav</item>
+        <item name="itemTextColor">@color/color_p2p_bottom_nav</item>
     </style>
 
     <style name="ListSync.Button" parent="Widget.AppCompat.Button.Borderless">
@@ -39,7 +39,7 @@
     </style>
 
     <style name="ListSync.Button.Login">
-        <item name="android:background">@drawable/login_button_background</item>
+        <item name="android:background">@drawable/background_login_button</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
@@ -47,7 +47,7 @@
         <item name="android:layout_margin">@dimen/button_margin</item>
         <item name="android:paddingTop">@dimen/button_pad_vertical</item>
         <item name="android:paddingBottom">@dimen/button_pad_vertical</item>
-        <item name="android:background">@drawable/start_button_background</item>
+        <item name="android:background">@drawable/background_start_button</item>
         <item name="android:textColor">@color/color_button_text</item>
     </style>
 
@@ -55,21 +55,33 @@
         <item name="android:layout_margin">@dimen/button_margin</item>
         <item name="android:paddingTop">@dimen/button_pad_vertical</item>
         <item name="android:paddingBottom">@dimen/button_pad_vertical</item>
-        <item name="android:background">@drawable/stop_button_background</item>
+        <item name="android:background">@drawable/background_stop_button</item>
         <item name="android:textColor">@color/color_button_text</item>
     </style>
 
     <style name="Text">
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/text_mid</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+    <style name="Text.Center">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Text.Label">
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Text.Small">
         <item name="android:textSize">@dimen/text_small</item>
     </style>
 
-    <style name="Text.Label">
+    <style name="Text.Small.Bottom">
+        <item name="android:gravity">bottom</item>
+    </style>
+
+    <style name="Text.Small.Label">
         <item name="android:textStyle">bold</item>
     </style>
 

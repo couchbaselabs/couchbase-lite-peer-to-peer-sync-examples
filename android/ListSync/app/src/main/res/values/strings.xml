@@ -15,8 +15,15 @@
     <string name="p2p">p2p</string>
     <string name="title_passive">Passive</string>
     <string name="title_active">Active</string>
-    <string name="start">Start Listener</string>
-    <string name="stop">Stop Listener</string>
+    <string name="start_server">Start Listener</string>
+    <string name="stop_server">Stop Listener</string>
+    <string name="start_client">Start Replicator</string>
+    <string name="stop_client">Stop Replicator</string>
     <string name="endpoint">Endpoint:</string>
+    <string name="host">Host:</string>
+    <string name="port">Port:</string>
+    <string name="database">Database:</string>
+
+    <string name="bad_port">You must specifiy a port 0 &lt; port &lt;= 65535</string>
 
 </resources>

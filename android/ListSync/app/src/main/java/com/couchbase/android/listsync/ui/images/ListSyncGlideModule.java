@@ -46,7 +46,7 @@ public class ListSyncGlideModule extends AppGlideModule {
             new ModelLoaderFactory<Produce, InputStream>() {
                 @NonNull
                 @Override
-                public ModelLoader<Produce, InputStream> build(@NonNull MultiModelLoaderFactory unused) {
+                public ModelLoader<Produce, InputStream> build(@NonNull MultiModelLoaderFactory ignore) {
                     return new ProduceImageLoader();
                 }
 

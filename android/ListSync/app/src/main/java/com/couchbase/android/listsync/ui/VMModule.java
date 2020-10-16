@@ -23,10 +23,10 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 
-import com.couchbase.android.listsync.ui.client.ClientViewModel;
+import com.couchbase.android.listsync.ui.p2p.client.ClientViewModel;
 import com.couchbase.android.listsync.ui.login.LoginViewModel;
 import com.couchbase.android.listsync.ui.main.MainViewModel;
-import com.couchbase.android.listsync.ui.server.ServerViewModel;
+import com.couchbase.android.listsync.ui.p2p.server.ServerViewModel;
 
 
 @SuppressWarnings({"WeakerAccess"})

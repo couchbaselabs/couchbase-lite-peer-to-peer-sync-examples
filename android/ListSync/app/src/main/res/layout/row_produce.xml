@@ -17,7 +17,6 @@
         app:layout_constraintEnd_toStartOf="@+id/name"
         app:layout_constraintVertical_chainStyle="packed"
         android:contentDescription="@string/inventory_tracker"
-        android:src="@mipmap/ic_launcher_foreground"
         />
 
     <TextView
@@ -28,7 +27,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/photo"
         app:layout_constraintEnd_toStartOf="@+id/done"
-        style="@style/Text"
+        style="@style/Text.Center"
         />
 
     <EditText
@@ -41,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:inputType="numberDecimal"
         android:focusedByDefault="false"
-        style="@style/Text.Small"
+        style="@style/Text.Small.Bottom"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

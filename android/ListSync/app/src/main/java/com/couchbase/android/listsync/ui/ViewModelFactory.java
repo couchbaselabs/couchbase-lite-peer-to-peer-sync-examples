@@ -31,7 +31,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     private final Map<Class<? extends ViewModel>, Provider<ViewModel>> providers;
 
     @Inject
-    public ViewModelFactory(@NonNull final Map<Class<? extends ViewModel>, Provider<ViewModel>> providers) {
+    public ViewModelFactory(@NonNull Map<Class<? extends ViewModel>, Provider<ViewModel>> providers) {
         this.providers = providers;
     }
 
