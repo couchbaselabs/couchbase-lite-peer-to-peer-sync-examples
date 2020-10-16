@@ -206,10 +206,5 @@ namespace P2PListSync.ViewModels
 
             return await Task.FromResult(true);
         }
-
-        public ImageSource Image(string IconSource)
-        {
-            return ImageSource.FromResource(string.Format("P2PListSync.Assets.{0}", IconSource));
-        }
     }
 }

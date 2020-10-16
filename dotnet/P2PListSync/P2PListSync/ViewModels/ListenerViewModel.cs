@@ -19,6 +19,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -152,6 +153,16 @@ namespace P2PListSync.ViewModels
 
             _urlEndpointListener = new URLEndpointListener(listenerConfig);
             //end::InitListener[]
+        }
+
+        internal string GetConnectedPeers()
+        {
+            if (!IsListening) {
+                return null;
+            }
+
+            var status = _urlEndpointListener.Status;
+            return $"There are {status.ConnectionCount} Connectioned clients of which {status.ActiveConnectionCount} are active.";
         }
 
         #region Server TLSIdentity

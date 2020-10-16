@@ -21,7 +21,14 @@
         <ToolbarItem Text="Broadcast" Command="{Binding BroadcastCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
-                    <On Platform="UWP" Value="refresh.png"/>
+                    <On Platform="UWP" Value="broadcast.png"/>
+                </OnPlatform>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+        <ToolbarItem Text="Peers" Clicked="GetConnectedPeers_Clicked">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="UWP" Value="peers.png"/>
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>

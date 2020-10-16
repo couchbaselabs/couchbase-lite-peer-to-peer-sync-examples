@@ -4,16 +4,6 @@
              x:Class="P2PListSync.Views.ListenersBrowserPage"
               Title="{Binding Title}"
              x:Name="ListenersPage">
-    <!--<ContentPage.ToolbarItems>
-        <ToolbarItem Text="Refresh" Clicked="Refresh_Clicked">
-            <ToolbarItem.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource">
-                    <On Platform="UWP" Value="refresh.png"/>
-                </OnPlatform>
-            </ToolbarItem.Icon>
-        </ToolbarItem>
-    </ContentPage.ToolbarItems>-->
-
     <ScrollView>
     <StackLayout>
             <Grid MinimumHeightRequest="30" Margin="0">
