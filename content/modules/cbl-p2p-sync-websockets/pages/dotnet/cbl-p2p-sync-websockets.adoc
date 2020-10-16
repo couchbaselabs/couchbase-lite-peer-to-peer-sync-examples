@@ -289,7 +289,7 @@ include::example$code-samples.cs[tags=ListenerValidationTestMode]
 
 === Stopping Replication
 
-* Open the *ReplicatorItem.cs* file and locate the `ExecuteStartReplicatorCommand()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we remove any listeners attached to the replicator and stop it. You can restart the replicator again in the same `ExecuteStartReplicatorCommand()` method
+* Open the *ReplicatorItem.cs* file and locate the `StopReplicator()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we remove any listeners attached to the replicator and stop it. You can restart the replicator again in the same `ExecuteStartReplicatorCommand()` method
 
 [source,C#]
 ----
@@ -303,7 +303,8 @@ include::example$code-samples.cs[tags=StopReplication]
 * Select "Broswer" menu. The app automatically browses for listener and lists it here when there is any listener is broadcasting.
 * Tap on the row corresponding to listener. This will start replication with the listener and it shoud transition to Connected state
 * Verify the connection count on listener
-* Tap on the row corresponding to listener. This will stop replication with the listener and it shoud transition to Disonnected state. Try Disconnect and then reconnect again
+* Tap on the row corresponding to listener again. This will stop replication with the listener and it shoud transition to Disonnected state. Try Disconnect and then reconnect again
+* Swipe left (iOS) or long press (Android) or left click (UWP) on the the row. You should see the option to remove listener
 
 image::ios-active-start-replicator.gif[alt=p2p sync,width=600,height=320]
 
@@ -316,7 +317,7 @@ Once the connection is established between the peers, you can start syncing. Cou
 * Start the listener on one of the app instances. You could also have multiple listeners.
 * Connect the other instances of the app to the listener
 * Enter `SeasonalItemsPage` by selecting "What's in Season?" menu
-* Edit the quanity or image on any one of the instances
+* Edit the quanity and/or image on one or multiple instance(s) and press Save when you are done editing
 * Watch it sync automatically to other connected clients
 
 image::ios-sync.gif[alt=server websockets listener login screen,width=600,height=320]
