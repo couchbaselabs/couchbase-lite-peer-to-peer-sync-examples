@@ -24,7 +24,7 @@ namespace P2PListSync.Views
             InitializeComponent();
         }
 
-        async void OnLoginButtonClicked(object sender, EventArgs e)
+        void OnLoginButtonClicked(object sender, EventArgs e)
         {
             var user = new User {
                 Username = usernameEntry.Text,

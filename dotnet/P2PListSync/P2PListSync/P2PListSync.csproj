@@ -2,121 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\apple-touch-icon.png" />
-    <None Remove="Assets\apples.png" />
-    <None Remove="Assets\aragula.png" />
-    <None Remove="Assets\asparagus.png" />
-    <None Remove="Assets\beets.png" />
-    <None Remove="Assets\blueberries.png" />
-    <None Remove="Assets\broccoli.png" />
-    <None Remove="Assets\brussels sprouts.png" />
-    <None Remove="Assets\cabbage.png" />
-    <None Remove="Assets\cantaloupes.png" />
-    <None Remove="Assets\carrots.png" />
-    <None Remove="Assets\cauliflower.png" />
-    <None Remove="Assets\celery.png" />
-    <None Remove="Assets\chard.png" />
-    <None Remove="Assets\cherries.png" />
-    <None Remove="Assets\corn.png" />
-    <None Remove="Assets\cucumbers.png" />
-    <None Remove="Assets\default-user-thumbnail.png" />
-    <None Remove="Assets\default_food.png" />
-    <None Remove="Assets\eggplant.png" />
-    <None Remove="Assets\garlic.png" />
-    <None Remove="Assets\grapes.png" />
-    <None Remove="Assets\icons8-food-filled-100.png" />
-    <None Remove="Assets\ionions.png" />
-    <None Remove="Assets\kale.png" />
-    <None Remove="Assets\leeks.png" />
-    <None Remove="Assets\lettuce.png" />
-    <None Remove="Assets\mushrooms.png" />
-    <None Remove="Assets\peaches.png" />
-    <None Remove="listener-cert-pkey.p12" />
-    <None Remove="listener-pinned-cert.cer" />
-    <None Remove="listener-self-signed-cert.p12" />
-    <None Remove="pinned-invalid-listener-cert.cer" />
-    <None Remove="pinned-listener-self-signed-cert.cer" />
-    <None Remove="userallowlist.json" />
-    <None Remove="userdb.cblite2.zip" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\apple-touch-icon.png" />
-    <EmbeddedResource Include="Assets\apples.png" />
-    <EmbeddedResource Include="Assets\aragula.png" />
-    <EmbeddedResource Include="Assets\asparagus.png" />
-    <EmbeddedResource Include="Assets\beets.png" />
-    <EmbeddedResource Include="Assets\blueberries.png" />
-    <EmbeddedResource Include="Assets\broccoli.png" />
-    <EmbeddedResource Include="Assets\brussels sprouts.png" />
-    <EmbeddedResource Include="Assets\cabbage.png" />
-    <EmbeddedResource Include="Assets\cantaloupes.png" />
-    <EmbeddedResource Include="Assets\carrots.png" />
-    <EmbeddedResource Include="Assets\cauliflower.png" />
-    <EmbeddedResource Include="Assets\celery.png" />
-    <EmbeddedResource Include="Assets\chard.png" />
-    <EmbeddedResource Include="Assets\cherries.png" />
-    <EmbeddedResource Include="Assets\corn.png" />
-    <EmbeddedResource Include="Assets\cucumbers.png" />
-    <EmbeddedResource Include="Assets\default-user-thumbnail.png" />
-    <EmbeddedResource Include="Assets\default_food.png" />
-    <EmbeddedResource Include="Assets\eggplant.png" />
-    <EmbeddedResource Include="Assets\garlic.png" />
-    <EmbeddedResource Include="Assets\grapes.png" />
-    <EmbeddedResource Include="Assets\icons8-food-filled-100.png" />
-    <EmbeddedResource Include="Assets\ionions.png" />
-    <EmbeddedResource Include="Assets\kale.png" />
-    <EmbeddedResource Include="Assets\leeks.png" />
-    <EmbeddedResource Include="Assets\lettuce.png" />
-    <EmbeddedResource Include="Assets\mushrooms.png" />
-    <EmbeddedResource Include="Assets\peaches.png" />
-    <EmbeddedResource Include="listener-cert-pkey.p12" />
-    <EmbeddedResource Include="listener-pinned-cert.cer" />
-    <EmbeddedResource Include="listener-self-signed-cert.p12" />
-    <EmbeddedResource Include="pinned-invalid-listener-cert.cer" />
-    <EmbeddedResource Include="pinned-listener-self-signed-cert.cer" />
-    <EmbeddedResource Include="userallowlist.json" />
-    <EmbeddedResource Include="userdb.cblite2.zip" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="4.6.0.1141" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
     <PackageReference Include="Couchbase.Lite.Enterprise" Version="2.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Xamarin.Forms" Version="3.5.0.129452" />
   </ItemGroup>
-
   <ItemGroup>
-    <EmbeddedResource Update="Views\LoginPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
+    <None Remove="userdb.cblite2.zip" />
   </ItemGroup>
-
   <ItemGroup>
-    <None Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\ListenerPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\ListenersBrowserPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\MenuPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Views\SeasonalItemsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+    <EmbeddedResource Include="userdb.cblite2.zip" />
   </ItemGroup>
 </Project>
