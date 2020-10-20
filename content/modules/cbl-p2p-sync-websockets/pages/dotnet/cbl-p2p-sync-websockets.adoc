@@ -28,7 +28,8 @@ Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https
 
 This tutorial will demonstrate how to -
 
-* Use UDP type socket to listen on specified port for peer discovery. Broadcast it's own IP address over UDP type socket. NOTE: UWP app needs to be added to the Exception list on the Windows Firewall.
+* Use UDP type socket to listen on specified port for peer discovery. Broadcast it's own IP address over UDP type socket. 
+** NOTE: UWP app needs to be added to the Exception list on the Windows Firewall.
 * Configure a websocket listener to listen to incoming requests. We will walk through various TLS modes and client authentication modes.
 * Start a bi-directional replication from active peer.
 * Sync data between connected peers
@@ -222,9 +223,10 @@ include::example$code-samples.cs[tags=StopListener]
 === Try it out
 * Run the app on a simulator or a real device. If its the latter, make sure you sign your app with the appropriate developer certificate
 * On login screen, sign in as any one of the users configured in the `userallowlist.json` file such as "bob" and "password"
-* You can find 4 selections (`What's un Season?`, `Listener`, `Browser`, and `Logout`) under "hamburger" menu locates on the upper left hand side.
+* You can find 4 selections (`What's in Season?`, `Listener`, `Browser`, and `Logout`) under "hamburger" menu locates on the upper left hand side.
 * From the `ListenerPage` after select `Listener` from the "hamburger" menu, start the listener by clicking on "Start Listener" button
-* You can see 2 toolbar items (`Broadcast` and `Peers`) NOTE: These two items will do nothing if listener is not started.
+* You can see 2 toolbar items (`Broadcast` and `Peers`) 
+** NOTE: These two items will do nothing if listener is not started.
 * Click on the "Peers" toolbar item to see number of connected clients. It should be 0 if there are no connected clients
 * Click on the "Broadcast" toolbar item to broadcast the listener ip endpoint if you don't see the listener's ip endpoint showing up on peers' `ListenersBrowserPage`
 * From the `ListenerPage`, stop the listener by clicking on "Stop Listener" button
@@ -235,7 +237,7 @@ image::xamarin-passive-start-listener.gif[alt=server websocket listener login sc
 We will walk through the steps of using the app in active peer mode
 
 === Discovering Listeners
-In the app, we use UDP Type Socket to listen on port 15000 for listener Note: Port 15000 is used by UDP Type Socket, not used by the websocket listener. Couchbase Lite choose the port when a websocket listener is created.
+In the app, we use UDP Type Socket to listen on port 15000 for listener. Please note, port 15000 is used by UDP Type Socket, not used by the websocket listener. Couchbase Lite choose the port when a websocket listener is created.
 
 * Open the *ListenersBrowserViewModel.cs* file and look for `ListenersBrowserViewModel` constructor. Here, we create a `UdpListener` with the port it listens on and pick up any raised Udp packet received event (Listner's broadcasting IPEndpoint).
 
@@ -304,10 +306,10 @@ include::example$code-samples.cs[tags=StopReplication]
 * Follow instructions in "Try It Out" section of <<Passive Peer or Server>> to start app in passive mode on a simulator instance or real device.
 * Run the app on a separate simulator instance or a real device. If its the latter, make sure you sign your app with the appropriate developer certificate
 * On login screen, sign in as any one of the users configured in the `userallowlist.json` file such as "bob" and "password". An an exercise, try with an invalid user and ensure it fails
-* You can find 4 selections (`What's un Season?`, `Listener`, `Browser`, and `Logout`) under "hamburger" menu locates on the upper left hand side.
+* You can find 4 selections (`What's in Season?`, `Listener`, `Browser`, and `Logout`) under "hamburger" menu locates on the upper left hand side.
 * Select "Broswer" from the "hamburger" menu. The app automatically browses for listener and lists it here when any listener is broadcasting. 
-  NOTE: If the listener is not started before listeners browser ("Broswer") is selected, you will need to click `Broadcast` toolbar item locates on top of the `ListenerPage` (See `Broadcast` in <<Passive Peer or Server>>)
-  NOTE: You will need to manually enter the listener's IP Endpoint (ex. 192.168.0.14:59840) for Xamarin android app.
+** NOTE: If the listener is not started before listeners browser ("Broswer") is selected, you will need to click `Broadcast` toolbar item locates on top of the `ListenerPage` (See `Broadcast` in <<Passive Peer or Server>>)
+** NOTE: You will need to manually enter the listener's IP Endpoint (ex. 192.168.0.14:59840) for Xamarin android app.
 * Tap on the row corresponding to listener. This will start replication with the listener and it shoud transition to Connected state
 * Verify the connection count on listener by clicking "Peers" toolbar item locates on top of the `ListenerPage` (See `Broadcast` in <<Passive Peer or Server>>)
 * Tap on the row corresponding to listener again. This will stop replication with the listener and it shoud transition to Disonnected state. Try Disconnect and then reconnect again
@@ -323,8 +325,8 @@ Once the connection is established between the peers, you can start syncing. Cou
 * Run the app on two or more simulators or real devices. If its the latter, make sure you sign your app with the appropriate developer certificate
 * Start the listener on one of the app instances. You could also have multiple listeners.
 * Connect the other instances of the app to the listener
-* You can find 4 selections (`What's un Season?`, `Listener`, `Browser`, and `Logout`) under "hamburger" menu locates on the upper left hand side.
-* Enter `SeasonalItemsPage` by selecting "What's un Season?" from the "hamburger" menu.
+* You can find 4 selections (`What's in Season?`, `Listener`, `Browser`, and `Logout`) under "hamburger" menu locates on the upper left hand side.
+* Enter `SeasonalItemsPage` by selecting "What's in Season?" from the "hamburger" menu.
 * Edit the quanity and/or image on one or multiple instance(s) and press Save when you are done editing
 * Watch it sync automatically to other connected clients
 
