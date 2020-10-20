@@ -5,7 +5,6 @@ using Xamarin.Forms.Xaml;
 
 using P2PListSync.Models;
 using P2PListSync.ViewModels;
-using System.Net;
 
 namespace P2PListSync.Views
 {
@@ -42,12 +41,8 @@ namespace P2PListSync.Views
 
         void Add_Clicked(object sender, EventArgs e)
         {
-            var ip = newItemName.Text.Split(':');
-            var remoteIP = IPAddress.Parse(ip[0]);
-            var remotePort = Int32.Parse(ip[1]);
-            var remoteEndpoint = new IPEndPoint(remoteIP, remotePort);
-            if (ip != null)
-                viewModel.AddReplicator(remoteEndpoint);
+            if (!viewModel.ManuallyAddReplicator())
+                DisplayAlert("Invalid IP Endpoint", "IP Endpoint should look something like ex. 192.168.0.14:59840", "OK");
         }
     }
 }

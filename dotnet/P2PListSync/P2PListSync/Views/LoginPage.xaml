@@ -3,16 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="P2PListSync.Views.LoginPage">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="StartAndExpand" Padding="5" Margin="5">
-        <Label Text="Inventory Tracker" FontSize="Large" HorizontalOptions="CenterAndExpand" Padding="0,15,0,0"/>
-        <StackLayout VerticalOptions="StartAndExpand" Padding="5" Margin="5">
-            <Label Text="Username" />
+        <StackLayout VerticalOptions="StartAndExpand" Padding="5,20,5,5" Margin="5">
+            <Label Text="Inventory Tracker" FontSize="Large" HorizontalOptions="CenterAndExpand" />
             <Entry x:Name="usernameEntry" Placeholder="username" />
-            <Label Text="Password" />
-            <Entry x:Name="passwordEntry" IsPassword="true" />
+            <Entry x:Name="passwordEntry" IsPassword="true" Placeholder="password" />
             <Button Text="Sign In" Clicked="OnLoginButtonClicked" />
             <Label x:Name="messageLabel" />
-        </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

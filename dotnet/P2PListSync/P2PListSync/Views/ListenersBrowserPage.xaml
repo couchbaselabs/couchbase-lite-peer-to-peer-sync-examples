@@ -4,45 +4,45 @@
              x:Class="P2PListSync.Views.ListenersBrowserPage"
               Title="{Binding Title}"
              x:Name="ListenersPage">
-    <ScrollView>
     <StackLayout>
-            <Grid MinimumHeightRequest="30" Margin="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Entry x:Name="newItemName" Placeholder="Listener IP: ex. 192.168.0.14:59840" />
-                <Button Padding="0" Grid.Column="1" Text="+" MinimumHeightRequest="30" Clicked="Add_Clicked" />
-            </Grid>
+        <Grid MinimumHeightRequest="30" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Entry Text="{Binding IPEndpointInput}" Placeholder="Listener IP: ex. 192.168.0.14:59840" />
+            <Button Padding="0" Grid.Column="1" Text="+" MinimumHeightRequest="30" Clicked="Add_Clicked" />
+        </Grid>
+        <ScrollView>
             <ListView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
                 CachingStrategy="RecycleElement"
                 ItemSelected="OnItemSelected">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
                             <ViewCell.ContextActions>
                                 <MenuItem Clicked="OnItemClicked" Text="Delete" IsDestructive="True" />
                             </ViewCell.ContextActions>
                             <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="Fill">
-                            <Label Text="{Binding ListenerEndpointString}" 
+                                <Label Text="{Binding ListenerEndpointString}" 
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
                                 HorizontalOptions="StartAndExpand"
                                 FontSize="Small" />
-                            <Label Text="{Binding ConnectionStatus}" 
+                                <Label Text="{Binding ConnectionStatus}" 
                                 LineBreakMode="NoWrap"
                                 TextColor="{Binding ConnectionStatusColor}"
                                 Style="{DynamicResource ListItemDetailTextStyle}"
                                 HorizontalOptions="EndAndExpand"
                                 FontSize="Small" />
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollView>
     </StackLayout>
-    </ScrollView>
 </ContentPage>

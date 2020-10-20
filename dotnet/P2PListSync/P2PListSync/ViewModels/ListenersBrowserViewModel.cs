@@ -11,6 +11,7 @@ using P2PListSync.Models;
 using P2PListSync.P2P;
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -21,6 +22,13 @@ namespace P2PListSync.ViewModels
     public class ListenersBrowserViewModel : BaseViewModel
     {
         public ObservableCollection<ReplicatorItem> Items { get; set; }
+
+        private string _iPEndpointInput;
+        public string IPEndpointInput
+        {
+            get { return _iPEndpointInput; }
+            set { SetProperty(ref _iPEndpointInput, value); }
+        }
 
         //peer discovery
         private UdpListener _discovery;
@@ -70,6 +78,48 @@ namespace P2PListSync.ViewModels
                 Items.Remove(repl);
                 repl.RemoveReplicator();
             });
+        }
+
+        internal bool ManuallyAddReplicator()
+        {
+            if(IPEndpointInput == null) {
+                return false;
+            }
+
+            var remoteEndpoint = CreateIPEndPoint(IPEndpointInput);
+            if (remoteEndpoint == null) {
+                return false;
+            }
+
+            AddReplicator(remoteEndpoint);
+            return true;
+        }
+
+        private IPEndPoint CreateIPEndPoint(string endPoint)
+        {
+            string[] ep = endPoint.Split(':');
+            if (ep.Length != 2) {
+                return null;
+            }
+
+            IPAddress ip;
+            if (!IPAddress.TryParse(ep[0], out ip) || ip == null) {
+                return null;
+            }
+
+            int port;
+            if (!int.TryParse(ep[ep.Length - 1], NumberStyles.None, NumberFormatInfo.CurrentInfo, out port)) {
+                return null;
+            }
+
+            IPEndPoint ipEp;
+            try {
+                ipEp = new IPEndPoint(ip, port);
+            } catch {
+                return null;
+            }
+
+            return ipEp;
         }
     }
 }

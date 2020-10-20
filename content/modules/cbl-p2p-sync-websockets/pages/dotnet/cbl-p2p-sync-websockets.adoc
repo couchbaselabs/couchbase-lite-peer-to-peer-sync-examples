@@ -1,4 +1,4 @@
-= Getting Started with Peer-to-Peer Sync on Xamarin
+= Getting Started with Peer-to-Peer Sync on Xamarin (UWP, iOS, and Android)
 :source-highlighter: coderay
 :coderay-css: style
 :imagesdir: ../../assets
@@ -28,7 +28,7 @@ Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https
 
 This tutorial will demonstrate how to -
 
-* Use UDP type socket to listen on specified port for peer discovery. Broadcast it's own IP address over UDP type socket.
+* Use UDP type socket to listen on specified port for peer discovery. Broadcast it's own IP address over UDP type socket. Note: UWP app needs to be added to the Exception list on the Windows Firewall.
 * Configure a websockets listener to listen to incoming requests. We will walk through various TLS modes and client authentication modes.
 * Start a bi-directional replication from active peer.
 * Sync data between connected peers
@@ -69,7 +69,7 @@ When used as a active peer :-
 * Directly sync data with connected clients
 
 
-image::ios-demo.gif[alt=peer to peer sync,width=640,height=480]
+image::xamarin-demo.gif[alt=peer to peer sync,width=640,height=480]
 
 == App Installation
 
@@ -225,7 +225,7 @@ include::example$code-samples.cs[tags=StopListener]
 * Click on the "action" button to see number of connected clients. It should be 0 if there are no connected clients
 * From the `ListenerPage`, stop the listener by clicking on "Stop Listener" button
 
-image::ios-passive-start-listener.gif[alt=server websockets listener login screen,width=600,height=320]
+image::xamarin-passive-start-listener.gif[alt=server websockets listener login screen,width=600,height=320]
 
 == Active Peer or Client
 We will walk through the steps of using the app in active peer mode
@@ -306,7 +306,7 @@ include::example$code-samples.cs[tags=StopReplication]
 * Tap on the row corresponding to listener again. This will stop replication with the listener and it shoud transition to Disonnected state. Try Disconnect and then reconnect again
 * Swipe left (iOS) or long press (Android) or left click (UWP) on the the row. You should see the option to remove listener
 
-image::ios-active-start-replicator.gif[alt=p2p sync,width=600,height=320]
+image::xamarin-active-start-replicator.gif[alt=p2p sync,width=600,height=320]
 
 == Syncing Data
 Once the connection is established between the peers, you can start syncing. Couchbase Lite takes care of it.
@@ -320,7 +320,7 @@ Once the connection is established between the peers, you can start syncing. Cou
 * Edit the quanity and/or image on one or multiple instance(s) and press Save when you are done editing
 * Watch it sync automatically to other connected clients
 
-image::ios-sync.gif[alt=server websockets listener login screen,width=600,height=320]
+image::xamarin-sync.gif[alt=server websockets listener login screen,width=600,height=320]
 
 == What Next
 As an exercise, switch between the various TLS modes and server cert validation modes and see how the app behaves. You can also try with different topologies to connect the peers.

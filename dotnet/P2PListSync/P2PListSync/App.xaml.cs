@@ -19,7 +19,7 @@ namespace P2PListSync
         public App()
         {
             InitializeComponent();
-            CoreApp.RequiresUserAuth = false;
+            CoreApp.RequiresUserAuth = true;
 
             if (CoreApp.RequiresUserAuth) {
                 CoreApp.LoadUserAllowList();
