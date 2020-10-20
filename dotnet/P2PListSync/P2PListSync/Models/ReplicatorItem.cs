@@ -48,7 +48,7 @@ namespace P2PListSync.Models
 
         public string ListenerEndpointString
         {
-            get { return $"ws://{ListenerEndpoint}/{CoreApp.DB.Name}"; }
+            get { return CoreApp.ListenerTLSMode == 0 ? $"ws://{ListenerEndpoint}/{CoreApp.DB.Name}" : $"wss://{ListenerEndpoint}/{CoreApp.DB.Name}"; }
         }
 
         private bool _isStarted = false;
