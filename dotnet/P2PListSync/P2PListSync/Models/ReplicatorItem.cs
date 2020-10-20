@@ -22,12 +22,17 @@ namespace P2PListSync.Models
 {
     public class ReplicatorItem : BaseViewModel
     {
+        #region Constants
         const string ListenerPinnedCertFile = "listener-pinned-cert";
+        #endregion
 
+        #region Variables
         private Database _db = CoreApp.DB;
         private ListenerToken listenerToken;
         private Replicator _repl;
+        #endregion
 
+        #region Properties
         public Command StartReplicatorCommand { get; set; }
 
         IPEndPoint _listenerEndpoint;
@@ -66,7 +71,9 @@ namespace P2PListSync.Models
             get { return _connectionStatusColor; }
             set { SetProperty(ref _connectionStatusColor, value); }
         }
+        #endregion
 
+        #region Constructor
         //tag::StartReplication[]
         public ReplicatorItem(IPEndPoint listenerEndpoint)
         {
@@ -74,6 +81,7 @@ namespace P2PListSync.Models
             StartReplicatorCommand = new Command(() => ExecuteStartReplicatorCommand());
             CreateReplicator(ListenerEndpointString);
         }
+        #endregion
 
         public void CreateReplicator(string PeerEndpointString)
         {

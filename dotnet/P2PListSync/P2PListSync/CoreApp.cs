@@ -67,7 +67,7 @@ namespace P2PListSync
         /// Switch between listener auth modes.
         /// </summary>
         //tag::ListenerTLSTestMode[]
-        public static LISTENER_TLS_MODE ListenerTLSMode = LISTENER_TLS_MODE.DISABLED;
+        public static LISTENER_TLS_MODE ListenerTLSMode = LISTENER_TLS_MODE.WITH_ANONYMOUS_AUTH;
         //end::ListenerTLSTestMode[]
 
         /// <summary>

@@ -27,11 +27,14 @@ namespace P2PListSync.ViewModels
 {
     public class ListenerViewModel : BaseViewModel
     {
+        #region Constants
         const string ListenerCommonName = "com.example.list-sync-server";
         const string ListenerCertLabel = "list-sync-server-cert-label";
         const string ListenerCertKeyP12File = "listener-cert-pkey";
         const string ListenerCertKeyExportPassword = "couchbase";
+        #endregion
 
+        #region Variables
         //Listener
         private URLEndpointListener _urlEndpointListener;
 
@@ -39,7 +42,9 @@ namespace P2PListSync.ViewModels
 
         //db
         private Database _db = CoreApp.DB;
+        #endregion
 
+        #region Properties
         private bool _isListening = false;
         public bool IsListening
         {
@@ -65,7 +70,9 @@ namespace P2PListSync.ViewModels
 
         public ICommand StartListenerCommand { get; }
         public ICommand BroadcastCommand { get; }
+        #endregion
 
+        #region Constructor
         public ListenerViewModel()
         {
             Title = "Listener";
@@ -77,6 +84,7 @@ namespace P2PListSync.ViewModels
 
             TLSIdentity.DeleteIdentity(_store, ListenerCertLabel, null);
         }
+        #endregion
 
         private void ExecuteStartListenerCommand()
         {

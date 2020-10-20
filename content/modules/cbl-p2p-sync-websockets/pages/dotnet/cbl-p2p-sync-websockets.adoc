@@ -156,7 +156,7 @@ First, we will walk through the steps of using the app in passive peer mode
 ----
 include::example$code-samples.cs[tags=InitListener]
 ----
-<1> Initialize the `URLEndpointListenerConfiguration` for the specified database. There is a listener for a given database. You can specify a port to be associated with the listener. In our app, we assign the port to 59840.
+<1> Initialize the `URLEndpointListenerConfiguration` for the specified database. There is a listener for a given database. You can specify a port to be associated with the listener. In our app, we let Couchbase Lite choose the port.
 <2> This is where we configure the TLS mode. In the app, we have a flag named `ListenerTLSMode` that allows the app to switch between the various modes. You can change the mode by changing the value of the variable. See <<Testing Different TLS Modes>>
 <3> Enable delta sync. It is disabled by default
 <4> Configure the password authenticator callback function that authenticates the  username/password received from the client during replication setup. The list of valid users are configured in `userallowlist.json` file bundled with the app
