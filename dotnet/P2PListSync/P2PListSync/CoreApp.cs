@@ -53,7 +53,7 @@ namespace P2PListSync
 
         /// <summary>
         /// Flag to determine if we need to login to the app and set user password auth for listener 
-        /// if LISTENER_TLS_MODE is DISABLED 
+        /// when LISTENER_TLS_MODE is DISABLED 
         /// </summary>
         public static bool RequiresUserAuth { get; set; }
 
