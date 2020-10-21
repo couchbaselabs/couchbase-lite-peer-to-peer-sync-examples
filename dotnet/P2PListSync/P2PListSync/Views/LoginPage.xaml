@@ -5,7 +5,7 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="StartAndExpand" Padding="5,20,5,5" Margin="5">
             <Label Text="Inventory Tracker" FontSize="Large" HorizontalOptions="CenterAndExpand" />
-            <Entry x:Name="usernameEntry" Placeholder="username" />
+            <Entry x:Name="usernameEntry" Placeholder="username" Keyboard="Plain"/>
             <Entry x:Name="passwordEntry" IsPassword="true" Placeholder="password" />
             <Button Text="Sign In" Clicked="OnLoginButtonClicked" />
             <Label x:Name="messageLabel" />
