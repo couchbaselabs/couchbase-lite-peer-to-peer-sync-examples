@@ -19,7 +19,6 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -77,12 +76,12 @@ namespace P2PListSync.ViewModels
         {
             Title = "Listener";
 
-            _store = new X509Store(StoreName.My);
-
             StartListenerCommand = new Command(() => ExecuteStartListenerCommand());
             BroadcastCommand = new Command(() => Broadcast());
 
-            TLSIdentity.DeleteIdentity(_store, ListenerCertLabel, null);
+            using (_store = new X509Store(StoreName.My)) {
+                TLSIdentity.DeleteIdentity(_store, ListenerCertLabel, null);
+            }
         }
         #endregion
 
@@ -105,6 +104,7 @@ namespace P2PListSync.ViewModels
             } else {
                 //tag::StopListener[]
                 _urlEndpointListener.Stop();
+                _urlEndpointListener.Dispose();
                 //end::StopListener[]
                 IsListening = false;
                 ListenerStatus = "";
@@ -116,33 +116,30 @@ namespace P2PListSync.ViewModels
             //tag::InitListener[]
             var listenerConfig = new URLEndpointListenerConfiguration(_db);
             listenerConfig.Port = 0; // Dynamic port
-            TLSIdentity tlsId = null;
 
             switch (CoreApp.ListenerTLSMode) {
                 //tag::TLSDisabled[]
                 case LISTENER_TLS_MODE.DISABLED:
                     listenerConfig.DisableTLS = true;
-                    listenerConfig.TlsIdentity = tlsId;
+                    listenerConfig.TlsIdentity = null;
                     //end::TLSDisabled[]
                     break;
                 //tag::TLSWithAnonymousAuth[]
                 case LISTENER_TLS_MODE.WITH_ANONYMOUS_AUTH:
                     listenerConfig.DisableTLS = false; // Use with anonymous self signed cert if TlsIdentity is null
-                    listenerConfig.TlsIdentity = tlsId;
+                    listenerConfig.TlsIdentity = null;
                     //end::TLSWithAnonymousAuth[]
                     break;
                 //tag::TLSWithBundledCert[]
                 case LISTENER_TLS_MODE.WITH_BUNDLED_CERT:
-                    tlsId = ImportTLSIdentityFromPkc12(ListenerCertLabel);
                     listenerConfig.DisableTLS = false;
-                    listenerConfig.TlsIdentity = tlsId;
+                    listenerConfig.TlsIdentity = ImportTLSIdentityFromPkc12(ListenerCertLabel);
                     //end::TLSWithBundledCert[]
                     break;
                 //tag::TLSWithGeneratedSelfSignedCert[]
                 case LISTENER_TLS_MODE.WITH_GENERATED_SELF_SIGNED_CERT:
-                    tlsId = CreateIdentityWithCertLabel(ListenerCertLabel);
                     listenerConfig.DisableTLS = false;
-                    listenerConfig.TlsIdentity = tlsId;
+                    listenerConfig.TlsIdentity = CreateIdentityWithCertLabel(ListenerCertLabel);
                     //end::TLSWithGeneratedSelfSignedCert[]
                     break;
             }
@@ -176,48 +173,52 @@ namespace P2PListSync.ViewModels
         #region Server TLSIdentity
         internal TLSIdentity ImportTLSIdentityFromPkc12(string label)
         {
-            // Check if identity exists, use the id if it is.
-            var id = TLSIdentity.GetIdentity(_store, label, null);
-            if(id != null) {
-                return id;
-            }
-
-            try {
-                byte[] data = null;
-                using (var stream = ResourceLoader.GetEmbeddedResourceStream(typeof(ListenerViewModel).GetTypeInfo().Assembly, $"{ListenerCertKeyP12File}.p12")) {
-                    using (var reader = new BinaryReader(stream)) {
-                        data = reader.ReadBytes((int)stream.Length);
-                    }
+            using (_store = new X509Store(StoreName.My)) {
+                // Check if identity exists, use the id if it is.
+                var id = TLSIdentity.GetIdentity(_store, label, null);
+                if (id != null) {
+                    return id;
                 }
 
-                id = TLSIdentity.ImportIdentity(_store, data, ListenerCertKeyExportPassword, label, null);
-            } catch (Exception ex) {
-                Debug.WriteLine($"Error while loading self signed cert : {ex}");
-            }
+                try {
+                    byte[] data = null;
+                    using (var stream = ResourceLoader.GetEmbeddedResourceStream(typeof(ListenerViewModel).GetTypeInfo().Assembly, $"{ListenerCertKeyP12File}.p12")) {
+                        using (var reader = new BinaryReader(stream)) {
+                            data = reader.ReadBytes((int)stream.Length);
+                        }
+                    }
 
-            return id;
+                    id = TLSIdentity.ImportIdentity(_store, data, ListenerCertKeyExportPassword, label, null);
+                } catch (Exception ex) {
+                    Debug.WriteLine($"Error while loading self signed cert : {ex}");
+                }
+
+                return id;
+            }
         }
 
         internal TLSIdentity CreateIdentityWithCertLabel(string label)
         {
-            // Check if identity exists, use the id if it is.
-            var id = TLSIdentity.GetIdentity(_store, label, null);
-            if (id != null) {
+            using (_store = new X509Store(StoreName.My)) {
+                // Check if identity exists, use the id if it is.
+                var id = TLSIdentity.GetIdentity(_store, label, null);
+                if (id != null) {
+                    return id;
+                }
+
+                try {
+                    id = TLSIdentity.CreateIdentity(true,
+                    new Dictionary<string, string>() { { Certificate.CommonNameAttribute, ListenerCommonName } },
+                    null,
+                    _store,
+                    label,
+                    null);
+                } catch (Exception ex) {
+                    Debug.WriteLine($"Error while creating self signed cert : {ex}");
+                }
+
                 return id;
             }
-
-            try {
-                id = TLSIdentity.CreateIdentity(true,
-                new Dictionary<string, string>() { { Certificate.CommonNameAttribute, ListenerCommonName } },
-                null,
-                _store,
-                label,
-                null);
-            } catch (Exception ex) {
-                Debug.WriteLine($"Error while creating self signed cert : {ex}");
-            }
-
-            return id;
         }
         #endregion
 
