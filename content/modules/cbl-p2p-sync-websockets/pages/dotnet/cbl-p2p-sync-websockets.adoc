@@ -347,8 +347,10 @@ This tutorial walked you through an example of how to directly synchronize data 
 Complete documentation is available link:https://docs.couchbase.com/couchbase-lite/current/csharp/learn/csharp-landing-p2psync.html[here]
 
 === Toubleshoot 
-== Having issue running the Xamarin iOS app?
+
+==== Having issue running the Xamarin iOS app?
 * Xamarin iOS p2p sample app should build and run with Visual Studio 2019 with latest updates and XCode 12.0.1
 * If you have Xcode 11 and try to run the iOS app on simulator and the simulator is not loading, try launch the simulator via Xcode and select that simulator when launching it from VS.
-== Having issue start listener with TLS on UWP?
+
+==== Having issue start listener with TLS on UWP?
 * On a 64-bit Windows, select "Debug" for Solution Configurations and "x64" for Solution Platforms on VS and Deploy the UWP sample app. After successfully deployed the app, you can run the app by clicking "Local Machine".
