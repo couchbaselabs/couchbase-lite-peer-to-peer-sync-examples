@@ -85,7 +85,7 @@ git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-webs
 * Open the Xamarin .Net project using Visual Studio
 * Build and run the project
 * Verify that you see the login screen
-* If you are having trouble running the Xamarin iOS sample app, please see <<Toubleshoot (If you have having issue running the Xamarin iOS app)>> 
+* If you are having trouble running the Xamarin iOS sample app, please see <<Having issue running the Xamarin iOS app?>> 
 +
 image::cs-login.png[alt=app login screen,width=640,height=537]
 
@@ -225,6 +225,7 @@ include::example$code-samples.cs[tags=StopListener]
 * On login screen, sign in as any one of the users configured in the `userallowlist.json` file such as "bob" and "password"
 * You can find 4 selections (`What's in Season?`, `Listener`, `Browser`, and `Logout`) under "hamburger" menu locates on the upper left hand side.
 * From the `ListenerPage` after select `Listener` from the "hamburger" menu, start the listener by clicking on "Start Listener" button
+** NOTE: You may encounter issue when starting the listener with TLS on UWP. Please see <<Having issue start listener with TLS on UWP?>>
 * You can see 2 toolbar items (`Broadcast` and `Peers`) 
 ** NOTE: These two items will do nothing if listener is not started.
 * Click on the "Peers" toolbar item to see number of connected clients. It should be 0 if there are no connected clients
@@ -345,6 +346,9 @@ This tutorial walked you through an example of how to directly synchronize data 
 
 Complete documentation is available link:https://docs.couchbase.com/couchbase-lite/current/csharp/learn/csharp-landing-p2psync.html[here]
 
-==== Toubleshoot (If you have having issue running the Xamarin iOS app)
+=== Toubleshoot 
+== Having issue running the Xamarin iOS app?
 * Xamarin iOS p2p sample app should build and run with Visual Studio 2019 with latest updates and XCode 12.0.1
 * If you have Xcode 11 and try to run the iOS app on simulator and the simulator is not loading, try launch the simulator via Xcode and select that simulator when launching it from VS.
+== Having issue start listener with TLS on UWP?
+* On a 64-bit Windows, select "Debug" for Solution Configurations and "x64" for Solution Platforms on VS and Deploy the UWP sample app. After successfully deployed the app, you can run the app by clicking "Local Machine".
