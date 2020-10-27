@@ -19,13 +19,14 @@ namespace P2PListSync
         public App()
         {
             InitializeComponent();
+
+            CoreApp.LoadAndInitDB();
             CoreApp.RequiresUserAuth = true;
 
             if (CoreApp.RequiresUserAuth) {
                 CoreApp.LoadUserAllowList();
                 MainPage = new LoginPage();
             } else {
-                CoreApp.LoadAndInitDB();
                 MainPage = new MainPage();
             }
         }

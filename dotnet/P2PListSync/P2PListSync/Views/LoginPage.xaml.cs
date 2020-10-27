@@ -24,24 +24,24 @@ namespace P2PListSync.Views
             InitializeComponent();
         }
 
-        void OnLoginButtonClicked(object sender, EventArgs e)
+        async void OnLoginButtonClicked(object sender, EventArgs e)
         {
             var user = new User {
                 Username = usernameEntry.Text,
                 Password = passwordEntry.Text
             };
-
-            CoreApp.CurrentUser = user; // User may not be autherized
+            
             var isValid = AreCredentialsCorrect(user);
             if (!isValid) {
                 messageLabel.Text = "You are not an autherized user.";
                 passwordEntry.Text = string.Empty;
-                var enter = DisplayAlert("Login Warning", "You are not an autherized user. You want to verify the fail case of ClientListenerAuthenticator functionality?", "Yes", "No").ConfigureAwait(false);
+                var enter = await DisplayAlert("Login Warning", "You are not an autherized user. You want to verify the fail case of ClientListenerAuthenticator functionality?", "Yes", "No");
                 if (!enter) {
                     return;
                 }
             }
-
+            
+            CoreApp.CurrentUser = user; // User may not be autherized
             Application.Current.MainPage = new MainPage();
         }
 
