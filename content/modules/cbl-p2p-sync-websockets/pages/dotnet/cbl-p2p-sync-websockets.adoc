@@ -84,6 +84,7 @@ git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-webs
 === Try it Out
 * Open the Xamarin .Net project using Visual Studio
 * Build and run the project
+** Note: For UWP, don't run until you do this: On a 64-bit Windows, select "Debug" for Solution Configurations and "x64" for Solution Platforms on VS and Deploy the UWP app. After successfully deployed the app, you can run the app by clicking "Local Machine".
 * Verify that you see the login screen
 * If you are having trouble running the Xamarin iOS sample app, please see <<Having issue running the Xamarin iOS app?>> 
 +
@@ -353,4 +354,4 @@ Complete documentation is available link:https://docs.couchbase.com/couchbase-li
 * If you have Xcode 11 and try to run the iOS app on simulator and the simulator is not loading, try launch the simulator via Xcode and select that simulator when launching it from VS.
 
 ==== Having issue start listener with TLS on UWP?
-* On a 64-bit Windows, select "Debug" for Solution Configurations and "x64" for Solution Platforms on VS and Deploy the UWP sample app. After successfully deployed the app, you can run the app by clicking "Local Machine".
+* If start listener crash the UWP app, please uninstall the app first. On a 64-bit Windows, select "Debug" for Solution Configurations and "x64" for Solution Platforms on VS and Deploy the UWP sample app. After successfully deployed the app, you can run the app by clicking "Local Machine".

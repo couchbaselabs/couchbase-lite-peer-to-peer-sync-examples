@@ -31,15 +31,18 @@ namespace P2PListSync.Views
                 Password = passwordEntry.Text
             };
 
+            CoreApp.CurrentUser = user; // User may not be autherized
             var isValid = AreCredentialsCorrect(user);
-            if (isValid) {
-                CoreApp.CurrentUser = user;
-                CoreApp.LoadAndInitDB();
-                Application.Current.MainPage = new MainPage();
-            } else {
-                messageLabel.Text = "Login failed";
+            if (!isValid) {
+                messageLabel.Text = "You are not an autherized user.";
                 passwordEntry.Text = string.Empty;
+                var enter = DisplayAlert("Login Warning", "You are not an autherized user. You want to verify the fail case of ClientListenerAuthenticator functionality?", "Yes", "No").ConfigureAwait(false);
+                if (!enter) {
+                    return;
+                }
             }
+
+            Application.Current.MainPage = new MainPage();
         }
 
         bool AreCredentialsCorrect(User user)
