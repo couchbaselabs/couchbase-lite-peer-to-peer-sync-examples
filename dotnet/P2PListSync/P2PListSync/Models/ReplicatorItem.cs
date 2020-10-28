@@ -20,7 +20,7 @@ using Xamarin.Forms;
 
 namespace P2PListSync.Models
 {
-    public class ReplicatorItem : BaseViewModel
+    public class ReplicatorItem : BaseViewModel, IDisposable
     {
         #region Constants
         const string ListenerPinnedCertFile = "listener-pinned-cert";
@@ -28,8 +28,9 @@ namespace P2PListSync.Models
 
         #region Variables
         private Database _db = CoreApp.DB;
-        private ListenerToken listenerToken;
+        private ListenerToken _listenerToken;
         private Replicator _repl;
+        private bool _disposedValue;
         #endregion
 
         #region Properties
@@ -66,6 +67,7 @@ namespace P2PListSync.Models
         }
 
         Color _connectionStatusColor = Color.Black;
+
         public Color ConnectionStatusColor
         {
             get { return _connectionStatusColor; }
@@ -80,6 +82,11 @@ namespace P2PListSync.Models
             _listenerEndpoint = listenerEndpoint;
             StartReplicatorCommand = new Command(() => ExecuteStartReplicatorCommand());
             CreateReplicator(ListenerEndpointString);
+        }
+
+        ~ReplicatorItem()
+        {
+            Dispose(disposing: false);
         }
         #endregion
 
@@ -142,15 +149,12 @@ namespace P2PListSync.Models
         public void ExecuteStartReplicatorCommand()
         {
             if (!IsStarted) {
-                listenerToken = _repl.AddChangeListener(ReplicationStatusUpdate);
-
+                _listenerToken = _repl.AddChangeListener(ReplicationStatusUpdate);
                 _repl.Start();
                 //end::StartReplication[]
                 IsStarted = true;
             } else {
                 StopReplicator();
-                ConnectionStatus = "DISCONNECTED";
-                ConnectionStatusColor = Color.Black;
             }
         }
 
@@ -159,15 +163,15 @@ namespace P2PListSync.Models
             if (IsStarted) {
                 StopReplicator();
             }
-            
-            _repl.Dispose();
+
+            _repl?.Dispose();
         }
 
         private void StopReplicator()
         {
             //tag::StopReplication[]
-            _repl?.RemoveChangeListener(listenerToken);
             _repl?.Stop();
+            _repl?.RemoveChangeListener(_listenerToken);
             //end::StopReplication[]
 
             IsStarted = false;
@@ -207,6 +211,24 @@ namespace P2PListSync.Models
                 ConnectionStatus = "BUSY";
                 ConnectionStatusColor = Color.Green;
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue) {
+                if (disposing) {
+                    RemoveReplicator();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
