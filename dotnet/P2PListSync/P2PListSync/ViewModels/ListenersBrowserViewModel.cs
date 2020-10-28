@@ -76,7 +76,7 @@ namespace P2PListSync.ViewModels
             Device.BeginInvokeOnMainThread(() =>
             {
                 Items.Remove(repl);
-                repl.RemoveReplicator();
+                repl.Dispose();
             });
         }
 

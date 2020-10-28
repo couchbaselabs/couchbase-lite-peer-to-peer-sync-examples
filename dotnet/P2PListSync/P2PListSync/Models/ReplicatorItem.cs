@@ -144,12 +144,12 @@ namespace P2PListSync.Models
             }
 
             _repl = new Replicator(replicatorConfig);
+            _listenerToken = _repl.AddChangeListener(ReplicationStatusUpdate);
         }
 
         public void ExecuteStartReplicatorCommand()
         {
             if (!IsStarted) {
-                _listenerToken = _repl.AddChangeListener(ReplicationStatusUpdate);
                 _repl.Start();
                 //end::StartReplication[]
                 IsStarted = true;
@@ -158,12 +158,13 @@ namespace P2PListSync.Models
             }
         }
 
-        public void RemoveReplicator()
+        private void RemoveReplicator()
         {
             if (IsStarted) {
                 StopReplicator();
             }
 
+            _repl?.RemoveChangeListener(_listenerToken);
             _repl?.Dispose();
         }
 
@@ -171,7 +172,6 @@ namespace P2PListSync.Models
         {
             //tag::StopReplication[]
             _repl?.Stop();
-            _repl?.RemoveChangeListener(_listenerToken);
             //end::StopReplication[]
 
             IsStarted = false;
