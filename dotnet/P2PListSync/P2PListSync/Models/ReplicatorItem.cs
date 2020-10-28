@@ -191,8 +191,8 @@ namespace P2PListSync.Models
                 ConnectionStatusColor = Color.Black;
             }//The replicator is offline as the remote host is unreachable.
             else if (args.Status.Activity == ReplicatorActivityLevel.Offline) {
-                ConnectionStatus = "DISCONNECTED";
-                ConnectionStatusColor = Color.Black;
+                ConnectionStatus = "OFFLINE";
+                ConnectionStatusColor = Color.Red;
             } //The replicator is connecting to the remote host.
             else if (args.Status.Activity == ReplicatorActivityLevel.Connecting) {
                 ConnectionStatus = "CONNECTING";

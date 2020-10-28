@@ -32,6 +32,7 @@ namespace P2PListSync.P2P
         Stopped
     }
 
+    // Please note UDP broadcast only works on actual android device, not on emulator. See https://stackoverflow.com/questions/60420560/unable-to-receive-udp-broadcast-in-xamarin-forms-app for detail.
     public class UdpListener
     {
         /// <summary>
