@@ -8,6 +8,7 @@
 //
 
 using Couchbase.Lite;
+using Couchbase.Lite.Logging;
 using Newtonsoft.Json;
 using P2PListSync.Models;
 using System;
@@ -89,7 +90,11 @@ namespace P2PListSync
 
         public static void LoadAndInitDB()
         {
-            //Database.Delete(DbName, DBPath); //enable this or uninstall app to reset db
+            // Enable this to get CBL Console Logs (Info)
+            Database.Log.Console.Level = LogLevel.Info;
+
+            // Enable this or uninstall app to reset db
+            //Database.Delete(DbName, DBPath); 
             //tag::OpenOrCreateDatabase[]
             if (!Database.Exists(DbName, DBPath)) {
                 using (var dbZip = new ZipArchive(ResourceLoader.GetEmbeddedResourceStream(typeof(CoreApp).GetTypeInfo().Assembly, $"{DbName}.cblite2.zip"))) {
