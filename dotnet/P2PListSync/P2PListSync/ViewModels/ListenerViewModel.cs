@@ -116,7 +116,7 @@ namespace P2PListSync.ViewModels
         {
             //tag::InitListener[]
             var listenerConfig = new URLEndpointListenerConfiguration(_db);
-            listenerConfig.NetworkInterface = GetLocalIPv4(NetworkInterfaceType.Wireless80211);
+            listenerConfig.NetworkInterface = GetLocalIPv4(NetworkInterfaceType.Wireless80211) ?? GetLocalIPv4(NetworkInterfaceType.Ethernet);
             listenerConfig.Port = 0; // Dynamic port
 
             switch (CoreApp.ListenerTLSMode) {
