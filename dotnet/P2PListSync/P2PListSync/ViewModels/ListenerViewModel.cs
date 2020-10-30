@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -115,6 +116,7 @@ namespace P2PListSync.ViewModels
         {
             //tag::InitListener[]
             var listenerConfig = new URLEndpointListenerConfiguration(_db);
+            listenerConfig.NetworkInterface = GetLocalIPv4(NetworkInterfaceType.Wireless80211);
             listenerConfig.Port = 0; // Dynamic port
 
             switch (CoreApp.ListenerTLSMode) {
@@ -240,5 +242,28 @@ namespace P2PListSync.ViewModels
         }
         //end::StartAdvertiser
         #endregion
+
+        private string GetLocalIPv4(NetworkInterfaceType type)
+        {  
+            string output = null;
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces()) 
+            {  
+                if (item.NetworkInterfaceType == type && item.OperationalStatus == OperationalStatus.Up) {   
+                    IPInterfaceProperties adapterProperties = item.GetIPProperties();
+                    if (adapterProperties.GatewayAddresses.FirstOrDefault() != null) {   
+                        foreach (UnicastIPAddressInformation ip in adapterProperties.UnicastAddresses) {   
+                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork) {
+                                output = ip.Address.ToString();
+                                break;  
+                            }
+                        }
+                    }
+                }
+
+                if (output != null) { break; }
+            }
+
+            return output;
+        }
     }
 }
