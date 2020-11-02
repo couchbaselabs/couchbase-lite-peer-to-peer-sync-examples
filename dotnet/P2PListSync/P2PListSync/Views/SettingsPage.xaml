@@ -4,22 +4,24 @@
              x:Class="P2PListSync.Views.SettingsPage"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout Margin="20,35,20,20">
-            <Label Text="TLS Settings"
+        <ScrollView>
+            <StackLayout Margin="20,35,20,20">
+                <Label Text="TLS Settings"
                FontAttributes="Bold"
                HorizontalOptions="Center" />
-            <Picker Title="Listener TLS Mode"
+                <Picker Title="Listener TLS Mode"
                     ItemsSource="{Binding ListenerTLSModes}"
                     ItemDisplayBinding="{Binding Setting}"
                     SelectedItem="{Binding SelectedListenerTLSMode}"
                     SelectedIndexChanged="OnListenerTLSModePickerSelectedIndexChanged" />
-            <Label Margin="0,5,0,15" Text="{Binding SelectedListenerTLSMode.Description}" />
-            <Picker Title="Listener Cert Validation Mode"
+                <Label Margin="0,5,0,15" Text="{Binding SelectedListenerTLSMode.Description}" />
+                <Picker Title="Listener Cert Validation Mode"
                     ItemsSource="{Binding ListenerCertValidationModes}"
                     ItemDisplayBinding="{Binding Setting}"
                     SelectedItem="{Binding SelectedListenerCertValidationMode}"
                 SelectedIndexChanged="OnListenerCertValidationModePickerSelectedIndexChanged" />
-            <Label Margin="0,5,0,15" Text="{Binding SelectedListenerCertValidationMode.Description}" />
-        </StackLayout>
+                <Label Margin="0,5,0,15" Text="{Binding SelectedListenerCertValidationMode.Description}" />
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

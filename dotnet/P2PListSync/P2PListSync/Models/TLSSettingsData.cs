@@ -35,9 +35,9 @@ namespace P2PListSync.Models
             };
 
             ListenerCertValidationMode = new List<TLSSetting>() {
-                new TLSSetting(){Index = 0, Setting = LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION.ToString(), Description="There is no authentication of server cert. The server cert is a self-signed cert. This is typically in used in dev or test environments. Skipping server cert authentication is discouraged in production environments. Communication is encrypted."},
+                new TLSSetting(){Index = 0, Setting = LISTENER_CERT_VALIDATION_MODE.SKIP_VALIDATION.ToString(), Description="There is no authentication of server cert. The server cert is a self-signed cert. This is typically in used in dev or test environments. Skipping server cert authentication is discouraged in production environments. Communication is encrypted."},
                 new TLSSetting(){Index = 1, Setting = LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION_WITH_CERT_PINNING.ToString(), Description="If the listener cert is from well known CA then you will use this mode. Of course, in our sample app, the listener cert as specified in listener-cert-pkey is a self signed cert - so you probably will not use this mode to test. But if you have a CA signed cert, you can configure your listener with the CA signed cert and use this mode to test. Communication is encrypted"},
-                new TLSSetting(){Index = 2, Setting = LISTENER_CERT_VALIDATION_MODE.SKIP_VALIDATION.ToString(), Description="In this mode, the app uses the pinned cert,listener-pinned-cert.cer that is bundled in the app to validate the listener identity. Only the server cert that exactly matches the pinned cert will be authenticated. Communication is encrypted"}
+                new TLSSetting(){Index = 2, Setting = LISTENER_CERT_VALIDATION_MODE.ENABLE_VALIDATION.ToString(), Description="In this mode, the app uses the pinned cert,listener-pinned-cert.cer that is bundled in the app to validate the listener identity. Only the server cert that exactly matches the pinned cert will be authenticated. Communication is encrypted"}
             };
         }
     }
