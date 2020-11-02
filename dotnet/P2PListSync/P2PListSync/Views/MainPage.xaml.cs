@@ -44,6 +44,9 @@ namespace P2PListSync.Views
                     case (int)MenuItemType.ListenersBrowser:
                         MenuPages.Add(id, new NavigationPage(new ListenersBrowserPage()));
                         break;
+                    case (int)MenuItemType.Settings:
+                        MenuPages.Add(id, new NavigationPage(new SettingsPage()));
+                        break;
                     case (int)MenuItemType.Logout:
                         //Do Logout logic
                         break;

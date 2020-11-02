@@ -33,4 +33,9 @@
     <EmbeddedResource Include="pinned-invalid-listener-cert.cer" />
     <EmbeddedResource Include="pinned-listener-self-signed-cert.cer" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Views\SettingsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

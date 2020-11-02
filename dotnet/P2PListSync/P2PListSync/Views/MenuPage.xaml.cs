@@ -29,7 +29,8 @@ namespace P2PListSync.Views
             {
                 new HomeMenuItem {Id = MenuItemType.SeasonalItemsList, Title="What's in Season?" },
                 new HomeMenuItem {Id = MenuItemType.Listener, Title="Listener" },
-                new HomeMenuItem {Id = MenuItemType.ListenersBrowser, Title="Browser" }
+                new HomeMenuItem {Id = MenuItemType.ListenersBrowser, Title="Browser" },
+                new HomeMenuItem {Id = MenuItemType.Settings, Title="Settings" }
             };
 
             if(CoreApp.RequiresUserAuth) {

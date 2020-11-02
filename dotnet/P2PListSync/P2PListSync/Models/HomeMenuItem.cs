@@ -15,7 +15,8 @@ namespace P2PListSync.Models
         ListenersBrowser,
         Listener,
         SeasonalItemsList,
-        Logout
+        Logout,
+        Settings
     }
 
     public class HomeMenuItem
