@@ -91,7 +91,7 @@ namespace P2PListSync
         public static void LoadAndInitDB()
         {
             // Enable this to get CBL Console Logs (Info)
-            Database.Log.Console.Level = LogLevel.Info;
+            Database.Log.Console.Level = LogLevel.Verbose;
 
             // Enable this or uninstall app to reset db
             //Database.Delete(DbName, DBPath); 
