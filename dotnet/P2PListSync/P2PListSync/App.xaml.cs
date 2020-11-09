@@ -10,6 +10,8 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using P2PListSync.Views;
+using Couchbase.Lite;
+using Couchbase.Lite.Logging;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace P2PListSync
@@ -19,6 +21,13 @@ namespace P2PListSync
         public App()
         {
             InitializeComponent();
+
+            // Set true to get CBL Console Logs (Verbose) and additional app debug messages.
+            CoreApp.IsDebugging = true;
+
+            if (CoreApp.IsDebugging) {
+                Database.Log.Console.Level = LogLevel.Verbose;
+            }
 
             CoreApp.LoadAndInitDB();
             CoreApp.RequiresUserAuth = true;

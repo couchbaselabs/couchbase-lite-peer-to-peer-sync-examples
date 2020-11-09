@@ -94,6 +94,9 @@ namespace P2PListSync.ViewModels
                     //tag::StartListener[]
                     _urlEndpointListener.Start();
                     //end::StartListener[]
+                    if (CoreApp.IsDebugging) {
+                        PrintListener(_urlEndpointListener);
+                    }
                 } catch (Exception ex) {
                     Debug.WriteLine($"Fail starting listener : {ex}");
                     return;
@@ -264,6 +267,48 @@ namespace P2PListSync.ViewModels
             }
 
             return output;
+        }
+
+        private void PrintListener(URLEndpointListener listener)
+        {
+            Debug.WriteLine("Listener Config TLSIdentity info: ");
+            if (listener?.Config.TlsIdentity == null) {
+                Debug.WriteLine("No TLSIdentity to print.");
+            } else {
+                PrintTLSIdentity(listener.Config.TlsIdentity);
+            }
+
+            Debug.WriteLine("Listener TLSIdentity info: ");
+            if (listener?.TlsIdentity == null) {
+                Debug.WriteLine("No TLSIdentity to print.");
+            } else {
+                PrintTLSIdentity(listener.TlsIdentity);
+            }
+        }
+
+        private void PrintTLSIdentity(TLSIdentity id)
+        {
+            var certs = id.Certs;
+            if(certs == null) {
+                Debug.WriteLine("No certs to print.");
+                return;
+            }
+
+            foreach(var x509 in certs) {
+                //Print to console information contained in the certificate.
+                Debug.WriteLine("{0}Subject: {1}{0}", Environment.NewLine, x509.Subject);
+                Debug.WriteLine("{0}Issuer: {1}{0}", Environment.NewLine, x509.Issuer);
+                Debug.WriteLine("{0}Version: {1}{0}", Environment.NewLine, x509.Version);
+                Debug.WriteLine("{0}Valid Date: {1}{0}", Environment.NewLine, x509.NotBefore);
+                Debug.WriteLine("{0}Expiry Date: {1}{0}", Environment.NewLine, x509.NotAfter);
+                Debug.WriteLine("{0}Thumbprint: {1}{0}", Environment.NewLine, x509.Thumbprint);
+                Debug.WriteLine("{0}Serial Number: {1}{0}", Environment.NewLine, x509.SerialNumber);
+                Debug.WriteLine("{0}Friendly Name: {1}{0}", Environment.NewLine, x509.PublicKey.Oid.FriendlyName);
+                Debug.WriteLine("{0}Public Key Format: {1}{0}", Environment.NewLine, x509.PublicKey.EncodedKeyValue.Format(true));
+                Debug.WriteLine("{0}Raw Data Length: {1}{0}", Environment.NewLine, x509.RawData.Length);
+                Debug.WriteLine("{0}Certificate to string: {1}{0}", Environment.NewLine, x509.ToString(true));
+                //Debug.WriteLine("{0}Certificate to XML String: {1}{0}", Environment.NewLine, x509.PublicKey.Key.ToXmlString(false));
+            }
         }
     }
 }

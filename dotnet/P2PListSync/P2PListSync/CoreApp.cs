@@ -58,6 +58,8 @@ namespace P2PListSync
         /// </summary>
         public static bool RequiresUserAuth { get; set; }
 
+        public static bool IsDebugging { get; set; }
+
         public static Database DB { get; private set; }
         internal static string DBPath => Path.Combine(Path.GetTempPath().Replace("cache", "files"), "CouchbaseLite");
         
@@ -90,9 +92,6 @@ namespace P2PListSync
 
         public static void LoadAndInitDB()
         {
-            // Enable this to get CBL Console Logs (Info)
-            Database.Log.Console.Level = LogLevel.Verbose;
-
             // Enable this or uninstall app to reset db
             //Database.Delete(DbName, DBPath); 
             //tag::OpenOrCreateDatabase[]
