@@ -15,7 +15,10 @@
 //
 package com.couchbase.android.listsync.ui.p2p.server;
 
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import androidx.lifecycle.LiveData;
 import java.net.URI;
 import java.util.Set;
 
+import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.FragmentServerBinding;
 import com.couchbase.android.listsync.ui.p2p.BaseFragment;
 import com.couchbase.android.listsync.ui.p2p.SyncAdapter;
@@ -54,9 +58,15 @@ public final class ServerFragment extends BaseFragment {
         binding.start.setOnClickListener(v -> startServer());
         binding.stop.setOnClickListener(v -> stopServer());
 
-        adapter = SyncAdapter.setup(getActivity(), binding.servers);
+        adapter = SyncAdapter.setup(getActivity(), binding.servers, this::enableStopButton);
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        viewModel.getServers().observe(this, adapter::populate);
     }
 
     @Override
@@ -65,32 +75,21 @@ public final class ServerFragment extends BaseFragment {
         viewModel.cancel();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        viewModel.getServers().observe(this, adapter::populate);
-    }
+    private void enableStopButton() { binding.stop.setEnabled(adapter.getSelection() != null); }
 
     private void startServer() {
-        binding.start.setEnabled(false);
-        binding.stop.setEnabled(true);
-
         final LiveData<Set<URI>> endpointData = viewModel.startServer();
         endpointData.observe(getViewLifecycleOwner(), new OneShotObserver<>(endpointData, adapter::populate));
     }
 
     private void stopServer() {
-        final URI uri = adapter.getFirstConnection();
+        final URI uri = adapter.getSelection();
         if (uri == null) { return; }
 
+        // this causes a call to enableStopButton...
+        adapter.clearSelection();
+
         final LiveData<Set<URI>> endpointData = viewModel.stopServer(uri);
-        endpointData.observe(getViewLifecycleOwner(), new OneShotObserver<>(endpointData, this::onServerStopped));
-    }
-
-    private void onServerStopped(@NonNull Set<URI> uris) {
-        adapter.populate(uris);
-
-        binding.start.setEnabled(true);
-        binding.stop.setEnabled(false);
+        endpointData.observe(getViewLifecycleOwner(), new OneShotObserver<>(endpointData, adapter::populate));
     }
 }

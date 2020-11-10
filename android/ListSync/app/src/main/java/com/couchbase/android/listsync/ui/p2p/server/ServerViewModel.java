@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-import com.couchbase.android.listsync.p2p.SyncManager;
+import com.couchbase.android.listsync.p2p.ListenerManager;
 
 
 @Singleton
@@ -43,20 +43,20 @@ public class ServerViewModel extends ViewModel {
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     @NonNull
-    private final SyncManager sync;
+    private final ListenerManager serverMgr;
 
     @Inject
-    public ServerViewModel(@NonNull SyncManager sync) { this.sync = sync; }
+    public ServerViewModel(@NonNull ListenerManager serverMgr) { this.serverMgr = serverMgr; }
 
     @NonNull
     public LiveData<Set<URI>> getServers() {
-        servers.setValue(sync.getServers());
+        servers.setValue(serverMgr.getServers());
         return servers;
     }
 
     @NonNull
     public LiveData<Set<URI>> startServer() {
-        disposables.add(sync.startServer().subscribe(
+        disposables.add(serverMgr.startServer().subscribe(
             servers::setValue,
             e -> Log.w(TAG, "Failed to start server", e)));
         return servers;
@@ -64,7 +64,7 @@ public class ServerViewModel extends ViewModel {
 
     @NonNull
     public LiveData<Set<URI>> stopServer(@NonNull URI uri) {
-        disposables.add(sync.stopServer(uri).subscribe(
+        disposables.add(serverMgr.stopServer(uri).subscribe(
             servers::setValue,
             e -> Log.w(TAG, "Failed to stop server", e)));
         return servers;

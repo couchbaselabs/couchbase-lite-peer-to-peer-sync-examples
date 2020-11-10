@@ -20,20 +20,28 @@
 
     <TextView
         android:id="@+id/port"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBaseline_toBaselineOf="@+id/host"
         app:layout_constraintStart_toEndOf="@+id/host"
-        app:layout_constraintEnd_toStartOf="@+id/database"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         style="@style/Text.Small"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.6"
+        android:orientation="vertical"
         />
 
     <TextView
         android:id="@+id/database"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBaseline_toBaselineOf="@+id/host"
-        app:layout_constraintStart_toEndOf="@+id/port"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/Text.Small"
         />

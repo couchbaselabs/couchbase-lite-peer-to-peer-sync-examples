@@ -29,7 +29,8 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-import com.couchbase.android.listsync.p2p.SyncManager;
+import com.couchbase.android.listsync.p2p.ListenerManager;
+import com.couchbase.android.listsync.p2p.ReplicatorManager;
 
 
 @Singleton
@@ -46,10 +47,10 @@ public class ClientViewModel extends ViewModel {
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     @NonNull
-    private final SyncManager sync;
+    private final ReplicatorManager sync;
 
     @Inject
-    public ClientViewModel(@NonNull SyncManager sync) { this.sync = sync; }
+    public ClientViewModel(@NonNull ReplicatorManager sync) { this.sync = sync; }
 
     @NonNull
     public LiveData<Set<URI>> getClients() {

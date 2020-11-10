@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toStartOf="@+id/host"
         android:layout_margin="@dimen/frame_margin"
         android:text="@string/host"
-        style="@style/Text.Small.Label"
+        style="@style/Text.Label"
         />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -43,7 +43,7 @@
         app:layout_constraintEnd_toStartOf="@+id/port"
         android:layout_margin="@dimen/frame_margin"
         android:text="@string/port"
-        style="@style/Text.Small.Label"
+        style="@style/Text.Label"
         />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -70,7 +70,7 @@
         android:layout_marginRight="@dimen/frame_margin"
         android:layout_marginBottom="@dimen/textbox_pad"
         android:text="@string/database"
-        style="@style/Text.Small.Label"
+        style="@style/Text.Label"
         />
 
     <androidx.appcompat.widget.AppCompatEditText

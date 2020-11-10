@@ -15,6 +15,8 @@
 //
 package com.couchbase.android.listsync.ui.p2p.client;
 
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -80,8 +82,8 @@ public final class ClientFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         viewModel.getClients().observe(this, adapter::populate);
     }
 
@@ -91,7 +93,7 @@ public final class ClientFragment extends BaseFragment {
         viewModel.cancel();
     }
 
-    private void enableStopButton() { binding.stop.setEnabled(!adapter.isSelected(null)); }
+    private void enableStopButton() { binding.stop.setEnabled(adapter.getSelection() != null); }
 
     private void enableStartButton() {
         int port = getPort();
@@ -100,14 +102,6 @@ public final class ClientFragment extends BaseFragment {
                 && (port > URLEndpointListenerConfiguration.MIN_PORT)
                 && (port <= URLEndpointListenerConfiguration.MAX_PORT)
                 && (binding.database.length() > 2));
-    }
-
-    private void stopClient() {
-        // this generates a call to enableStopButton
-        final URI uri = adapter.getAndClearSelection();
-        if (uri == null) { return; }
-
-        viewModel.stopClient(uri);
     }
 
     private void startClient() {
@@ -127,6 +121,15 @@ public final class ClientFragment extends BaseFragment {
         enableStartButton();
 
         viewModel.startClient(uri);
+    }
+
+    private void stopClient() {
+        final URI uri = adapter.getSelection();
+        if (uri == null) { return; }
+
+        viewModel.stopClient(uri);
+
+        adapter.clearSelection();
     }
 
     @Nullable

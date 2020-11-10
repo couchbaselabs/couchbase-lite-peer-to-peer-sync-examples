@@ -21,7 +21,7 @@
 
     <dimen name="done_box_width">80dp</dimen>
 
-    <dimen name="text_small">18sp</dimen>
-    <dimen name="text_mid">24sp</dimen>
-    <dimen name="text_big">36sp</dimen>
+    <dimen name="text_small">16sp</dimen>
+    <dimen name="text_mid">20sp</dimen>
+    <dimen name="text_big">30sp</dimen>
 </resources>

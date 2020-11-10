@@ -17,7 +17,6 @@ package com.couchbase.android.listsync.ui.p2p;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +46,7 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
         public ConnectionViewHolder(@NonNull RowSyncBinding bindings) {
             super(bindings.getRoot());
             this.bindings = bindings;
-            itemView.setOnClickListener(this::select);
+            itemView.setOnClickListener(v -> setHighlighted(toggleSelection(this)));
         }
 
         public final void setConnection(@Nullable URI uri) {
@@ -71,14 +70,9 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
             bindings.url.setText(uri.toString());
         }
 
-        private void select(View view) {
-            itemView.setBackgroundColor(toggleSelection(this) ? selectedBg : unselectedBg);
+        public void setHighlighted(boolean highlighted) {
+            itemView.setBackgroundColor(highlighted ? selectedBg : 0);
         }
-    }
-
-    @NonNull
-    public static SyncAdapter setup(@NonNull Activity ctxt, @NonNull RecyclerView listView) {
-        return setup(ctxt, listView, null);
     }
 
     @NonNull
@@ -95,22 +89,19 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
         divider.setDrawable(ContextCompat.getDrawable(ctxt, R.drawable.divider));
         listView.addItemDecoration(divider);
 
-        ctxt.getResources().getColor(R.color.pale_yellow);
-
         final SyncAdapter adapter = new SyncAdapter(
             onSelectionChange,
-            ctxt.getResources().getColor(R.color.white),
-            ctxt.getResources().getColor(R.color.pale_yellow));
+            ctxt.getResources().getColor(R.color.pale_yellow)
+        );
         listView.setAdapter(adapter);
 
         return adapter;
     }
 
 
-    @NonNull
+    @Nullable
     private final Runnable onSelectionChanged;
     private final int selectedBg;
-    private final int unselectedBg;
 
     @Nullable
     private List<URI> connections;
@@ -118,10 +109,9 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
     @Nullable
     private ConnectionViewHolder selected;
 
-    public SyncAdapter(@Nullable Runnable onSelectionChanged, int selectedBg, int unselectedBg) {
+    public SyncAdapter(@Nullable Runnable onSelectionChanged, int selectedBg) {
         this.onSelectionChanged = onSelectionChanged;
         this.selectedBg = selectedBg;
-        this.unselectedBg = unselectedBg;
     }
 
     @Override
@@ -143,7 +133,7 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
 
     @Override
     public void onViewRecycled(@NonNull ConnectionViewHolder vh) {
-        deselect(vh);
+        if (selected == vh) { clearSelection(); }
         super.onViewRecycled(vh);
     }
 
@@ -152,28 +142,25 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
         Collections.sort(sortedConnections);
         this.connections = sortedConnections;
         notifyDataSetChanged();
+        clearSelection();
     }
 
     @Nullable
-    public URI getFirstConnection() { return (connections.size() <= 0) ? null : connections.get(0); }
+    public URI getSelection() { return (selected == null) ? null : selected.uri; }
 
-    public boolean isSelected(@Nullable ConnectionViewHolder vh) { return selected == vh; }
-
-    @Nullable
-    public URI getAndClearSelection() {
-        if (selected == null) { return null; }
-        final ConnectionViewHolder curSelection = selected;
+    public void clearSelection() {
+        if (selected == null) { return; }
+        selected.setHighlighted(false);
         select(null);
-        return curSelection.uri;
     }
 
-    boolean toggleSelection(@NonNull ConnectionViewHolder selection) {
-        select(isSelected(selection) ? null : selection);
-        return isSelected(selection);
-    }
-
-    void deselect(@NonNull ConnectionViewHolder vh) {
-        if (isSelected(vh)) { select(null); }
+    boolean toggleSelection(@NonNull ConnectionViewHolder newSelection) {
+        if (selected == newSelection) { clearSelection(); }
+        else {
+            if (selected != null) { selected.setHighlighted(false); }
+            select(newSelection);
+        }
+        return selected != null;
     }
 
     private void select(@Nullable ConnectionViewHolder selection) {
