@@ -16,6 +16,7 @@
 package com.couchbase.android.listsync.ui.login;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -51,11 +52,16 @@ public class LoginViewModel extends ViewModel {
 
         db.openDb(user, pwd)
             .subscribe(
-                () -> login.setValue(STATUS_OK),
-                e -> login.setValue(e.toString()));
+                () -> onLogin(user, STATUS_OK),
+                e -> onLogin(user, e.toString()));
 
         return login;
     }
 
-    public boolean isLoggedIn() { return db.isLoggedIn(); }
+    public boolean isLoggedIn() { return db.getUser() != null; }
+
+    private void onLogin(@NonNull String user, @NonNull String message) {
+        login.setValue(message);
+        Log.d(TAG, "login @" + user + ": " + message);
+    }
 }

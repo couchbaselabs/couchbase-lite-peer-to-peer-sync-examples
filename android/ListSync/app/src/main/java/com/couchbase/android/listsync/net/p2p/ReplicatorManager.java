@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package com.couchbase.android.listsync.p2p;
+package com.couchbase.android.listsync.net.p2p;
 
 import android.util.Log;
 import androidx.annotation.GuardedBy;
@@ -140,10 +140,10 @@ public final class ReplicatorManager {
     private void stopClientAsync(@NonNull URI uri) {
         final Replicator replicator = replicators.remove(uri);
         if (replicator == null) {
-            Log.i(TAG, "Attempt to stop non-existent replicator: " + uri);
+            Log.w(TAG, "Attempt to stop non-existent replicator: " + uri);
         }
         else {
-            Log.d(TAG, "Stopping client @" + replicator.getConfig());
+            Log.i(TAG, "Stopping client @" + replicator.getConfig());
             replicator.stop();
         }
     }

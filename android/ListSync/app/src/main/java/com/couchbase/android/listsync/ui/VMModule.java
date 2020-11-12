@@ -23,9 +23,10 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 
-import com.couchbase.android.listsync.ui.p2p.client.ClientViewModel;
 import com.couchbase.android.listsync.ui.login.LoginViewModel;
 import com.couchbase.android.listsync.ui.main.MainViewModel;
+import com.couchbase.android.listsync.ui.p2p.client.ClientViewModel;
+import com.couchbase.android.listsync.ui.p2p.nearby.NearbyViewModel;
 import com.couchbase.android.listsync.ui.p2p.server.ServerViewModel;
 
 
@@ -53,6 +54,12 @@ public interface VMModule {
     @IntoMap
     @ViewModelKey(ServerViewModel.class)
     ViewModel bindServerViewModel(@NonNull ServerViewModel serverViewModel);
+
+    @NonNull
+    @Binds
+    @IntoMap
+    @ViewModelKey(NearbyViewModel.class)
+    ViewModel bindNearbyViewModel(@NonNull NearbyViewModel nearbyViewModel);
 
     @NonNull
     @Binds

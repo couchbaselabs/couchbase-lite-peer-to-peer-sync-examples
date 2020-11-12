@@ -15,10 +15,7 @@
 //
 package com.couchbase.android.listsync.ui.p2p.server;
 
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +26,9 @@ import androidx.lifecycle.LiveData;
 import java.net.URI;
 import java.util.Set;
 
-import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.FragmentServerBinding;
 import com.couchbase.android.listsync.ui.p2p.BaseFragment;
-import com.couchbase.android.listsync.ui.p2p.SyncAdapter;
+import com.couchbase.android.listsync.ui.p2p.P2PAdapter;
 
 
 public final class ServerFragment extends BaseFragment {
@@ -46,7 +42,7 @@ public final class ServerFragment extends BaseFragment {
 
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
-    private SyncAdapter adapter;
+    private P2PAdapter adapter;
 
     @NonNull
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
@@ -58,7 +54,7 @@ public final class ServerFragment extends BaseFragment {
         binding.start.setOnClickListener(v -> startServer());
         binding.stop.setOnClickListener(v -> stopServer());
 
-        adapter = SyncAdapter.setup(getActivity(), binding.servers, this::enableStopButton);
+        adapter = P2PAdapter.setup(getActivity(), binding.servers, this::enableStopButton);
 
         return root;
     }

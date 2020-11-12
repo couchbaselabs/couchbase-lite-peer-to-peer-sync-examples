@@ -87,7 +87,7 @@ public class MainViewModel extends ViewModel {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void closeDb() {
         db.closeDb().subscribe(
-            () -> Log.w(TAG, "Db closed"),
+            () -> Log.i(TAG, "Db closed"),
             (e) -> Log.w(TAG, "Failed to close db", e));
     }
 }

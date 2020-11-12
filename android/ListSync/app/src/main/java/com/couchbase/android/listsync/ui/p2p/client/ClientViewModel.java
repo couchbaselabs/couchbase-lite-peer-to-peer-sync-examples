@@ -29,13 +29,12 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-import com.couchbase.android.listsync.p2p.ListenerManager;
-import com.couchbase.android.listsync.p2p.ReplicatorManager;
+import com.couchbase.android.listsync.net.p2p.ReplicatorManager;
 
 
 @Singleton
 public class ClientViewModel extends ViewModel {
-    private static final String TAG = "CLI_VM";
+    private static final String TAG = "CLIENT_VM";
 
     public static final String SCHEME_WSS = "wss";
 

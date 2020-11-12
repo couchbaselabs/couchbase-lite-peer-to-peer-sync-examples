@@ -48,7 +48,10 @@ public class P2PActivity extends AppCompatActivity implements BaseFragment.VMPro
 
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         AppBarConfiguration appBarConfiguration
-            = new AppBarConfiguration.Builder(R.id.nav_active, R.id.nav_passive).build();
+            = new AppBarConfiguration.Builder(
+            R.id.nav_active,
+            R.id.nav_passive)
+            .build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 

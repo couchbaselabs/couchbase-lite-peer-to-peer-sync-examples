@@ -15,9 +15,7 @@
 //
 package com.couchbase.android.listsync.ui.p2p;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.TypedValue;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -27,7 +25,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.couchbase.android.listsync.R;
 import com.couchbase.lite.internal.utils.Fn;
 
 

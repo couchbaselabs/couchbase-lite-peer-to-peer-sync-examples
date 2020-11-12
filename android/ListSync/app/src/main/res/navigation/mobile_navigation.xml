@@ -15,6 +15,13 @@
         />
 
     <fragment
+        android:id="@+id/nav_nearby"
+        android:name="com.couchbase.android.listsync.ui.p2p.nearby.NearbyFragment"
+        android:label="@string/title_nearby"
+        tools:layout="@layout/fragment_nearby"
+        />
+
+    <fragment
         android:id="@+id/nav_passive"
         android:name="com.couchbase.android.listsync.ui.p2p.server.ServerFragment"
         android:label="@string/title_passive"

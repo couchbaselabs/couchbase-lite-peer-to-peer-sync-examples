@@ -15,8 +15,6 @@
 //
 package com.couchbase.android.listsync.ui.p2p.client;
 
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.FragmentClientBinding;
 import com.couchbase.android.listsync.ui.p2p.BaseFragment;
-import com.couchbase.android.listsync.ui.p2p.SyncAdapter;
+import com.couchbase.android.listsync.ui.p2p.P2PAdapter;
 import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 
@@ -50,7 +48,7 @@ public final class ClientFragment extends BaseFragment {
 
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
-    private SyncAdapter adapter;
+    private P2PAdapter adapter;
 
     @NonNull
     public View onCreateView(@NotNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
@@ -76,7 +74,7 @@ public final class ClientFragment extends BaseFragment {
         binding.port.addTextChangedListener(buttonEnabler);
         binding.database.addTextChangedListener(buttonEnabler);
 
-        adapter = SyncAdapter.setup(getActivity(), binding.clients, this::enableStopButton);
+        adapter = P2PAdapter.setup(getActivity(), binding.clients, this::enableStopButton);
 
         return root;
     }

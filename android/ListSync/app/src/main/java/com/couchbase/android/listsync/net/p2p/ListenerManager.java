@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package com.couchbase.android.listsync.p2p;
+package com.couchbase.android.listsync.net.p2p;
 
 import android.util.Log;
 import androidx.annotation.GuardedBy;
@@ -38,9 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import com.couchbase.android.listsync.db.DatabaseManager;
-import com.couchbase.android.listsync.util.ObservableMap;
 import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Replicator;
 import com.couchbase.lite.URLEndpointListener;
 import com.couchbase.lite.URLEndpointListenerConfiguration;
 
@@ -105,7 +103,6 @@ public final class ListenerManager {
         final URI uri = listener.getUrls().get(0);
         addServer(uri, listener);
 
-
         return getServers();
     }
 
@@ -113,10 +110,10 @@ public final class ListenerManager {
     public Set<URI> stopServerAsync(@NonNull URI uri) {
         final URLEndpointListener listener = removeServer(uri);
         if (listener == null) {
-            Log.i(TAG, "Attempt to stop non-existent listener: " + uri);
+            Log.w(TAG, "Attempt to stop non-existent listener: " + uri);
         }
         else {
-            Log.d(TAG, "Stopping server @" + listener.getConfig());
+            Log.i(TAG, "Stopping server @" + listener.getConfig());
             listener.stop();
         }
 

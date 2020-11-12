@@ -35,7 +35,7 @@ import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.RowSyncBinding;
 
 
-public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionViewHolder> {
+public class P2PAdapter extends RecyclerView.Adapter<P2PAdapter.ConnectionViewHolder> {
     final class ConnectionViewHolder extends RecyclerView.ViewHolder {
         @NonNull
         private final RowSyncBinding bindings;
@@ -76,7 +76,7 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
     }
 
     @NonNull
-    public static SyncAdapter setup(
+    public static P2PAdapter setup(
         @NonNull Activity ctxt,
         @NonNull RecyclerView listView,
         @Nullable Runnable onSelectionChange) {
@@ -89,7 +89,7 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
         divider.setDrawable(ContextCompat.getDrawable(ctxt, R.drawable.divider));
         listView.addItemDecoration(divider);
 
-        final SyncAdapter adapter = new SyncAdapter(
+        final P2PAdapter adapter = new P2PAdapter(
             onSelectionChange,
             ctxt.getResources().getColor(R.color.pale_yellow)
         );
@@ -109,7 +109,7 @@ public class SyncAdapter extends RecyclerView.Adapter<SyncAdapter.ConnectionView
     @Nullable
     private ConnectionViewHolder selected;
 
-    public SyncAdapter(@Nullable Runnable onSelectionChanged, int selectedBg) {
+    public P2PAdapter(@Nullable Runnable onSelectionChanged, int selectedBg) {
         this.onSelectionChanged = onSelectionChanged;
         this.selectedBg = selectedBg;
     }

@@ -101,6 +101,10 @@ public final class DatabaseManager {
     @Nullable
     private Database database;
 
+    @GuardedBy("this")
+    @Nullable
+    private String userName;
+
     @Inject
     public DatabaseManager(@NonNull final Context ctxt) {
         CouchbaseLite.init(ctxt);
@@ -136,7 +140,7 @@ public final class DatabaseManager {
         return new ReplicatorConfiguration(getDb(), endpoint);
     }
 
-    public boolean isLoggedIn() { return getDb() != null; }
+    public synchronized String getUser() { return userName; }
 
     @MainThread
     @NonNull
@@ -216,7 +220,10 @@ public final class DatabaseManager {
             db.changeEncryptionKey(encryptionKey);
         }
 
-        synchronized (this) { database = db; }
+        synchronized (this) {
+            database = db;
+            userName = user;
+        }
         Log.i(TAG, "DB open: " + user);
     }
 

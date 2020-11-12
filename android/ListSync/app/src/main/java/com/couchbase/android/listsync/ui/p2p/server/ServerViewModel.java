@@ -15,6 +15,8 @@
 //
 package com.couchbase.android.listsync.ui.p2p.server;
 
+import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -22,6 +24,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -29,12 +32,14 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-import com.couchbase.android.listsync.p2p.ListenerManager;
+import com.couchbase.android.listsync.db.DatabaseManager;
+import com.couchbase.android.listsync.net.nearby.NearbyServer;
+import com.couchbase.android.listsync.net.p2p.ListenerManager;
 
 
 @Singleton
 public class ServerViewModel extends ViewModel {
-    private static final String TAG = "SRV_VM";
+    private static final String TAG = "SERVER_VM";
 
     @NonNull
     private final MutableLiveData<Set<URI>> servers = new MutableLiveData<>();
@@ -44,20 +49,27 @@ public class ServerViewModel extends ViewModel {
 
     @NonNull
     private final ListenerManager serverMgr;
+    @NonNull
+    private final NearbyServer nearbyMgr;
 
     @Inject
-    public ServerViewModel(@NonNull ListenerManager serverMgr) { this.serverMgr = serverMgr; }
+    public ServerViewModel(@NonNull Context ctxt, @NonNull DatabaseManager db, @NonNull ListenerManager serverMgr) {
+        this.serverMgr = serverMgr;
+        final String user = db.getUser();
+        if (TextUtils.isEmpty(user)) { throw new IllegalStateException("Attempt to use nearby before sign in"); }
+        this.nearbyMgr = new NearbyServer(ctxt, user, Collections.emptySet());
+    }
 
     @NonNull
     public LiveData<Set<URI>> getServers() {
-        servers.setValue(serverMgr.getServers());
+        updateServers(serverMgr.getServers());
         return servers;
     }
 
     @NonNull
     public LiveData<Set<URI>> startServer() {
         disposables.add(serverMgr.startServer().subscribe(
-            servers::setValue,
+            this::updateServers,
             e -> Log.w(TAG, "Failed to start server", e)));
         return servers;
     }
@@ -65,10 +77,30 @@ public class ServerViewModel extends ViewModel {
     @NonNull
     public LiveData<Set<URI>> stopServer(@NonNull URI uri) {
         disposables.add(serverMgr.stopServer(uri).subscribe(
-            servers::setValue,
+            this::updateServers,
             e -> Log.w(TAG, "Failed to stop server", e)));
         return servers;
     }
 
+    // continue to advertise...
     public void cancel() { disposables.clear(); }
+
+    private void updateServers(Set<URI> newServers) {
+        final Set<URI> curServers = servers.getValue();
+        final int curServerCount = (curServers == null) ? 0 : curServers.size();
+
+        Log.d(TAG, "Update servers: " + newServers.size() + ", " + curServerCount);
+
+        if (curServerCount == 0) {
+            if (newServers.isEmpty()) { return; }
+            nearbyMgr.advertise(true);
+        }
+        else if (newServers.isEmpty()) {
+            nearbyMgr.advertise(false);
+        }
+
+        servers.setValue(newServers);
+
+        nearbyMgr.update(newServers);
+    }
 }

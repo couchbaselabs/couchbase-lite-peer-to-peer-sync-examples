@@ -25,7 +25,6 @@ import com.couchbase.android.listsync.ui.ActivityBuilder;
 import com.couchbase.android.listsync.ui.VMModule;
 
 
-@SuppressWarnings("unused")
 @Singleton
 @Component(modules = {AndroidInjectionModule.class, ActivityBuilder.class, VMModule.class})
 public interface AppFactory extends AndroidInjector<ListSync> {

@@ -16,52 +16,37 @@
 package com.couchbase.android.listsync.model;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.util.Objects;
-
-import com.couchbase.lite.Blob;
 
 
-public final class Produce {
+public final class Endpoint {
+    @NonNull
+    private final String id;
     @NonNull
     private final String name;
-    @Nullable
-    private final Blob photo;
-    private final long done;
 
-    public Produce(@NonNull String name, @Nullable Blob photo, long done) {
+    public Endpoint(@NonNull String id, @NonNull String name) {
+        this.id = id;
         this.name = name;
-        this.photo = photo;
-        this.done = done;
     }
+
+    @NonNull
+    public String getId() { return id; }
 
     @NonNull
     public String getName() { return name; }
 
-    @Nullable
-    public Blob getPhoto() { return photo; }
-
-    public long getDone() { return done; }
-
     @NonNull
     @Override
-    public String toString() {
-        String s = "Produce{" + name + ", " + done + ",";
-        if (photo != null) { s += photo.toString(); }
-        return s + "}";
-    }
-
-    @Override
-    public int hashCode() { return Objects.hash(name); }
+    public String toString() { return "Endpoint{" + name + ", " + id + "}"; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
-        if (o == null) { return false; }
-        if (!(o instanceof Produce)) { return false; }
-        Produce produce = (Produce) o;
-        return name.equals(produce.name);
+        if (o == null || getClass() != o.getClass()) { return false; }
+        return id.equals(((Endpoint) o).id);
     }
+
+    @Override
+    public int hashCode() { return id.hashCode(); }
 }
 
