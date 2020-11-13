@@ -44,8 +44,7 @@ You can learn more about Couchbase Lite https://docs.couchbase.com/couchbase-lit
 == Prerequisites
 This tutorial assumes familiarity with building Xamarin apps with Visual Studio and with Couchbase Lite.
 
-* Visual Studio 2019 with:
-** Download the Visual Studio from the link:https://visualstudio.microsoft.com/downloads/[Microsoft Website]
+* Visual Studio 2019 (Download it from the link:https://visualstudio.microsoft.com/downloads/[Microsoft Website]) with:
 ** Universal Windows Platform component installed.
 ** Xamarin component installed (for Android and iOS development).
 
@@ -314,6 +313,7 @@ include::example$code-samples.cs[tags=StopReplication]
 ** NOTE: If the listener is not started before listeners browser ("Broswer") is selected, you will need to click `Broadcast` toolbar item locates on top of the `ListenerPage` (See `Broadcast` in <<Passive Peer or Server>>)
 ** NOTE: You will need to manually enter the listener's IP Endpoint (ex. 192.168.0.14:59840) for Xamarin android app.
 * Tap on the row corresponding to listener. This will start replication with the listener and it shoud transition to Connected state
+** NOTE: If you <<Cannot connect Android app's active peer to passive peer if you are using Xamarin.Android SDK 9.x or other older version?>>
 * Verify the connection count on listener by clicking "Peers" toolbar item locates on top of the `ListenerPage` (See `Broadcast` in <<Passive Peer or Server>>)
 * Tap on the row corresponding to listener again. This will stop replication with the listener and it shoud transition to Disonnected state. Try Disconnect and then reconnect again
 * Swipe left (iOS) or long press (Android) or left click (UWP) on the the row. You should see the option to remove listener
