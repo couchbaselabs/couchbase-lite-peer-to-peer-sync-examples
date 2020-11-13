@@ -364,5 +364,5 @@ adb forward tcp:35262 tcp:35262
 ----
 2) You cannot connect to emulator directly over localhost. Regardless of what the IPAddress is in the URL that's displayed , the replicator app must ignore it and use "127.0.0.1" as host address. So if listener is listening on "10.2.0.15: 35262" , then you must connect to URL "127.0.0.1: 35262"
 
-=== Cannot connect Android app's active peer to passive peer if you are using Xamarin.Android SDK 9.x or other older version?
+=== Cannot connect Android app active peer to passive peer if you are using Xamarin.Android SDK 9.x or other older version?
 Go to `Advanced Android Options` (Android Project Properties -> Android Options -> Advanced button) and change `SSL/TLS implementation` configuratino to `Managed TLS 1.0` from `Native TLS 1.2+`.
