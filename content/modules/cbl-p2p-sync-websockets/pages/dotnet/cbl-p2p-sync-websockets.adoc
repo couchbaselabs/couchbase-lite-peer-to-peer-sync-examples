@@ -18,12 +18,12 @@ toc::[]
 
 
 [abstract]
-This tutorial uses a simple inventory tracker app to demonstrate the peer-to-peer database sync functionality introduced in Couchbase Lite 2.8.
+This tutorial uses a simple inventory tracker app to demonstrate the peer-to-peer database sync functionality introduced in Couchbase Lite 2.8.2.
 
 
 == Introduction
 
-Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https://docs.couchbase.com/couchbase-lite/current/csharp/learn/csharp-landing-p2psync.html[Peer-to-Peer Sync], over websocket, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point (i.e. you do not need a Sync Gateway or Couchbase Server to get peer-to-peer database sync going)
+Couchbase Lite 2.8.2 release supports out-of-the-box support for secure link:https://docs.couchbase.com/couchbase-lite/current/csharp/learn/csharp-landing-p2psync.html[Peer-to-Peer Sync], over websocket, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point (i.e. you do not need a Sync Gateway or Couchbase Server to get peer-to-peer database sync going)
 
 
 This tutorial will demonstrate how to -
@@ -42,6 +42,10 @@ You can learn more about Couchbase Lite https://docs.couchbase.com/couchbase-lit
 ====
 
 == Prerequisites
+*Visual Studio 2019 with:
+**Universal Windows Platform component installed.
+**Xamarin component installed (for Android and iOS development).
++
 This tutorial assumes familiarity with building Xamarin apps with Visual Studio and with Couchbase Lite.
 
 * If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the link:https://docs.couchbase.com/couchbase-lite/current/csharp/start/csharp-gs-install.html[Getting Started] guides
@@ -226,7 +230,6 @@ include::example$code-samples.cs[tags=StopListener]
 * On login screen, sign in as any one of the users configured in the `userallowlist.json` file such as "bob" and "password"
 * You can find 4 selections (`What's in Season?`, `Listener`, `Browser`, and `Logout`) under "hamburger" menu locates on the upper left hand side.
 * From the `ListenerPage` after select `Listener` from the "hamburger" menu, start the listener by clicking on "Start Listener" button
-** NOTE: You may encounter issue when starting the listener with TLS on UWP. Please see <<Having issue start listener with TLS on UWP?>>
 * You can see 2 toolbar items (`Broadcast` and `Peers`) 
 ** NOTE: These two items will do nothing if listener is not started.
 * Click on the "Peers" toolbar item to see number of connected clients. It should be 0 if there are no connected clients
@@ -353,5 +356,14 @@ Complete documentation is available link:https://docs.couchbase.com/couchbase-li
 * Xamarin iOS p2p sample app should build and run with Visual Studio 2019 with latest updates and XCode 12.0.1
 * If you have Xcode 11 and try to run the iOS app on simulator and the simulator is not loading, try launch the simulator via Xcode and select that simulator when launching it from VS.
 
-==== Having issue start listener with TLS on UWP?
-* If start listener crash the UWP app, please uninstall the app first. On a 64-bit Windows, select "Debug" for Solution Configurations and "x64" for Solution Platforms on VS and Deploy the UWP sample app. After successfully deployed the app, you can run the app by clicking "Local Machine".
+=== Connecting to Android emulator over localhost
+When starting listener on Android emulator and trying to connect it from another emulator or iOS simulator on localhost, the following steps must be followed
+1) Setup port forwarding .For instance if listener is listening on port 35262 , then command to be run on terminal of host machine would be
+[source,bash]
+----
+adb forward tcp:35262 tcp:35262
+----
+2) You cannot connect to emulator directly over localhost. Regardless of what the IPAddress is in the URL that's displayed , the replicator app must ignore it and use "127.0.0.1" as host address. So if listener is listening on "10.2.0.15: 35262" , then you must connect to URL "127.0.0.1: 35262"
+
+=== Cannot connect Android app's active peer to passive peer if you are using Xamarin.Android SDK 9.x or other older version?
+Go to `Advanced Android Options` (Android Project Properties -> Android Options -> Advanced button) and change `SSL/TLS implementation` configuratino to `Managed TLS 1.0` from `Native TLS 1.2+`.
