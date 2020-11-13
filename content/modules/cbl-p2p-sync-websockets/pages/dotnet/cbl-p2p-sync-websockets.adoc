@@ -134,14 +134,14 @@ An example of a document would be
 
 The app extract prebuild database zip file named `userdb.cblite2.zip` into `DBPath` the first time the database is created. This is done regardless of whether the app is launched in passive or active mode.
 
-* Open the *CoreApp.cs* file and locate the `LoadAndInitDB()` method. This method extract and place the Couchbase Lite database in `DBPath` for the user if one does not exist.
+* Open the *CoreApp.cs* file and locate the `LoadAndInitDB` method. This method extract and place the Couchbase Lite database in `DBPath` for the user if one does not exist.
 
 [source,C#]
 ----
 include::example$code-samples.cs[tags=OpenOrCreateDatabase]
 ----
 
-* Open the *SeasonalItemsViewModel.cs* file and locate the `SeasonalItemsViewModel()` constructor. It creates LiveQuery to pick up document changes in the inventory list array when the ViewModel load the first time. Each array item contains a dictionary with 3 pairs of key value, and keys are "key", "value", and "image" and their values are mapped to the properties `Name`, `Quantity`, and `Image` in .Net Object `SeasonalItem`. The "image" property holds a blob entry to an image. 
+* Open the *SeasonalItemsViewModel.cs* file and locate the `SeasonalItemsViewModel` constructor. It creates LiveQuery to pick up document changes in the inventory list array when the ViewModel load the first time. Each array item contains a dictionary with 3 pairs of key value, and keys are "key", "value", and "image" and their values are mapped to the properties `Name`, `Quantity`, and `Image` in .Net Object `SeasonalItem`. The "image" property holds a blob entry to an image. 
 
 [source,C#]
 ----
@@ -153,7 +153,7 @@ First, we will walk through the steps of using the app in passive peer mode
 
 
 === Initializing Websocket Listener
-* Open the *ListenerViewModel.cs* file and locate the `CreateListener()` function. This is where the websocket listsner for peer-to-peer sync is initialized
+* Open the *ListenerViewModel.cs* file and locate the `CreateListener` function. This is where the websocket listsner for peer-to-peer sync is initialized
 
 
 [source,C#]
@@ -197,7 +197,7 @@ include::example$code-samples.cs[tags=ListenerValidationTestMode]
 |===
 
 === Start Websocket Listener
-* Open the *ListenerViewModel.cs* file and locate the `ExecuteStartListenerCommand()` method.
+* Open the *ListenerViewModel.cs* file and locate the `ExecuteStartListenerCommand` method.
 
 [source,C#]
 ----
@@ -215,7 +215,7 @@ include::example$code-samples.cs[tags=StartAdvertiser]
 ----
 
 === Stop Websocket Listener
-* Open the *ListenerViewModel.cs* file and locate the `ExecuteStartListenerCommand()` method. You can stop the listener after the listener is started.
+* Open the *ListenerViewModel.cs* file and locate the `ExecuteStartListenerCommand` method. You can stop the listener after the listener is started.
 
 [source,C#]
 ----
@@ -253,7 +253,7 @@ Explore the content in the `UdpListener.cs`. It includes implementation of creat
 === Initializing and Starting Replication
 Initialilzing a replicator for peer-to-peer sync is fundamentally the same as the case if the Couchbase Lite client were to link:https://docs.couchbase.com/couchbase-lite/current/csharp/learn/csharp-replication.html#starting-a-replication[sync] with a remote Sync Gateway. 
 
-* Open the *ReplicatorItem.cs* file and locate the `ExecuteStartReplicatorCommand()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we initialize a bi-directional replication to the listener peer in continuous mode. We also register a Replication Listener to be notified of status to the replication status.
+* Open the *ReplicatorItem.cs* file and locate the `ExecuteStartReplicatorCommand` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we initialize a bi-directional replication to the listener peer in continuous mode. We also register a Replication Listener to be notified of status to the replication status.
 
 [source,C#]
 ----
@@ -297,7 +297,7 @@ include::example$code-samples.cs[tags=ListenerValidationTestMode]
 
 === Stopping Replication
 
-* Open the *ReplicatorItem.cs* file and locate the `StopReplicator()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we remove any listeners attached to the replicator and stop it. You can restart the replicator with `ExecuteStartReplicatorCommand()` method
+* Open the *ReplicatorItem.cs* file and locate the `StopReplicator` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we remove any listeners attached to the replicator and stop it. You can restart the replicator with `ExecuteStartReplicatorCommand` method
 
 [source,C#]
 ----
@@ -364,5 +364,5 @@ adb forward tcp:35262 tcp:35262
 ----
 2) You cannot connect to emulator directly over localhost. Regardless of what the IPAddress is in the URL that's displayed , the replicator app must ignore it and use "127.0.0.1" as host address. So if listener is listening on "10.2.0.15: 35262" , then you must connect to URL "127.0.0.1: 35262"
 
-=== Cannot connect Android app active peer to passive peer if you are using Xamarin.Android SDK 9.x or other older version?
+=== Cannot connect Android app active peer to passive peer when you are using Xamarin.Android SDK 9.x or other older version?
 Go to `Advanced Android Options` (Android Project Properties -> Android Options -> Advanced button) and change `SSL/TLS implementation` configuratino to `Managed TLS 1.0` from `Native TLS 1.2+`.
