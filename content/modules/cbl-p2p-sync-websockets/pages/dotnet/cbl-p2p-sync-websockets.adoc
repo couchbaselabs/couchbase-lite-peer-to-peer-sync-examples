@@ -43,6 +43,7 @@ You can learn more about Couchbase Lite https://docs.couchbase.com/couchbase-lit
 
 == Prerequisites
 This tutorial assumes familiarity with building Xamarin apps with Visual Studio and with Couchbase Lite.
+
 * Visual Studio 2019 with:
 ** Download the Visual Studio from the link:https://visualstudio.microsoft.com/downloads/[Microsoft Website]
 ** Universal Windows Platform component installed.
@@ -85,7 +86,6 @@ git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-webs
 === Try it Out
 * Open the Xamarin .Net project using Visual Studio
 * Build and run the project
-** Note: For UWP, don't run until you do this: On a 64-bit Windows, select "Debug" for Solution Configurations and "x64" for Solution Platforms on VS and Deploy the UWP app. After successfully deployed the app, you can run the app by clicking "Local Machine".
 ** Note: If you are running Android apps on emulators, please see <<Connecting to Android emulator over localhost>>
 * Verify that you see the login screen
 * If you are having trouble running the Xamarin iOS sample app, please see <<Having issue running the Xamarin iOS app?>> 
