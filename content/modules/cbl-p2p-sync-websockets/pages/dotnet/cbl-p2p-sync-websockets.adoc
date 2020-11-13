@@ -18,12 +18,12 @@ toc::[]
 
 
 [abstract]
-This tutorial uses a simple inventory tracker app to demonstrate the peer-to-peer database sync functionality introduced in Couchbase Lite 2.8.2.
+This tutorial uses a simple inventory tracker app to demonstrate the peer-to-peer database sync functionality introduced in Couchbase Lite 2.8.
 
 
 == Introduction
 
-Couchbase Lite 2.8.2 release supports out-of-the-box support for secure link:https://docs.couchbase.com/couchbase-lite/current/csharp/learn/csharp-landing-p2psync.html[Peer-to-Peer Sync], over websocket, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point (i.e. you do not need a Sync Gateway or Couchbase Server to get peer-to-peer database sync going)
+Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https://docs.couchbase.com/couchbase-lite/current/csharp/learn/csharp-landing-p2psync.html[Peer-to-Peer Sync], over websocket, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point (i.e. you do not need a Sync Gateway or Couchbase Server to get peer-to-peer database sync going)
 
 
 This tutorial will demonstrate how to -
@@ -42,16 +42,13 @@ You can learn more about Couchbase Lite https://docs.couchbase.com/couchbase-lit
 ====
 
 == Prerequisites
-*Visual Studio 2019 with:
-**Universal Windows Platform component installed.
-**Xamarin component installed (for Android and iOS development).
-+
 This tutorial assumes familiarity with building Xamarin apps with Visual Studio and with Couchbase Lite.
+* Visual Studio 2019 with:
+** Download the Visual Studio from the link:https://visualstudio.microsoft.com/downloads/[Microsoft Website]
+** Universal Windows Platform component installed.
+** Xamarin component installed (for Android and iOS development).
 
 * If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the link:https://docs.couchbase.com/couchbase-lite/current/csharp/start/csharp-gs-install.html[Getting Started] guides
-
-* Visual Studio
-** Download latest version from the link:https://visualstudio.microsoft.com/downloads/[Microsoft Website]
 
 * Wi-Fi network that the peers can communicate over
 ** You could run your peers in multiple simulators. But if you were running the app on real devices, then you will need to ensure that the devices are on the same WiFi network
@@ -89,6 +86,7 @@ git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-webs
 * Open the Xamarin .Net project using Visual Studio
 * Build and run the project
 ** Note: For UWP, don't run until you do this: On a 64-bit Windows, select "Debug" for Solution Configurations and "x64" for Solution Platforms on VS and Deploy the UWP app. After successfully deployed the app, you can run the app by clicking "Local Machine".
+** Note: If you are running Android apps on emulators, please see <<Connecting to Android emulator over localhost>>
 * Verify that you see the login screen
 * If you are having trouble running the Xamarin iOS sample app, please see <<Having issue running the Xamarin iOS app?>> 
 +
@@ -350,9 +348,9 @@ This tutorial walked you through an example of how to directly synchronize data 
 
 Complete documentation is available link:https://docs.couchbase.com/couchbase-lite/current/csharp/learn/csharp-landing-p2psync.html[here]
 
-=== Toubleshoot 
+== Toubleshoot 
 
-==== Having issue running the Xamarin iOS app?
+=== Having issue running the Xamarin iOS app?
 * Xamarin iOS p2p sample app should build and run with Visual Studio 2019 with latest updates and XCode 12.0.1
 * If you have Xcode 11 and try to run the iOS app on simulator and the simulator is not loading, try launch the simulator via Xcode and select that simulator when launching it from VS.
 
