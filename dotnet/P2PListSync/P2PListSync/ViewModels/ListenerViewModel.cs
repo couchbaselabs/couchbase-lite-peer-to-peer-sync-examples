@@ -118,11 +118,11 @@ namespace P2PListSync.ViewModels
         internal void CreateListener()
         {
             //tag::InitListener[]
-            var listenerConfig = new URLEndpointListenerConfiguration(_db);
+            var listenerConfig = new URLEndpointListenerConfiguration(_db); // <1>
             listenerConfig.NetworkInterface = GetLocalIPv4(NetworkInterfaceType.Wireless80211) ?? GetLocalIPv4(NetworkInterfaceType.Ethernet);
             listenerConfig.Port = 0; // Dynamic port
 
-            switch (CoreApp.ListenerTLSMode) {
+            switch (CoreApp.ListenerTLSMode) { // <2>
                 //tag::TLSDisabled[]
                 case LISTENER_TLS_MODE.DISABLED:
                     listenerConfig.DisableTLS = true;
@@ -149,9 +149,9 @@ namespace P2PListSync.ViewModels
                     break;
             }
 
-            listenerConfig.EnableDeltaSync = true;
+            listenerConfig.EnableDeltaSync = true; // <3>
 
-            if (CoreApp.RequiresUserAuth) {
+            if (CoreApp.RequiresUserAuth) { // <4>
                 listenerConfig.Authenticator = new ListenerPasswordAuthenticator((sender, username, password) =>
                 {
                     // ** This is only a sample app to use an existing users credential shared cross platforms.
