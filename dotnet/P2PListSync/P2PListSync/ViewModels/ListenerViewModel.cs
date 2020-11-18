@@ -101,7 +101,7 @@ namespace P2PListSync.ViewModels
                     Debug.WriteLine($"Fail starting listener : {ex}");
                     return;
                 }
-                
+
                 IsListening = true;
                 Broadcast();
                 ListenerStatus = $"Listening on {_urlEndpointListener.Urls[0]}";
@@ -228,7 +228,7 @@ namespace P2PListSync.ViewModels
         #endregion
 
         #region Broadcast
-        //tag::StartAdvertiser
+        //tag::StartAdvertiser[]
         public void Broadcast()
         {
             if (!IsListening)
@@ -243,21 +243,21 @@ namespace P2PListSync.ViewModels
                 socket.Close();
             }
         }
-        //end::StartAdvertiser
+        //end::StartAdvertiser[]
         #endregion
 
         private string GetLocalIPv4(NetworkInterfaceType type)
-        {  
+        {
             string output = null;
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces()) 
-            {  
-                if (item.NetworkInterfaceType == type && item.OperationalStatus == OperationalStatus.Up) {   
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == type && item.OperationalStatus == OperationalStatus.Up) {
                     IPInterfaceProperties adapterProperties = item.GetIPProperties();
-                    if (adapterProperties.GatewayAddresses.FirstOrDefault() != null) {   
-                        foreach (UnicastIPAddressInformation ip in adapterProperties.UnicastAddresses) {   
+                    if (adapterProperties.GatewayAddresses.FirstOrDefault() != null) {
+                        foreach (UnicastIPAddressInformation ip in adapterProperties.UnicastAddresses) {
                             if (ip.Address.AddressFamily == AddressFamily.InterNetwork) {
                                 output = ip.Address.ToString();
-                                break;  
+                                break;
                             }
                         }
                     }
