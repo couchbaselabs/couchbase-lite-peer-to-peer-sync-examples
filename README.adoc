@@ -16,7 +16,7 @@ endif::[]
 toc::[]
 
 == Overview
-Sample apps that demonstate out-of-box websockets listener based peer-to-peer database sync functionality introduced in Couchbase Lite 2.8.
+Sample apps that demonstrate out-of-box websockets listener based peer-to-peer database sync functionality introduced in Couchbase Lite 2.8.
 
 == Introduction
 
