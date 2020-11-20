@@ -36,7 +36,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import com.couchbase.android.listsync.db.DatabaseManager;
+import com.couchbase.android.listsync.db.Db;
 import com.couchbase.android.listsync.util.ObservableMap;
 import com.couchbase.lite.AbstractReplicator;
 import com.couchbase.lite.CouchbaseLiteException;
@@ -59,10 +59,10 @@ public final class ReplicatorManager {
     private final ObservableMap<URI, Replicator> replicators = new ObservableMap<>();
 
     @NonNull
-    private final DatabaseManager dbMgr;
+    private final Db dbMgr;
 
     @Inject
-    public ReplicatorManager(@NonNull DatabaseManager dbMgr) { this.dbMgr = dbMgr; }
+    public ReplicatorManager(@NonNull Db dbMgr) { this.dbMgr = dbMgr; }
 
     @UiThread
     @NonNull

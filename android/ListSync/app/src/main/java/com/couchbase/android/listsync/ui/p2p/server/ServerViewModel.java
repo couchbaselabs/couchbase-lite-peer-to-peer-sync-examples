@@ -15,8 +15,6 @@
 //
 package com.couchbase.android.listsync.ui.p2p.server;
 
-import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -24,7 +22,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -32,7 +29,6 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-import com.couchbase.android.listsync.db.DatabaseManager;
 import com.couchbase.android.listsync.net.nearby.NearbyServer;
 import com.couchbase.android.listsync.net.p2p.ListenerManager;
 
@@ -53,11 +49,9 @@ public class ServerViewModel extends ViewModel {
     private final NearbyServer nearbyMgr;
 
     @Inject
-    public ServerViewModel(@NonNull Context ctxt, @NonNull DatabaseManager db, @NonNull ListenerManager serverMgr) {
+    public ServerViewModel(@NonNull ListenerManager serverMgr, @NonNull NearbyServer nearbyMgr) {
         this.serverMgr = serverMgr;
-        final String user = db.getUser();
-        if (TextUtils.isEmpty(user)) { throw new IllegalStateException("Attempt to use nearby before sign in"); }
-        this.nearbyMgr = new NearbyServer(ctxt, user, Collections.emptySet());
+        this.nearbyMgr = nearbyMgr;
     }
 
     @NonNull

@@ -32,12 +32,12 @@ import org.jetbrains.annotations.Nullable;
 
 import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.FragmentClientBinding;
-import com.couchbase.android.listsync.ui.p2p.BaseFragment;
 import com.couchbase.android.listsync.ui.p2p.P2PAdapter;
+import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 
-public final class ClientFragment extends BaseFragment {
+public final class ClientFragment extends P2PFragment {
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private ClientViewModel viewModel;
@@ -76,6 +76,9 @@ public final class ClientFragment extends BaseFragment {
 
         adapter = P2PAdapter.setup(getActivity(), binding.clients, this::enableStopButton);
 
+        final Bundle args = getArguments();
+        if (args != null) { setReplicatorUri(ClientFragmentArgs.fromBundle(args).getUri()); }
+
         return root;
     }
 
@@ -94,18 +97,11 @@ public final class ClientFragment extends BaseFragment {
     private void enableStopButton() { binding.stop.setEnabled(adapter.getSelection() != null); }
 
     private void enableStartButton() {
-        int port = getPort();
-        binding.start.setEnabled(
-            (binding.host.length() > 2)
-                && (port > URLEndpointListenerConfiguration.MIN_PORT)
-                && (port <= URLEndpointListenerConfiguration.MAX_PORT)
-                && (binding.database.length() > 2));
+        binding.start.setEnabled((binding.host.length() > 2) && (getPort() > 0) && (binding.database.length() > 2));
     }
 
     private void startClient() {
-        int port = getPort();
-        if ((port <= URLEndpointListenerConfiguration.MIN_PORT)
-            || (port > URLEndpointListenerConfiguration.MAX_PORT)) {
+        if (getPort() < 0) {
             Toast.makeText(getActivity(), R.string.bad_port, Toast.LENGTH_LONG).show();
             return;
         }
@@ -150,8 +146,48 @@ public final class ClientFragment extends BaseFragment {
 
     @NotNull
     private Integer getPort() {
-        try { return Integer.valueOf(binding.port.getText().toString());}
+        try {
+            final int port = Integer.parseInt(binding.port.getText().toString());
+            if ((port > URLEndpointListenerConfiguration.MIN_PORT)
+                && (port <= URLEndpointListenerConfiguration.MAX_PORT)) {
+                return port;
+            }
+        }
         catch (NumberFormatException ignore) { }
         return -1;
+    }
+
+    private void setReplicatorUri(@Nullable URI uri) {
+        final String scheme = uri.getScheme();
+        if (!ClientViewModel.SCHEME_WSS.equals(scheme)) {
+            final String msg = getString(R.string.bad_scheme, scheme);
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String suffix = "";
+        String s = uri.getQuery();
+        if (s != null) { suffix += "?" + s; }
+        s = uri.getFragment();
+        if (s != null) { suffix += "#" + s; }
+        if (suffix.length() > 0) {
+            final String msg = getString(R.string.bad_suffix, suffix);
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String path = uri.getPath();
+        if (path.lastIndexOf('/') != 0) {
+            final String msg = getString(R.string.bad_path, path);
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // the port and host should be ok?
+        binding.host.setText(uri.getHost());
+        binding.port.setText(String.valueOf(uri.getPort()));
+        binding.database.setText(path.substring(1));
+
+        enableStartButton();
     }
 }

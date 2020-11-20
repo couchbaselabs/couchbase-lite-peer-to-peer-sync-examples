@@ -21,7 +21,7 @@ import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.ActivityP2pBinding;
 
 
-public class P2PActivity extends AppCompatActivity implements BaseFragment.VMProvider {
+public class P2PActivity extends AppCompatActivity {
     public static void start(@NonNull Activity activity) {
         final Intent intent = new Intent(activity, P2PActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
@@ -36,6 +36,13 @@ public class P2PActivity extends AppCompatActivity implements BaseFragment.VMPro
     @NonNull
     public ViewModelProvider.Factory getViewModelFactory() { return viewModelFactory; }
 
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
+    private NavController navController;
+
+
+    NavController getNavController() { return navController; }
+
     @Override
     protected void onCreate(@Nullable Bundle state) {
         super.onCreate(state);
@@ -46,15 +53,15 @@ public class P2PActivity extends AppCompatActivity implements BaseFragment.VMPro
 
         setContentView(binding.getRoot());
 
-        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         AppBarConfiguration appBarConfiguration
             = new AppBarConfiguration.Builder(
             R.id.nav_active,
+            R.id.nav_nearby,
             R.id.nav_passive)
             .build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
         final BottomNavigationView navView = findViewById(R.id.nav_view);
         NavigationUI.setupWithNavController(navView, navController);
     }

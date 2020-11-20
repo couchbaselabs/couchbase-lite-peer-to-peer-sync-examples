@@ -17,36 +17,20 @@ package com.couchbase.android.listsync.model;
 
 import androidx.annotation.NonNull;
 
+import java.net.URI;
 
-public final class Endpoint {
-    @NonNull
-    private final String id;
-    @NonNull
-    private final String name;
 
-    public Endpoint(@NonNull String id, @NonNull String name) {
-        this.id = id;
-        this.name = name;
-    }
+public class Listener implements Named {
 
     @NonNull
-    public String getId() { return id; }
+    private final URI uri;
+
+    public Listener(@NonNull URI uri) { this.uri = uri; }
 
     @NonNull
-    public String getName() { return name; }
+    public URI getUri() { return uri; }
 
     @NonNull
     @Override
-    public String toString() { return "Endpoint{" + name + ", " + id + "}"; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
-        return id.equals(((Endpoint) o).id);
-    }
-
-    @Override
-    public int hashCode() { return id.hashCode(); }
+    public String getName() { return uri.toString(); }
 }
-

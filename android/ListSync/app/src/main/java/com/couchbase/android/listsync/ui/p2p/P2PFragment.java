@@ -15,24 +15,26 @@
 //
 package com.couchbase.android.listsync.ui.p2p;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavDirections;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.couchbase.lite.internal.utils.Fn;
 
 
-public abstract class BaseFragment extends Fragment {
-    public interface VMProvider {
-        ViewModelProvider.Factory getViewModelFactory();
-    }
-
+public abstract class P2PFragment extends Fragment {
     public static class OneShotObserver<T> implements Observer<T> {
         private final LiveData<T> liveData;
         private final Fn.Consumer<T> consumer;
@@ -49,25 +51,34 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NonNull
-    private ViewModelProvider.Factory viewModelFactory;
-
     @CallSuper
     @Override
     public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        if (!(context instanceof VMProvider)) {
-            throw new IllegalStateException("Fragment's context is not a VMProvider");
+        if (!(context instanceof P2PActivity)) {
+            throw new IllegalStateException("Fragment's context is not a P2PActivity");
         }
-
-        viewModelFactory = ((VMProvider) context).getViewModelFactory();
+        super.onAttach(context);
     }
 
     @NonNull
     public final <T extends ViewModel> T getViewModel(@NonNull Class<T> klass) {
-        return ViewModelProviders.of(this, viewModelFactory).get(klass);
+        return ViewModelProviders.of(this, ((P2PActivity) getActivity()).getViewModelFactory()).get(klass);
+    }
+
+    protected final List<String> checkPerms(String[] requiredPerms) {
+        final Activity act = getActivity();
+        final List<String> perms = new ArrayList<>();
+        for (String perm: requiredPerms) {
+            if (ActivityCompat.checkSelfPermission(act, perm) != PackageManager.PERMISSION_GRANTED) { perms.add(perm); }
+        }
+        return perms;
+    }
+
+    protected final void navigate(int destinationId) {
+        ((P2PActivity) getActivity()).getNavController().navigate(destinationId);
+    }
+
+    protected final void navigate(NavDirections direction) {
+        ((P2PActivity) getActivity()).getNavController().navigate(direction);
     }
 }

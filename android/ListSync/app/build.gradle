@@ -1,4 +1,7 @@
-plugins { id 'com.android.application' }
+plugins {
+    id 'com.android.application'
+    id 'androidx.navigation.safeargs'
+}
 
 ext {
     dagger_version = '2.17'
@@ -35,10 +38,13 @@ android {
 }
 
 repositories {
-    maven { url "http://mobile.maven.couchbase.com/maven2/internalmaven/" }
+    //maven { url "http://172.23.113.15/maven2/internalmaven/" }
+    mavenLocal()
     google()
     jcenter()
 }
+
+configurations.all { resolutionStrategy.cacheChangingModulesFor 0, 'seconds' }
 
 dependencies {
     // Dagger compiler extensions
@@ -48,12 +54,12 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.1'
     implementation 'androidx.navigation:navigation-ui:2.3.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
+
     implementation 'com.google.android.material:material:1.2.1'
 
     implementation 'com.google.android.gms:play-services-nearby:17.0.0'
@@ -67,7 +73,10 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:${glide_version}"
 
-    implementation 'com.couchbase.lite:couchbase-lite-android-ee:2.8.0-273'
+    implementation('com.couchbase.lite:couchbase-lite-android-ee:3.0.0-SNAPSHOT') {
+        changing = true
+    }
+    //implementation 'com.couchbase.lite:couchbase-lite-android-ee:2.8.0-273'
 
     testImplementation 'junit:junit:4.13'
 

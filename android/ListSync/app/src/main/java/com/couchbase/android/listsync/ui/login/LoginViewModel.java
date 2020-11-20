@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModel;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.couchbase.android.listsync.db.DatabaseManager;
+import com.couchbase.android.listsync.db.Db;
 
 
 @Singleton
@@ -39,10 +39,10 @@ public class LoginViewModel extends ViewModel {
     public final MutableLiveData<String> login = new MutableLiveData<>();
 
     @NonNull
-    private final DatabaseManager db;
+    private final Db db;
 
     @Inject
-    public LoginViewModel(@NonNull DatabaseManager db) { this.db = db; }
+    public LoginViewModel(@NonNull Db db) { this.db = db; }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("CheckResult")

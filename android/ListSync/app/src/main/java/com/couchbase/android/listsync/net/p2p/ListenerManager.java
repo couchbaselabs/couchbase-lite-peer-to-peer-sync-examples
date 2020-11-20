@@ -37,7 +37,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import com.couchbase.android.listsync.db.DatabaseManager;
+import com.couchbase.android.listsync.db.Db;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.URLEndpointListener;
 import com.couchbase.lite.URLEndpointListenerConfiguration;
@@ -57,10 +57,10 @@ public final class ListenerManager {
     private final Map<URI, URLEndpointListener> listeners = new HashMap<>();
 
     @NonNull
-    private final DatabaseManager dbMgr;
+    private final Db dbMgr;
 
     @Inject
-    public ListenerManager(@NonNull DatabaseManager dbMgr) { this.dbMgr = dbMgr; }
+    public ListenerManager(@NonNull Db dbMgr) { this.dbMgr = dbMgr; }
 
     @NonNull
     public Set<URI> getServers() {

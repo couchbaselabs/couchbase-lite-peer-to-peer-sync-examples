@@ -27,11 +27,11 @@ import java.net.URI;
 import java.util.Set;
 
 import com.couchbase.android.listsync.databinding.FragmentServerBinding;
-import com.couchbase.android.listsync.ui.p2p.BaseFragment;
+import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 import com.couchbase.android.listsync.ui.p2p.P2PAdapter;
 
 
-public final class ServerFragment extends BaseFragment {
+public final class ServerFragment extends P2PFragment {
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private ServerViewModel viewModel;

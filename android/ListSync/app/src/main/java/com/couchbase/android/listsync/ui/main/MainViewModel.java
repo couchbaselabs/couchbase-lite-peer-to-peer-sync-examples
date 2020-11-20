@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-import com.couchbase.android.listsync.db.DatabaseManager;
+import com.couchbase.android.listsync.db.Db;
 import com.couchbase.android.listsync.model.Produce;
 import com.couchbase.android.listsync.ui.login.LoginActivity;
 import com.couchbase.android.listsync.ui.p2p.P2PActivity;
@@ -46,11 +46,11 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<List<Produce>> produce = new MutableLiveData<>();
 
     @NonNull
-    private final DatabaseManager db;
+    private final Db db;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    public MainViewModel(@NonNull DatabaseManager db) { this.db = db; }
+    public MainViewModel(@NonNull Db db) { this.db = db; }
 
     @NonNull
     public LiveData<List<Produce>> getProduce() {

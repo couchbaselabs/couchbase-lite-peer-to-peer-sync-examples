@@ -10,22 +10,22 @@
     >
 
     <TextView
-        android:id="@+id/nearby_label"
+        android:id="@+id/nearby_devices_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/nearby"
+        app:layout_constraintBottom_toTopOf="@+id/nearby_devices"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/vertical_indent"
-        android:text="@string/label_nearby"
+        android:text="@string/label_nearby_devices"
         style="@style/Text.Label"
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/nearby"
+        android:id="@+id/nearby_devices"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/nearby_label"
+        app:layout_constraintTop_toBottomOf="@+id/nearby_devices_label"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,28 +37,28 @@
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.2"
+        app:layout_constraintGuide_percent="0.3"
         android:orientation="horizontal"
         />
 
     <TextView
-        android:id="@+id/endpoints_label"
+        android:id="@+id/nearby_listeners_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/guideline"
         app:layout_constraintBottom_toTopOf="@+id/servers"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/vertical_indent"
-        android:text="@string/label_endpoints"
+        android:text="@string/label_nearby_listeners"
         style="@style/Text.Label"
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/servers"
+        android:id="@+id/nearby_listeners"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/textbox_pad"
-        app:layout_constraintTop_toBottomOf="@+id/endpoints_label"
+        app:layout_constraintTop_toBottomOf="@+id/nearby_listeners_label"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -15,8 +15,6 @@
 //
 package com.couchbase.android.listsync.ui.p2p.nearby;
 
-import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,15 +22,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.disposables.Disposable;
 
-import com.couchbase.android.listsync.db.DatabaseManager;
-import com.couchbase.android.listsync.model.Endpoint;
+import com.couchbase.android.listsync.model.Device;
+import com.couchbase.android.listsync.model.Listener;
 import com.couchbase.android.listsync.net.nearby.NearbyClient;
 
 
@@ -40,41 +41,74 @@ import com.couchbase.android.listsync.net.nearby.NearbyClient;
 public class NearbyViewModel extends ViewModel {
     private static final String TAG = "NEAR_VM";
 
-    @NonNull
-    private final MutableLiveData<Collection<Endpoint>> nearby = new MutableLiveData<>();
+    private static final List<String> REQUIRED_PERMISSIONS;
+    static {
+        List<String> l = new ArrayList<>();
+        l.add(android.Manifest.permission.BLUETOOTH);
+        l.add(android.Manifest.permission.BLUETOOTH_ADMIN);
+        l.add(android.Manifest.permission.ACCESS_WIFI_STATE);
+        l.add(android.Manifest.permission.CHANGE_WIFI_STATE);
+        l.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        REQUIRED_PERMISSIONS = Collections.unmodifiableList(l);
+    }
+
 
     @NonNull
-    private final NearbyClient nearbyMgr;
+    private final MutableLiveData<Collection<Device>> nearbyDevices = new MutableLiveData<>();
+
+    @NonNull
+    private final MutableLiveData<Collection<Listener>> nearbyListeners = new MutableLiveData<>();
+
+    @NonNull
+    private final NearbyClient nearby;
 
     @Nullable
-    private Disposable discoveryDisposable;
+    private Disposable deviceDisposable;
+    @Nullable
+    private Disposable listenerDisposable;
 
     @Inject
-    public NearbyViewModel(@NonNull Context ctxt, @NonNull DatabaseManager db) {
-        final String user = db.getUser();
-        if (TextUtils.isEmpty(user)) { throw new IllegalStateException("Attempt to use nearby before sign in"); }
-        this.nearbyMgr = new NearbyClient(ctxt, user);
+    public NearbyViewModel(@NonNull NearbyClient nearby) { this.nearby = nearby; }
+
+    @NonNull
+    public LiveData<Collection<Device>> getNearbyDevices() {
+        if (deviceDisposable == null) {
+            deviceDisposable = nearby.startDiscovery().subscribe(
+                nearbyDevices::setValue,
+                e -> Log.w(TAG, "Discovery failed", e));
+        }
+        return nearbyDevices;
     }
 
     @NonNull
-    public LiveData<Collection<Endpoint>> getNearby() {
-        if (discoveryDisposable == null) {
-            discoveryDisposable = nearbyMgr.startDiscovery()
-                .subscribe(
-                    nearby::setValue,
-                    e -> Log.w(TAG, "Discovery error", e));
-        }
-        return nearby;
-    }
+    public LiveData<Collection<Listener>> getNearbyListeners(@Nullable Device device) {
+        cancelListeners();
 
-    public void selectNearby(Endpoint endpoint) {
-        Log.d(TAG, "Selected: " + endpoint);
+        if (device == null) {
+            nearbyListeners.setValue(null);
+        }
+        else {
+            listenerDisposable = nearby.getListenersForDevice(device).subscribe(
+                nearbyListeners::setValue,
+                e -> Log.w(TAG, "Failed getting listeners for device " + device, e));
+        }
+
+        return nearbyListeners;
     }
 
     public void cancel() {
-        if (discoveryDisposable != null) {
-            discoveryDisposable.dispose();
-            discoveryDisposable = null;
+        cancelListeners();
+        if (deviceDisposable != null) {
+            deviceDisposable.dispose();
+            deviceDisposable = null;
         }
     }
+
+    private void cancelListeners() {
+        if (listenerDisposable == null) { return; }
+        listenerDisposable.dispose();
+        listenerDisposable = null;
+    }
+
+    public String[] getRequiredPermissions() { return REQUIRED_PERMISSIONS.toArray(new String[0]); }
 }

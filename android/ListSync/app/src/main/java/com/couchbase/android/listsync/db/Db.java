@@ -75,7 +75,7 @@ import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 
 @Singleton
-public final class DatabaseManager {
+public final class Db {
     private static final String TAG = "DB";
 
     private static final String PROTO_DB_NAME = "userdb";
@@ -106,7 +106,7 @@ public final class DatabaseManager {
     private String userName;
 
     @Inject
-    public DatabaseManager(@NonNull final Context ctxt) {
+    public Db(@NonNull final Context ctxt) {
         CouchbaseLite.init(ctxt);
 
         final ConsoleLogger logger = Database.log.getConsole();

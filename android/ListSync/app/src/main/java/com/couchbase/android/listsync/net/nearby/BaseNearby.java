@@ -16,41 +16,65 @@
 package com.couchbase.android.listsync.net.nearby;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.URI;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.ConnectionInfo;
-import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
-import com.google.android.gms.nearby.connection.ConnectionResolution;
-import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
-import com.google.android.gms.nearby.connection.PayloadCallback;
+import com.google.android.gms.nearby.connection.Payload;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 
+import com.couchbase.android.listsync.db.Db;
+
 
 abstract class BaseNearby {
-    class NearbyCallback extends ConnectionLifecycleCallback {
-        // Always automatically accept the connection.
-        @Override
-        public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo info) {
-            Nearby.getConnectionsClient(ctxt).acceptConnection(endpointId, getPayloadCallback());
+    private static final String TAG = "NEARBY_BASE";
+
+    // This seems a little scary... no protocol version, no content identifier.  Whatevs...
+    @Nullable
+    protected static Payload toPayload(@Nullable List<URI> endpoints) {
+        if (endpoints == null) { return null; }
+
+        try (ByteArrayOutputStream bStream = new ByteArrayOutputStream()) {
+            try (ObjectOutputStream oStream = new ObjectOutputStream(bStream)) {
+                oStream.writeObject(endpoints);
+                oStream.flush();
+                return Payload.fromBytes(bStream.toByteArray());
+            }
+        }
+        catch (IOException e) {
+            Log.w(TAG, "Failed encoding payload", e);
         }
 
-        @Override
-        public void onConnectionResult(@NonNull String endpointId, @NonNull ConnectionResolution result) {
-            if (result.getStatus().getStatusCode() != ConnectionsStatusCodes.STATUS_OK) { return; }
-            if (connections.contains(endpointId)) { return; }
-            connections.add(endpointId);
-            newEndpoint(endpointId);
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    protected static List<URI> fromPayload(@Nullable byte[] payloadData) {
+        if (payloadData == null) { return null; }
+
+        try (ByteArrayInputStream bStream = new ByteArrayInputStream(payloadData)) {
+            try (ObjectInputStream oStream = new ObjectInputStream(bStream)) {
+                return (List<URI>) oStream.readObject();
+            }
+        }
+        catch (IOException | ClassNotFoundException e) {
+            Log.w(TAG, "Failed decoding payload", e);
         }
 
-        @Override
-        public void onDisconnected(@NonNull String endpointId) { connections.remove(endpointId); }
+        return null;
     }
 
     @NonNull
@@ -59,23 +83,16 @@ abstract class BaseNearby {
     protected final Scheduler nearbyScheduler = Schedulers.from(nearbyExecutor);
 
     @NonNull
-    protected final Set<String> connections = new HashSet<>();
-
-    @NonNull
     protected final Context ctxt;
     @NonNull
     protected final String user;
     @NonNull
     protected final String pkgName;
 
-    protected BaseNearby(@NonNull Context ctxt, @NonNull String user) {
+    protected BaseNearby(@NonNull Context ctxt, @NonNull Db db) {
         this.ctxt = ctxt.getApplicationContext();
-        this.user = user;
         this.pkgName = ctxt.getPackageName();
+        this.user = db.getUser();
+        if (TextUtils.isEmpty(user)) { throw new IllegalStateException("Attempt to use nearby before sign in"); }
     }
-
-    @NonNull
-    protected abstract PayloadCallback getPayloadCallback();
-
-    protected abstract void newEndpoint(@NonNull String endpointId);
 }

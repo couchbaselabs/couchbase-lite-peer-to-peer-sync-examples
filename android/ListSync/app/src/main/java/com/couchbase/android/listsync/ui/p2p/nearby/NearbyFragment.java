@@ -22,11 +22,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.FragmentNearbyBinding;
-import com.couchbase.android.listsync.ui.p2p.BaseFragment;
+import com.couchbase.android.listsync.model.Device;
+import com.couchbase.android.listsync.model.Listener;
+import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 
 
-public final class NearbyFragment extends BaseFragment {
+public final class NearbyFragment extends P2PFragment {
+    public static final int PERMISSIONS_REQ = 57936;
+
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private NearbyViewModel viewModel;
@@ -37,7 +42,11 @@ public final class NearbyFragment extends BaseFragment {
 
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
-    private NearbyAdapter nearbyAdapter;
+    private NearbyAdapter<Device> nearbyDeviceAdapter;
+
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    @NonNull
+    private NearbyAdapter<Listener> nearbyListenerAdapter;
 
     @NonNull
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
@@ -46,20 +55,40 @@ public final class NearbyFragment extends BaseFragment {
         binding = FragmentNearbyBinding.inflate(inflater, container, false);
         final View root = binding.getRoot();
 
-        nearbyAdapter = NearbyAdapter.setup(getActivity(), binding.nearby, viewModel::selectNearby);
+        nearbyDeviceAdapter = NearbyAdapter.setup(getActivity(), binding.nearbyDevices, this::selectNearbyDevice);
+
+        nearbyListenerAdapter = NearbyAdapter.setup(getActivity(), binding.nearbyListeners, this::selectNearbyListener);
 
         return root;
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (checkPerms(viewModel.getRequiredPermissions()).isEmpty()) { return; }
+        navigate(R.id.action_nav_nearby_to_perms);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        viewModel.getNearby().observe(this, nearbyAdapter::populate);
+        viewModel.getNearbyDevices().observe(this, nearbyDeviceAdapter::populate);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         viewModel.cancel();
+    }
+
+    private void selectNearbyDevice(@Nullable Device device) {
+        viewModel.getNearbyListeners(device).observe(this, nearbyListenerAdapter::populate);
+    }
+
+    private void selectNearbyListener(@Nullable Listener listener) {
+        final NearbyFragmentDirections.ActionNavNearbyToActive direction
+            = NearbyFragmentDirections.actionNavNearbyToActive();
+        if (listener != null) { direction.setUri(listener.getUri()); }
+        navigate(direction);
     }
 }

@@ -18,45 +18,81 @@ package com.couchbase.android.listsync.net.nearby;
 import android.content.Context;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
+import com.google.android.gms.nearby.connection.ConnectionInfo;
+import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
+import com.google.android.gms.nearby.connection.ConnectionResolution;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
+import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
 import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.connection.Strategy;
 
+import com.couchbase.android.listsync.db.Db;
+
 
 public final class NearbyServer extends BaseNearby {
     private static final String TAG = "NEARBY_SERVER";
 
-    private static class IgnorePayloads extends PayloadCallback {
+    class NearbyCallback extends ConnectionLifecycleCallback {
+        // Always automatically accept the connection.
+        @Override
+        public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo info) {
+            Log.d(TAG, "Connection initiated @" + endpointId + ": " + info.getEndpointName());
+            Nearby.getConnectionsClient(ctxt).acceptConnection(endpointId, IGNORE_PAYLOADS);
+        }
+
+        @Override
+        public void onConnectionResult(@NonNull String endpointId, @NonNull ConnectionResolution result) {
+            final int code = result.getStatus().getStatusCode();
+            Log.d(TAG, "Connection result @" + endpointId + ": " + code);
+            if (code != ConnectionsStatusCodes.STATUS_OK) { return; }
+            connectEndpoint(endpointId);
+        }
+
+        @Override
+        public void onDisconnected(@NonNull String endpointId) {
+            Log.d(TAG, "Disconnected: " + endpointId);
+            disconnectEndpoint(endpointId);
+        }
+    }
+
+    private static final PayloadCallback IGNORE_PAYLOADS = new PayloadCallback() {
         @Override
         public void onPayloadReceived(@NonNull String endpointId, @NonNull Payload ignore) { }
 
         @Override
         public void onPayloadTransferUpdate(@NonNull String endpointId, @NonNull PayloadTransferUpdate ignore) { }
-    }
+    };
 
+
+    @NonNull
+    protected final Set<String> connections = new HashSet<>();
 
     @NonNull
     private final NearbyCallback callback;
 
     @NonNull
-    private Payload data;
+    private Payload cachedPayload;
 
-    public NearbyServer(@NonNull final Context ctxt, @NonNull String user, @NonNull Set<URI> endpoints) {
-        super(ctxt, user);
+    @Inject
+    public NearbyServer(@NonNull final Context ctxt, @NonNull Db db) {
+        super(ctxt, db);
         this.callback = new NearbyCallback();
-        data = toPayload(endpoints);
+        cachedPayload = toPayload(Collections.emptyList());
     }
 
     public void advertise(boolean advertise) {
@@ -64,55 +100,38 @@ public final class NearbyServer extends BaseNearby {
 
         if (!advertise) {
             nearby.stopAdvertising();
-            Log.i(TAG, "Stop advertising " + user + "@" + pkgName);
+            Log.i(TAG, "advertising started: " + user + "@" + pkgName);
             return;
         }
 
         nearby.startAdvertising(user, pkgName, callback, new AdvertisingOptions(Strategy.P2P_CLUSTER));
-        Log.i(TAG, "Start advertising " + user + "@" + pkgName);
+        Log.i(TAG, "Sdvertising stopped: " + user + "@" + pkgName);
     }
 
+    @UiThread
     public void update(Set<URI> endpoints) {
-        final Payload payload = toPayload(endpoints);
-        for (String endpointId: connections) { nearbyExecutor.execute(() -> send(endpointId, payload)); }
+        final ConnectionsClient nearby = Nearby.getConnectionsClient(ctxt);
+        final List<URI> endpts = new ArrayList<>(endpoints);
+        nearbyExecutor.execute(() -> {
+            final Payload payload = toPayload(endpts);
+            synchronized (this) { cachedPayload = payload; }
+            for (String endpointId: connections) { nearby.sendPayload(endpointId, payload); }
+        });
     }
 
-    @NonNull
-    @Override
-    protected PayloadCallback getPayloadCallback() { return new IgnorePayloads(); }
+    @UiThread
+    void connectEndpoint(@NonNull String endpointId) {
+        if (connections.contains(endpointId)) { return; }
+        connections.add(endpointId);
 
-    @Override
-    protected void newEndpoint(@NonNull String endpointId) {
         final Payload payload;
-        synchronized (this) { payload = data; }
-        nearbyExecutor.execute(() -> send(endpointId, payload));
+        synchronized (this) { payload = cachedPayload; }
+
+        nearbyExecutor.execute(() -> Nearby.getConnectionsClient(ctxt).sendPayload(endpointId, payload));
     }
 
-    private void send(@NonNull String endpointId, @NonNull Payload payload) {
-        Nearby.getConnectionsClient(ctxt).sendPayload(endpointId, payload);
-    }
-
-    // This seems a little scary... no protocol version, no content identifier.  Whatevs...
-    private Payload toPayload(@NonNull Set<URI> endpoints) {
-
-        ObjectOutputStream oStream = null;
-        try {
-            final ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-            oStream = new ObjectOutputStream(bStream);
-            oStream.writeObject(new ArrayList<>(endpoints));
-            oStream.flush();
-
-            final Payload payload = Payload.fromBytes(bStream.toByteArray());
-            synchronized (this) { data = payload; }
-            return payload;
-        }
-        catch (IOException e) { Log.w(TAG, "Failed advertising servers", e); }
-        finally {
-            if (oStream != null) {
-                try { oStream.close(); } catch (IOException ignore) { }
-            }
-        }
-
-        throw new IllegalStateException("Failed creating payload");
-    }
+    @UiThread
+    void disconnectEndpoint(@NonNull String endpointId) { connections.remove(endpointId); }
 }
+
+
