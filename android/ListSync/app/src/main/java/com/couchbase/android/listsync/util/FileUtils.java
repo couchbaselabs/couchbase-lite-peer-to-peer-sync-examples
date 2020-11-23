@@ -32,13 +32,13 @@ public final class FileUtils {
     public static boolean erase(@NonNull File file) { return deleteRecursive(file); }
 
     public static void unzipToDir(@NonNull InputStream in, @NonNull File destDir) throws IOException {
-        byte[] buffer = new byte[1024];
+        final byte[] buffer = new byte[1024];
 
         try (ZipInputStream zis = new ZipInputStream(in)) {
             try {
                 ZipEntry ze = zis.getNextEntry();
                 while (ze != null) {
-                    File newFile = new File(destDir, ze.getName());
+                    final File newFile = new File(destDir, ze.getName());
                     if (ze.isDirectory()) { makeDir(newFile); }
                     else if (!unzipFile(zis, buffer, newFile)) { continue; }
                     ze = zis.getNextEntry();
@@ -57,7 +57,7 @@ public final class FileUtils {
     private static boolean deleteContents(@NonNull File root) {
         if (!root.isDirectory()) { return true; }
 
-        File[] contents = root.listFiles();
+        final File[] contents = root.listFiles();
         if (contents == null) { return true; }
 
         boolean succeeded = true;
@@ -72,8 +72,9 @@ public final class FileUtils {
         if (!(dir.isDirectory() || dir.mkdirs())) { throw new IOException("Failed to create directory: " + dir); }
     }
 
+    @SuppressWarnings("PMD.AvoidFileStream")
     private static boolean unzipFile(ZipInputStream zis, byte[] buffer, File newFile) throws IOException {
-        File parent = newFile.getParentFile();
+        final File parent = newFile.getParentFile();
         if (parent == null) { return false; }
 
         makeDir(parent);

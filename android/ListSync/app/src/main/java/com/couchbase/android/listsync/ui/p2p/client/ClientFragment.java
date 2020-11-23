@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,14 +39,17 @@ import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 
 public final class ClientFragment extends P2PFragment {
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private ClientViewModel viewModel;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private FragmentClientBinding binding;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private P2PAdapter adapter;
@@ -76,8 +80,7 @@ public final class ClientFragment extends P2PFragment {
 
         adapter = P2PAdapter.setup(getActivity(), binding.clients, this::enableStopButton);
 
-        final Bundle args = getArguments();
-        if (args != null) { setReplicatorUri(ClientFragmentArgs.fromBundle(args).getUri()); }
+        initializeReplicatorUri();
 
         return root;
     }
@@ -109,10 +112,7 @@ public final class ClientFragment extends P2PFragment {
         final URI uri = getReplicatorUri();
         if (uri == null) { return; }
 
-        binding.host.setText("");
-        binding.port.setText("");
-        binding.database.setText("");
-        enableStartButton();
+        clear();
 
         viewModel.startClient(uri);
     }
@@ -126,15 +126,26 @@ public final class ClientFragment extends P2PFragment {
         adapter.clearSelection();
     }
 
+    private void clear() {
+        binding.host.setText("");
+        binding.port.setText("");
+        binding.database.setText("");
+        enableStartButton();
+    }
+
     @Nullable
     private URI getReplicatorUri() {
         try {
+            final Editable host = binding.host.getText();
+            if (host == null) { return null; }
+            final Editable dbName = binding.database.getText();
+            if (dbName == null) { return null; }
             return new URI(
                 ClientViewModel.SCHEME_WSS,
                 null,
-                binding.host.getText().toString(),
+                host.toString(),
                 getPort(),
-                "/" + binding.database.getText().toString(),
+                "/" + dbName.toString(),
                 null,
                 null);
         }
@@ -144,20 +155,15 @@ public final class ClientFragment extends P2PFragment {
         }
     }
 
-    @NotNull
-    private Integer getPort() {
-        try {
-            final int port = Integer.parseInt(binding.port.getText().toString());
-            if ((port > URLEndpointListenerConfiguration.MIN_PORT)
-                && (port <= URLEndpointListenerConfiguration.MAX_PORT)) {
-                return port;
-            }
+    private void initializeReplicatorUri() {
+        URI uri = null;
+        final Bundle args = getArguments();
+        if (args != null) { uri = ClientFragmentArgs.fromBundle(args).getUri(); }
+        if (uri == null) {
+            clear();
+            return;
         }
-        catch (NumberFormatException ignore) { }
-        return -1;
-    }
 
-    private void setReplicatorUri(@Nullable URI uri) {
         final String scheme = uri.getScheme();
         if (!ClientViewModel.SCHEME_WSS.equals(scheme)) {
             final String msg = getString(R.string.bad_scheme, scheme);
@@ -189,5 +195,21 @@ public final class ClientFragment extends P2PFragment {
         binding.database.setText(path.substring(1));
 
         enableStartButton();
+    }
+
+    @NotNull
+    private Integer getPort() {
+        try {
+            final Editable portStr = binding.port.getText();
+            if (portStr == null) { return -1; }
+
+            final int port = Integer.parseInt(portStr.toString());
+            if ((port > URLEndpointListenerConfiguration.MIN_PORT)
+                && (port <= URLEndpointListenerConfiguration.MAX_PORT)) {
+                return port;
+            }
+        }
+        catch (NumberFormatException ignore) { }
+        return -1;
     }
 }

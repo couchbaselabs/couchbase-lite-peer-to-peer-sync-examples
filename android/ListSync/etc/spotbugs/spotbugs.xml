@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Created by G. Blake Meike on 3/11/19.
+-->
+
+<!--suppress XmlUnboundNsPrefix -->
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="SF_SWITCH_NO_DEFAULT" />
+    </Match>
+</FindBugsFilter>

@@ -60,7 +60,7 @@ public final class Produce {
         if (this == o) { return true; }
         if (o == null) { return false; }
         if (!(o instanceof Produce)) { return false; }
-        Produce produce = (Produce) o;
+        final Produce produce = (Produce) o;
         return name.equals(produce.name);
     }
 }

@@ -22,7 +22,6 @@ import androidx.annotation.UiThread;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -80,7 +79,7 @@ public final class NearbyServer extends BaseNearby {
 
 
     @NonNull
-    protected final Set<String> connections = new HashSet<>();
+    final Set<String> connections = new HashSet<>();
 
     @NonNull
     private final NearbyCallback callback;
@@ -92,7 +91,7 @@ public final class NearbyServer extends BaseNearby {
     public NearbyServer(@NonNull final Context ctxt, @NonNull Db db) {
         super(ctxt, db);
         this.callback = new NearbyCallback();
-        cachedPayload = toPayload(Collections.emptyList());
+        cachedPayload = toPayload(null);
     }
 
     public void advertise(boolean advertise) {
@@ -105,7 +104,7 @@ public final class NearbyServer extends BaseNearby {
         }
 
         nearby.startAdvertising(user, pkgName, callback, new AdvertisingOptions(Strategy.P2P_CLUSTER));
-        Log.i(TAG, "Sdvertising stopped: " + user + "@" + pkgName);
+        Log.i(TAG, "Advertising stopped: " + user + "@" + pkgName);
     }
 
     @UiThread

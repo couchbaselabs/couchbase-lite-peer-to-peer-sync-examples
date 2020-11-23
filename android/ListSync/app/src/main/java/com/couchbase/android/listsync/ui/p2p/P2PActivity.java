@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import dagger.android.AndroidInjection;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.ActivityP2pBinding;
@@ -28,20 +29,20 @@ public class P2PActivity extends AppCompatActivity {
         activity.startActivity(intent);
     }
 
+
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings({"WeakerAccess", "NotNullFieldNotInitialized"})
     @NonNull
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    @NonNull
-    public ViewModelProvider.Factory getViewModelFactory() { return viewModelFactory; }
-
-    @SuppressWarnings("NotNullFieldNotInitialized")
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
+    @SuppressWarnings({"NotNullFieldNotInitialized", "PMD.SingularField"})
     @NonNull
     private NavController navController;
 
-
-    NavController getNavController() { return navController; }
+    @NonNull
+    public ViewModelProvider.Factory getViewModelFactory() { return viewModelFactory; }
 
     @Override
     protected void onCreate(@Nullable Bundle state) {
@@ -49,16 +50,13 @@ public class P2PActivity extends AppCompatActivity {
 
         AndroidInjection.inject(this);
 
-        ActivityP2pBinding binding = ActivityP2pBinding.inflate(getLayoutInflater());
+        final ActivityP2pBinding binding = ActivityP2pBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        AppBarConfiguration appBarConfiguration
-            = new AppBarConfiguration.Builder(
-            R.id.nav_active,
-            R.id.nav_nearby,
-            R.id.nav_passive)
+        final AppBarConfiguration appBarConfiguration
+            = new AppBarConfiguration.Builder(R.id.nav_active, R.id.nav_nearby, R.id.nav_passive)
             .build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);

@@ -24,7 +24,7 @@ import dagger.android.AndroidInjector;
 import com.couchbase.android.listsync.ui.ActivityBuilder;
 import com.couchbase.android.listsync.ui.VMModule;
 
-
+@SuppressWarnings("PMD.AbstractClassWithoutAnyMethod")
 @Singleton
 @Component(modules = {AndroidInjectionModule.class, ActivityBuilder.class, VMModule.class})
 public interface AppFactory extends AndroidInjector<ListSync> {

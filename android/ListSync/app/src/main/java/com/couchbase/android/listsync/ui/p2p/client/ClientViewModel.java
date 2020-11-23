@@ -16,7 +16,6 @@
 package com.couchbase.android.listsync.ui.p2p.client;
 
 import android.util.Log;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -29,9 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
-import org.jetbrains.annotations.Nullable;
 
-import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.net.p2p.ReplicatorManager;
 
 

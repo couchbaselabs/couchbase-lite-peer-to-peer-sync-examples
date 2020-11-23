@@ -74,6 +74,7 @@ import com.couchbase.lite.URLEndpoint;
 import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 
+@SuppressWarnings("PMD.ExcessiveImports")
 @Singleton
 public final class Db {
     private static final String TAG = "DB";
@@ -114,16 +115,16 @@ public final class Db {
         logger.setDomains(LogDomain.ALL_DOMAINS);
 
         // make sure the proto-db is in place
-        DatabaseConfiguration config = new DatabaseConfiguration();
+        final DatabaseConfiguration config = new DatabaseConfiguration();
         if (Database.exists(PROTO_DB_NAME, new File(config.getDirectory()))) { return; }
 
-        File tmpDir = ctxt.getExternalFilesDir(TMP_DIR);
+        final File tmpDir = ctxt.getExternalFilesDir(TMP_DIR);
         if (tmpDir == null) { throw new IllegalStateException("Error creating temp dir"); }
 
         try (InputStream in = ctxt.getAssets().open(DB_ASSET)) { FileUtils.unzipToDir(in, tmpDir); }
         catch (IOException e) { throw new IllegalStateException("Failed unzipping db asset", e); }
 
-        File dbFile = new File(tmpDir, DB_FILE);
+        final File dbFile = new File(tmpDir, DB_FILE);
         try { Database.copy(dbFile, PROTO_DB_NAME, config); }
         catch (CouchbaseLiteException e) { throw new IllegalStateException("Failed copying db asset", e); }
 
@@ -235,19 +236,25 @@ public final class Db {
             database = null;
         }
 
+        if (db == null) { return; }
+
         Log.i(TAG, "DB closing: " + db.getName());
-        if (db != null) { db.close(); }
+        db.close();
     }
 
-    // ??? O(n) lookup. Feh.
+    // ??? O(n) lookup. Are you kidding me?
     @WorkerThread
     private void updateDoneAsync(String name, long done) throws CouchbaseLiteException {
         final Document doc = getDb().getDocument(DOC_ID);
-        final MutableArray items = doc.getArray(PROP_ITEMS).toMutable();
+        final Array itemArray = doc.getArray(PROP_ITEMS);
+        if (itemArray == null) { return; }
+        final MutableArray items = itemArray.toMutable();
 
         final int n = items.count();
         for (int i = 0; i < n; i++) {
             final Dictionary produce = items.getDictionary(i);
+            if (produce == null) { continue; }
+
             if (name.equals(produce.getString(PROP_KEY))) {
                 final MutableDictionary mutableProduce = produce.toMutable();
                 mutableProduce.setLong(PROP_VALUE, done);
@@ -274,7 +281,7 @@ public final class Db {
         final Array items = result.getArray(PROP_ITEMS);
         if (items == null) { return produce; }
 
-        List rawProduce = items.toList();
+        final List rawProduce = items.toList();
         for (Map<String, ?> veg: (List<Map<String, ?>>) rawProduce) { produce.add(toProduce(veg)); }
 
         return produce;
@@ -288,9 +295,12 @@ public final class Db {
         return new Produce(name, (Blob) rawProduce.get(PROP_IMAGE), (done == null) ? 0 : done);
     }
 
-    @Nullable
+    @NonNull
     private Database getDb() {
-        synchronized (this) { return database; }
+        final Database db;
+        synchronized (this) { db = database; }
+        if (db == null) { throw new IllegalStateException("operation on closed database"); }
+        return db;
     }
 }
 

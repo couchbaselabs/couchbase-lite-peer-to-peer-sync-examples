@@ -27,37 +27,37 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.google.android.gms.nearby.connection.Payload;
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
 
 import com.couchbase.android.listsync.db.Db;
 
 
-abstract class BaseNearby {
+class BaseNearby {
     private static final String TAG = "NEARBY_BASE";
 
     // This seems a little scary... no protocol version, no content identifier.  Whatevs...
-    @Nullable
+    @NonNull
     protected static Payload toPayload(@Nullable List<URI> endpoints) {
-        if (endpoints == null) { return null; }
+        while (true) {
+            if (endpoints == null) { endpoints = Collections.emptyList(); }
 
-        try (ByteArrayOutputStream bStream = new ByteArrayOutputStream()) {
-            try (ObjectOutputStream oStream = new ObjectOutputStream(bStream)) {
-                oStream.writeObject(endpoints);
-                oStream.flush();
-                return Payload.fromBytes(bStream.toByteArray());
+            try (ByteArrayOutputStream bStream = new ByteArrayOutputStream()) {
+                try (ObjectOutputStream oStream = new ObjectOutputStream(bStream)) {
+                    oStream.writeObject(endpoints);
+                    oStream.flush();
+                    return Payload.fromBytes(bStream.toByteArray());
+                }
             }
+            catch (IOException e) {
+                Log.w(TAG, "Failed encoding payload", e);
+            }
+            endpoints = null;
         }
-        catch (IOException e) {
-            Log.w(TAG, "Failed encoding payload", e);
-        }
-
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -79,8 +79,6 @@ abstract class BaseNearby {
 
     @NonNull
     protected final Executor nearbyExecutor = Executors.newSingleThreadExecutor();
-    @NonNull
-    protected final Scheduler nearbyScheduler = Schedulers.from(nearbyExecutor);
 
     @NonNull
     protected final Context ctxt;
@@ -92,7 +90,8 @@ abstract class BaseNearby {
     protected BaseNearby(@NonNull Context ctxt, @NonNull Db db) {
         this.ctxt = ctxt.getApplicationContext();
         this.pkgName = ctxt.getPackageName();
-        this.user = db.getUser();
+        final String user = db.getUser();
         if (TextUtils.isEmpty(user)) { throw new IllegalStateException("Attempt to use nearby before sign in"); }
+        this.user = user;
     }
 }

@@ -36,21 +36,21 @@ import com.couchbase.android.listsync.model.Named;
 import com.couchbase.lite.internal.utils.Fn;
 
 
-public class NearbyAdapter<T1 extends Named> extends RecyclerView.Adapter<NearbyAdapter<T1>.NearbyViewHolder> {
+public class NearbyAdapter<T extends Named> extends RecyclerView.Adapter<NearbyAdapter<T>.NearbyViewHolder> {
     final class NearbyViewHolder extends RecyclerView.ViewHolder {
         @NonNull
         private final RowNearbyBinding bindings;
 
         @Nullable
-        T1 data;
+        T data;
 
-        public NearbyViewHolder(@NonNull RowNearbyBinding bindings) {
+        NearbyViewHolder(@NonNull RowNearbyBinding bindings) {
             super(bindings.getRoot());
             this.bindings = bindings;
             itemView.setOnClickListener(v -> setHighlighted(toggleSelection(this)));
         }
 
-        public final void setNearby(@Nullable T1 data) {
+        public void setNearby(@Nullable T data) {
             this.data = data;
             bindings.nearby.setText((data == null) ? "" : data.getName());
         }
@@ -61,10 +61,10 @@ public class NearbyAdapter<T1 extends Named> extends RecyclerView.Adapter<Nearby
     }
 
     @NonNull
-    public static <T extends Named> NearbyAdapter<T> setup(
+    public static <S extends Named> NearbyAdapter<S> setup(
         @NonNull Activity ctxt,
         @NonNull RecyclerView listView,
-        @Nullable Fn.Consumer<T> onSelectionChange) {
+        @Nullable Fn.Consumer<S> onSelectionChange) {
         listView.hasFixedSize();
 
         final LinearLayoutManager layoutMgr = new LinearLayoutManager(ctxt);
@@ -74,7 +74,7 @@ public class NearbyAdapter<T1 extends Named> extends RecyclerView.Adapter<Nearby
         divider.setDrawable(ContextCompat.getDrawable(ctxt, R.drawable.divider));
         listView.addItemDecoration(divider);
 
-        final NearbyAdapter<T> adapter = new NearbyAdapter<>(
+        final NearbyAdapter<S> adapter = new NearbyAdapter<>(
             onSelectionChange,
             ctxt.getResources().getColor(R.color.pale_yellow)
         );
@@ -85,16 +85,16 @@ public class NearbyAdapter<T1 extends Named> extends RecyclerView.Adapter<Nearby
 
 
     @Nullable
-    private final Fn.Consumer<T1> onSelectionChanged;
+    private final Fn.Consumer<T> onSelectionChanged;
     private final int selectedBg;
 
     @Nullable
-    private List<T1> nearby;
+    private List<T> nearby;
 
     @Nullable
     private NearbyViewHolder selected;
 
-    public NearbyAdapter(@Nullable Fn.Consumer<T1> onSelectionChanged, int selectedBg) {
+    public NearbyAdapter(@Nullable Fn.Consumer<T> onSelectionChanged, int selectedBg) {
         this.onSelectionChanged = onSelectionChanged;
         this.selectedBg = selectedBg;
     }
@@ -116,8 +116,8 @@ public class NearbyAdapter<T1 extends Named> extends RecyclerView.Adapter<Nearby
             : nearby.get(pos));
     }
 
-    public void populate(@Nullable Collection<T1> nearbys) {
-        final List<T1> sortedNearbys = (nearbys != null) ? new ArrayList<>(nearbys) : Collections.emptyList();
+    public void populate(@Nullable Collection<T> nearbys) {
+        final List<T> sortedNearbys = (nearbys != null) ? new ArrayList<>(nearbys) : Collections.emptyList();
         Collections.sort(sortedNearbys, (e1, e2) -> e1.getName().compareTo(e2.getName()));
         this.nearby = sortedNearbys;
         notifyDataSetChanged();
@@ -125,7 +125,7 @@ public class NearbyAdapter<T1 extends Named> extends RecyclerView.Adapter<Nearby
     }
 
     @Nullable
-    public T1 getSelection() { return (selected == null) ? null : selected.data; }
+    public T getSelection() { return (selected == null) ? null : selected.data; }
 
     public void clearSelection() {
         if (selected == null) { return; }

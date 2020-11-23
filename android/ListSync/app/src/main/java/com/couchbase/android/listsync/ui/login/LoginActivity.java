@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.couchbase.android.listsync.databinding.ActivityLoginBinding;
 import com.couchbase.android.listsync.ui.main.MainActivity;
@@ -28,15 +29,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings({"WeakerAccess", "NotNullFieldNotInitialized"})
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @NonNull
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
     @SuppressWarnings("NotNullFieldNotInitialized")
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @NonNull
     private LoginViewModel viewModel;
 
     @SuppressWarnings("NotNullFieldNotInitialized")
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @NonNull
     private ActivityLoginBinding binding;
 

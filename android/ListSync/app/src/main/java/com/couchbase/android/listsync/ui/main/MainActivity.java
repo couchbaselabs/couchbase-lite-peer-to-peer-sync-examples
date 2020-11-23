@@ -14,9 +14,11 @@ import androidx.lifecycle.ViewModelProviders;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.ActivityMainBinding;
+import com.couchbase.android.listsync.ui.login.LoginActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -26,15 +28,18 @@ public class MainActivity extends AppCompatActivity {
         activity.startActivity(intent);
     }
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings({"WeakerAccess", "NotNullFieldNotInitialized"})
     @NonNull
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private MainViewModel viewModel;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private ProduceAdapter adapter;
@@ -67,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         AndroidInjection.inject(this);
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
+        if (!viewModel.loggedIn()) {
+            LoginActivity.start(this);
+            finish();
+            return;
+        }
 
         final ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 

@@ -24,10 +24,12 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 public class ListSync extends Application implements HasActivityInjector {
     @SuppressWarnings({"WeakerAccess", "NotNullFieldNotInitialized"})
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @NonNull
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingActivityInjector;

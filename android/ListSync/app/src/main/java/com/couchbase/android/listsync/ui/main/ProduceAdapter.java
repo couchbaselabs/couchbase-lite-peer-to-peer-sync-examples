@@ -44,7 +44,7 @@ public class ProduceAdapter extends RecyclerView.Adapter<ProduceAdapter.ProduceV
         @NonNull
         private final RequestManager glide;
 
-        public ProduceViewHolder(
+        ProduceViewHolder(
             @NonNull MainViewModel viewModel,
             @NonNull RowProduceBinding bindings,
             @NonNull RequestManager glide) {
@@ -55,7 +55,7 @@ public class ProduceAdapter extends RecyclerView.Adapter<ProduceAdapter.ProduceV
             this.glide = glide;
         }
 
-        public final void setProduce(@Nullable Produce produce) {
+        public void setProduce(@Nullable Produce produce) {
             if (produce == null) {
                 bindings.name.setText("");
                 bindings.done.setText("");

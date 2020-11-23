@@ -43,7 +43,7 @@ public class NearbyViewModel extends ViewModel {
 
     private static final List<String> REQUIRED_PERMISSIONS;
     static {
-        List<String> l = new ArrayList<>();
+        final List<String> l = new ArrayList<>();
         l.add(android.Manifest.permission.BLUETOOTH);
         l.add(android.Manifest.permission.BLUETOOTH_ADMIN);
         l.add(android.Manifest.permission.ACCESS_WIFI_STATE);

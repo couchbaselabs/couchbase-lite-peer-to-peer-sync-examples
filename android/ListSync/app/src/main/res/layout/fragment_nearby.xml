@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/guideline"
-        app:layout_constraintBottom_toTopOf="@+id/servers"
+        app:layout_constraintBottom_toTopOf="@+id/nearby_listeners"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/vertical_indent"
         android:text="@string/label_nearby_listeners"

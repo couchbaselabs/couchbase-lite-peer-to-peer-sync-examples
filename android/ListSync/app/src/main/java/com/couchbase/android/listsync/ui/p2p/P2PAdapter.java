@@ -43,13 +43,13 @@ public class P2PAdapter extends RecyclerView.Adapter<P2PAdapter.ConnectionViewHo
         @Nullable
         URI uri;
 
-        public ConnectionViewHolder(@NonNull RowSyncBinding bindings) {
+        ConnectionViewHolder(@NonNull RowSyncBinding bindings) {
             super(bindings.getRoot());
             this.bindings = bindings;
             itemView.setOnClickListener(v -> setHighlighted(toggleSelection(this)));
         }
 
-        public final void setConnection(@Nullable URI uri) {
+        public void setConnection(@Nullable URI uri) {
             this.uri = uri;
 
             if (uri == null) {
@@ -138,9 +138,12 @@ public class P2PAdapter extends RecyclerView.Adapter<P2PAdapter.ConnectionViewHo
     }
 
     public void populate(@Nullable Set<URI> connections) {
-        final List<URI> sortedConnections = new ArrayList<>(connections);
-        Collections.sort(sortedConnections);
-        this.connections = sortedConnections;
+        if (connections == null) { this.connections = null; }
+        else {
+            final List<URI> sortedConnections = new ArrayList<>(connections);
+            Collections.sort(sortedConnections);
+            this.connections = sortedConnections;
+        }
         notifyDataSetChanged();
         clearSelection();
     }

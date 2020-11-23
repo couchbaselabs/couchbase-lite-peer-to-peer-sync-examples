@@ -16,6 +16,7 @@
 package com.couchbase.android.listsync.ui.main;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -51,6 +52,8 @@ public class MainViewModel extends ViewModel {
     @SuppressWarnings("WeakerAccess")
     @Inject
     public MainViewModel(@NonNull Db db) { this.db = db; }
+
+    public boolean loggedIn() { return !TextUtils.isEmpty(db.getUser()); }
 
     @NonNull
     public LiveData<List<Produce>> getProduce() {

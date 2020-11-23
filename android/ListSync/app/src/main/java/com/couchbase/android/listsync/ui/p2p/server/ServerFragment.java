@@ -26,20 +26,25 @@ import androidx.lifecycle.LiveData;
 import java.net.URI;
 import java.util.Set;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import com.couchbase.android.listsync.databinding.FragmentServerBinding;
-import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 import com.couchbase.android.listsync.ui.p2p.P2PAdapter;
+import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 
 
 public final class ServerFragment extends P2PFragment {
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private ServerViewModel viewModel;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private FragmentServerBinding binding;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private P2PAdapter adapter;

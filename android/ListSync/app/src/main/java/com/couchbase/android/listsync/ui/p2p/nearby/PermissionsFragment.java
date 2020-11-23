@@ -24,8 +24,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.FragmentPermissionsBinding;
@@ -35,14 +39,17 @@ import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 public final class PermissionsFragment extends P2PFragment {
     public static final int PERMISSIONS_REQ = 57936;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private NearbyViewModel viewModel;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private FragmentPermissionsBinding binding;
 
+    @SuppressWarnings("PMD.SingularField")
     private Handler hdlr;
 
     @NonNull
@@ -61,23 +68,28 @@ public final class PermissionsFragment extends P2PFragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String ign1[], int[] ign2) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] ign1, @NonNull int[] ign2) {
         if (requestCode != PERMISSIONS_REQ) { return; }
 
         hdlr = null;
         binding.permsJustification.setVisibility(View.INVISIBLE);
+        final NavController nav = Navigation.findNavController(binding.getRoot());
 
         final List<String> missingPerms = checkPerms(viewModel.getRequiredPermissions());
-        if (missingPerms.isEmpty()) { navigate(R.id.action_nav_perms_to_nearby); }
+        if (missingPerms.isEmpty()) {
+            nav.navigate(PermissionsFragmentDirections.actionNavPermsToNearby());
+            return;
+        }
 
         boolean showRational = false;
         for (String perm: missingPerms) { showRational = showRational || shouldShowRequestPermissionRationale(perm); }
         if (!showRational) {
             Toast.makeText(getContext(), R.string.nearby_not_available, Toast.LENGTH_LONG).show();
-            navigate(R.id.action_nav_perms_to_active);
+            nav.navigate(PermissionsFragmentDirections.actionNavPermsToActive());
             return;
         }
 
+        // show the justification and then re-request permissions.
         binding.permsJustification.setVisibility(View.VISIBLE);
         hdlr = new Handler(Looper.getMainLooper());
         hdlr.postDelayed(this::requestNeededPermissions, 6 * 1000);

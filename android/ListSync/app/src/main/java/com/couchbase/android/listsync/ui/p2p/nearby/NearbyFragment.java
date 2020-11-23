@@ -21,8 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.Navigation;
 
-import com.couchbase.android.listsync.R;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import com.couchbase.android.listsync.databinding.FragmentNearbyBinding;
 import com.couchbase.android.listsync.model.Device;
 import com.couchbase.android.listsync.model.Listener;
@@ -32,18 +34,22 @@ import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 public final class NearbyFragment extends P2PFragment {
     public static final int PERMISSIONS_REQ = 57936;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private NearbyViewModel viewModel;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private FragmentNearbyBinding binding;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private NearbyAdapter<Device> nearbyDeviceAdapter;
 
+    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
     private NearbyAdapter<Listener> nearbyListenerAdapter;
@@ -53,20 +59,19 @@ public final class NearbyFragment extends P2PFragment {
         viewModel = getViewModel(NearbyViewModel.class);
 
         binding = FragmentNearbyBinding.inflate(inflater, container, false);
-        final View root = binding.getRoot();
 
         nearbyDeviceAdapter = NearbyAdapter.setup(getActivity(), binding.nearbyDevices, this::selectNearbyDevice);
 
         nearbyListenerAdapter = NearbyAdapter.setup(getActivity(), binding.nearbyListeners, this::selectNearbyListener);
 
-        return root;
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (checkPerms(viewModel.getRequiredPermissions()).isEmpty()) { return; }
-        navigate(R.id.action_nav_nearby_to_perms);
+        Navigation.findNavController(view).navigate(NearbyFragmentDirections.actionNavNearbyToPerms());
     }
 
     @Override
@@ -89,6 +94,6 @@ public final class NearbyFragment extends P2PFragment {
         final NearbyFragmentDirections.ActionNavNearbyToActive direction
             = NearbyFragmentDirections.actionNavNearbyToActive();
         if (listener != null) { direction.setUri(listener.getUri()); }
-        navigate(direction);
+        Navigation.findNavController(binding.getRoot()).navigate(direction);
     }
 }

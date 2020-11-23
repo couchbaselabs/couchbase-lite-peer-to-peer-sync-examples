@@ -59,7 +59,7 @@ public class NearbyClient extends BaseNearby {
         @NonNull
         private final Emitter<Collection<Device>> emitter;
 
-        public NearbyDiscovery(@NonNull Emitter<Collection<Device>> emitter) { this.emitter = emitter; }
+        NearbyDiscovery(@NonNull Emitter<Collection<Device>> emitter) { this.emitter = emitter; }
 
         @Override
         public void onEndpointFound(@NonNull String endpointId, @NonNull DiscoveredEndpointInfo info) {
@@ -95,7 +95,7 @@ public class NearbyClient extends BaseNearby {
         @NonNull
         private final ObservableEmitter<Collection<Listener>> emitter;
 
-        public ConnectionHandler(@NonNull ObservableEmitter<Collection<Listener>> emitter) { this.emitter = emitter; }
+        ConnectionHandler(@NonNull ObservableEmitter<Collection<Listener>> emitter) { this.emitter = emitter; }
 
         @Override
         public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo info) {
@@ -127,12 +127,9 @@ public class NearbyClient extends BaseNearby {
     public Observable<Collection<Device>> startDiscovery() {
         final ConnectionsClient nearby = Nearby.getConnectionsClient(ctxt);
         return Observable.create((emitter) -> {
-            nearby.startDiscovery(
-                pkgName,
-                new NearbyDiscovery(emitter),
-                new DiscoveryOptions(Strategy.P2P_CLUSTER));
+            nearby.startDiscovery(pkgName, new NearbyDiscovery(emitter), new DiscoveryOptions(Strategy.P2P_CLUSTER));
             emitter.setDisposable(new Disposable() {
-                boolean disposed = false;
+                boolean disposed;
 
                 @Override
                 public boolean isDisposed() { return disposed; }
@@ -155,7 +152,7 @@ public class NearbyClient extends BaseNearby {
         return Observable.create((emitter) -> {
             nearby.requestConnection(user, deviceId, new ConnectionHandler(emitter));
             emitter.setDisposable(new Disposable() {
-                boolean disposed = false;
+                boolean disposed;
 
                 @Override
                 public boolean isDisposed() { return disposed; }

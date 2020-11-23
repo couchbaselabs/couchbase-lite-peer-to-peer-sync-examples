@@ -26,7 +26,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavDirections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,13 +71,5 @@ public abstract class P2PFragment extends Fragment {
             if (ActivityCompat.checkSelfPermission(act, perm) != PackageManager.PERMISSION_GRANTED) { perms.add(perm); }
         }
         return perms;
-    }
-
-    protected final void navigate(int destinationId) {
-        ((P2PActivity) getActivity()).getNavController().navigate(destinationId);
-    }
-
-    protected final void navigate(NavDirections direction) {
-        ((P2PActivity) getActivity()).getNavController().navigate(direction);
     }
 }

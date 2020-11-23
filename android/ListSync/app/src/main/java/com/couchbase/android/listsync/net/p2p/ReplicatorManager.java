@@ -110,7 +110,6 @@ public final class ReplicatorManager {
         replicator.addChangeListener(
             syncExecutor,
             change -> {
-                if (change == null) { return; }
                 final Replicator.Status status = change.getStatus();
 
                 final CouchbaseLiteException err = status.getError();
@@ -118,7 +117,6 @@ public final class ReplicatorManager {
 
                 final AbstractReplicator.ActivityLevel state = status.getActivityLevel();
                 Log.i(TAG, "Replicator in state " + state + ": " + uri);
-                if (state == null) { return; }
                 switch (state) {
                     case CONNECTING:
                     case IDLE:
