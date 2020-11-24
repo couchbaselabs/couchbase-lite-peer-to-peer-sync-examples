@@ -141,7 +141,8 @@ public final class Db {
         return new ReplicatorConfiguration(getDb(), endpoint);
     }
 
-    public synchronized String getUser() { return userName; }
+    @Nullable
+    public synchronized String getUser() { return (database == null) ? null : userName; }
 
     @MainThread
     @NonNull

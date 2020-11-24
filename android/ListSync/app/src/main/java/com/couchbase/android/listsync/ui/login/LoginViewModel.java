@@ -16,6 +16,7 @@
 package com.couchbase.android.listsync.ui.login;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -58,7 +59,7 @@ public class LoginViewModel extends ViewModel {
         return login;
     }
 
-    public boolean isLoggedIn() { return db.getUser() != null; }
+    public boolean isLoggedIn() { return !TextUtils.isEmpty(db.getUser()); }
 
     private void onLogin(@NonNull String user, @NonNull String message) {
         login.setValue(message);

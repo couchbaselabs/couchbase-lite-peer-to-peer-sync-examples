@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.menu_logout) {
             viewModel.logout(this);
+            loggedOut();
             return true;
         }
 
@@ -72,11 +73,6 @@ public class MainActivity extends AppCompatActivity {
         AndroidInjection.inject(this);
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
-        if (!viewModel.loggedIn()) {
-            LoginActivity.start(this);
-            finish();
-            return;
-        }
 
         final ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 
@@ -95,6 +91,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (!viewModel.loggedIn()) {
+            loggedOut();
+            return;
+        }
+
         viewModel.getProduce().observe(this, adapter::populate);
+    }
+
+    private void loggedOut() {
+        LoginActivity.start(this);
+        finish();
     }
 }
