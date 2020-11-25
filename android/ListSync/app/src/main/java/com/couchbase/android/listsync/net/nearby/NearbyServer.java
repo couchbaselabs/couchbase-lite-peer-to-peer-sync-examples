@@ -22,6 +22,7 @@ import androidx.annotation.UiThread;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -108,7 +109,7 @@ public final class NearbyServer extends BaseNearby {
     }
 
     @UiThread
-    public void update(Set<URI> endpoints) {
+    public void update(Collection<URI> endpoints) {
         final ConnectionsClient nearby = Nearby.getConnectionsClient(ctxt);
         final List<URI> endpts = new ArrayList<>(endpoints);
         nearbyExecutor.execute(() -> {

@@ -29,7 +29,7 @@
     <string name="bad_port">You must specify a port 0 &lt; port &lt;= 65535</string>
     <string name="bad_scheme">URL scheme "%1$s" is not valid. Valid schemes are "ws" and "wss"</string>
     <string name="bad_suffix">Extraneous URI content ignored: "%1$s"</string>
-    <string name="bad_path">Unrecognizable database path: "%1$s"</string>
+    <string name="bad_path">Unrecognized database path: "%1$s"</string>
     <string name="perms_request">
         In order to discover nearby devices, you must allow the use Bluetooth, Wifi and Coarse Location
     </string>

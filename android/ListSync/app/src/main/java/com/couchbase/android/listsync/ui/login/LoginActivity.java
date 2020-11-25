@@ -81,15 +81,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
-        viewModel.login(binding.username.getText().toString(), binding.password.getText().toString())
-            .observe(this, this::nextPage);
+        try {
+            viewModel.login(binding.username.getText().toString(), binding.password.getText().toString())
+                .observe(this, this::nextPage);
+        }
+        catch (IllegalArgumentException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void nextPage(@Nullable String status) {
         if (status == null) { return; }
 
         if (!LoginViewModel.STATUS_OK.equals(status)) {
-            Toast.makeText(this, status, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
             return;
         }
 

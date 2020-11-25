@@ -79,9 +79,11 @@ import com.couchbase.lite.URLEndpointListenerConfiguration;
 public final class Db {
     private static final String TAG = "DB";
 
-    private static final String PROTO_DB_NAME = "userdb";
+    public static final String DB_NAME = "userdb";
+
+
     private static final String DB_SUFFIX = ".cblite2";
-    private static final String DB_FILE = PROTO_DB_NAME + DB_SUFFIX;
+    private static final String DB_FILE = DB_NAME + DB_SUFFIX;
     private static final String DB_ASSET = DB_FILE + ".zip";
     private static final String TMP_DIR = "couchbase";
 
@@ -116,7 +118,7 @@ public final class Db {
 
         // make sure the proto-db is in place
         final DatabaseConfiguration config = new DatabaseConfiguration();
-        if (Database.exists(PROTO_DB_NAME, new File(config.getDirectory()))) { return; }
+        if (Database.exists(DB_NAME, new File(config.getDirectory()))) { return; }
 
         final File tmpDir = ctxt.getExternalFilesDir(TMP_DIR);
         if (tmpDir == null) { throw new IllegalStateException("Error creating temp dir"); }
@@ -125,7 +127,7 @@ public final class Db {
         catch (IOException e) { throw new IllegalStateException("Failed unzipping db asset", e); }
 
         final File dbFile = new File(tmpDir, DB_FILE);
-        try { Database.copy(dbFile, PROTO_DB_NAME, config); }
+        try { Database.copy(dbFile, DB_NAME, config); }
         catch (CouchbaseLiteException e) { throw new IllegalStateException("Failed copying db asset", e); }
 
         FileUtils.erase(dbFile);
@@ -206,19 +208,23 @@ public final class Db {
 
     @WorkerThread
     private void openDbAsync(@NonNull String user, @NonNull String pwd) throws CouchbaseLiteException {
-        final DatabaseConfiguration config = new DatabaseConfiguration();
         final EncryptionKey encryptionKey = new EncryptionKey(pwd);
 
-        final File dbDir = new File(config.getDirectory());
+        final DatabaseConfiguration config = new DatabaseConfiguration();
+
+        final String rootPath = config.getDirectory();
+
+        final File dbDir = new File(rootPath, user);
+        config.setDirectory(dbDir.getAbsolutePath());
 
         final Database db;
-        if (Database.exists(user, dbDir)) {
+        if (Database.exists(DB_NAME, dbDir)) {
             config.setEncryptionKey(encryptionKey);
-            db = new Database(user, config);
+            db = new Database(DB_NAME, config);
         }
         else {
-            Database.copy(new File(dbDir, DB_FILE), user, config);
-            db = new Database(user, config);
+            Database.copy(new File(rootPath, DB_FILE), DB_NAME, config);
+            db = new Database(DB_NAME, config);
             db.changeEncryptionKey(encryptionKey);
         }
 

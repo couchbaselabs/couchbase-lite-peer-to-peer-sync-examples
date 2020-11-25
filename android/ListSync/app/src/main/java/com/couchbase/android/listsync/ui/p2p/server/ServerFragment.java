@@ -21,15 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 
 import java.net.URI;
-import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.couchbase.android.listsync.databinding.FragmentServerBinding;
-import com.couchbase.android.listsync.ui.p2p.P2PAdapter;
 import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 
 
@@ -44,11 +41,6 @@ public final class ServerFragment extends P2PFragment {
     @NonNull
     private FragmentServerBinding binding;
 
-    @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
-    @SuppressWarnings("NotNullFieldNotInitialized")
-    @NonNull
-    private P2PAdapter adapter;
-
     @NonNull
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         viewModel = getViewModel(ServerViewModel.class);
@@ -59,15 +51,13 @@ public final class ServerFragment extends P2PFragment {
         binding.start.setOnClickListener(v -> startServer());
         binding.stop.setOnClickListener(v -> stopServer());
 
-        adapter = P2PAdapter.setup(getActivity(), binding.servers, this::enableStopButton);
-
         return root;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        viewModel.getServers().observe(this, adapter::populate);
+        viewModel.getServers().observe(getViewLifecycleOwner(), this::updateServer);
     }
 
     @Override
@@ -76,21 +66,26 @@ public final class ServerFragment extends P2PFragment {
         viewModel.cancel();
     }
 
-    private void enableStopButton() { binding.stop.setEnabled(adapter.getSelection() != null); }
-
     private void startServer() {
-        final LiveData<Set<URI>> endpointData = viewModel.startServer();
-        endpointData.observe(getViewLifecycleOwner(), new OneShotObserver<>(endpointData, adapter::populate));
+        binding.start.setEnabled(false);
+        viewModel.startServer();
     }
 
     private void stopServer() {
-        final URI uri = adapter.getSelection();
-        if (uri == null) { return; }
+        binding.stop.setEnabled(false);
+        viewModel.stopServer();
+    }
 
-        // this causes a call to enableStopButton...
-        adapter.clearSelection();
+    private void updateServer(URI uri) {
+        viewModel.cancel();
 
-        final LiveData<Set<URI>> endpointData = viewModel.stopServer(uri);
-        endpointData.observe(getViewLifecycleOwner(), new OneShotObserver<>(endpointData, adapter::populate));
+        final boolean showUri = uri == null;
+
+        binding.host.setText((showUri) ? "" : uri.getHost());
+        binding.port.setText((showUri) ? "" : String.valueOf(uri.getPort()));
+        binding.uri.setText((showUri) ? "" : uri.toString());
+
+        binding.start.setEnabled(showUri);
+        binding.stop.setEnabled(!showUri);
     }
 }

@@ -22,34 +22,14 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.couchbase.lite.internal.utils.Fn;
-
 
 public abstract class P2PFragment extends Fragment {
-    public static class OneShotObserver<T> implements Observer<T> {
-        private final LiveData<T> liveData;
-        private final Fn.Consumer<T> consumer;
-
-        public OneShotObserver(@NonNull LiveData<T> liveData, @NonNull Fn.Consumer<T> consumer) {
-            this.liveData = liveData;
-            this.consumer = consumer;
-        }
-
-        @Override
-        public void onChanged(T data) {
-            consumer.accept(data);
-            liveData.removeObserver(this);
-        }
-    }
-
     @CallSuper
     @Override
     public void onAttach(@NonNull Context context) {

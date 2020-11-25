@@ -23,9 +23,9 @@ import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -63,17 +63,17 @@ public final class ListenerManager {
     public ListenerManager(@NonNull Db dbMgr) { this.dbMgr = dbMgr; }
 
     @NonNull
-    public Set<URI> getServers() {
+    public Collection<URI> getServers() {
         synchronized (listeners) { return listeners.keySet(); }
     }
 
     @UiThread
     @NonNull
-    public Observable<Set<URI>> startServer() { return startServer(null, 0); }
+    public Observable<Collection<URI>> startServer() { return startServer(null, 0); }
 
     @UiThread
     @NonNull
-    public Observable<Set<URI>> startServer(@Nullable String iface, int port) {
+    public Observable<Collection<URI>> startServer(@Nullable String iface, int port) {
         return Observable
             .fromCallable(() -> startServerAsync(iface, port))
             .subscribeOn(syncScheduler)
@@ -82,7 +82,7 @@ public final class ListenerManager {
 
     @UiThread
     @NonNull
-    public Observable<Set<URI>> stopServer(@NonNull URI uri) {
+    public Observable<Collection<URI>> stopServer(@NonNull URI uri) {
         return Observable
             .fromCallable(() -> stopServerAsync(uri))
             .subscribeOn(syncScheduler)
@@ -90,7 +90,7 @@ public final class ListenerManager {
     }
 
     @WorkerThread
-    private Set<URI> startServerAsync(@Nullable String iface, int port) throws CouchbaseLiteException {
+    private Collection<URI> startServerAsync(@Nullable String iface, int port) throws CouchbaseLiteException {
         final URLEndpointListenerConfiguration config = dbMgr.getListenerConfig();
         if (iface != null) { config.setNetworkInterface(iface); }
         if (port > URLEndpointListenerConfiguration.MIN_PORT) { config.setPort(port); }
@@ -107,7 +107,7 @@ public final class ListenerManager {
     }
 
     @WorkerThread
-    public Set<URI> stopServerAsync(@NonNull URI uri) {
+    public Collection<URI> stopServerAsync(@NonNull URI uri) {
         final URLEndpointListener listener = removeServer(uri);
         if (listener == null) {
             Log.w(TAG, "Attempt to stop non-existent listener: " + uri);

@@ -38,10 +38,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/hostLabel"
-        app:layout_constraintBottom_toTopOf="@+id/databaseLabel"
+        app:layout_constraintBottom_toTopOf="@+id/start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/port"
-        android:layout_margin="@dimen/frame_margin"
+        android:layout_marginTop="@dimen/frame_margin"
+        android:layout_marginLeft="@dimen/frame_margin"
+        android:layout_marginRight="@dimen/frame_margin"
+        android:layout_marginBottom="@dimen/textbox_pad"
         android:text="@string/port"
         style="@style/Text.Label"
         />
@@ -54,33 +57,6 @@
         app:layout_constraintStart_toEndOf="@+id/portLabel"
         app:layout_constraintEnd_toEndOf="parent"
         android:inputType="numberDecimal"
-        style="@style/Text"
-        />
-
-    <TextView
-        android:id="@+id/databaseLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/portLabel"
-        app:layout_constraintBottom_toTopOf="@+id/start"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/database"
-        android:layout_marginTop="@dimen/frame_margin"
-        android:layout_marginLeft="@dimen/frame_margin"
-        android:layout_marginRight="@dimen/frame_margin"
-        android:layout_marginBottom="@dimen/textbox_pad"
-        android:text="@string/database"
-        style="@style/Text.Label"
-        />
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/database"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBaseline_toBaselineOf="@+id/databaseLabel"
-        app:layout_constraintStart_toEndOf="@+id/databaseLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:inputType="text|textNoSuggestions"
         style="@style/Text"
         />
 

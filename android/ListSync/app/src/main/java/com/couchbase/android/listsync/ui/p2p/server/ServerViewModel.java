@@ -22,7 +22,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +38,7 @@ public class ServerViewModel extends ViewModel {
     private static final String TAG = "SERVER_VM";
 
     @NonNull
-    private final MutableLiveData<Set<URI>> servers = new MutableLiveData<>();
+    private final MutableLiveData<URI> server = new MutableLiveData<>();
 
     @NonNull
     private final CompositeDisposable disposables = new CompositeDisposable();
@@ -55,46 +55,48 @@ public class ServerViewModel extends ViewModel {
     }
 
     @NonNull
-    public LiveData<Set<URI>> getServers() {
+    public LiveData<URI> getServers() {
         updateServers(serverMgr.getServers());
-        return servers;
+        return server;
     }
 
     @NonNull
-    public LiveData<Set<URI>> startServer() {
+    public LiveData<URI> startServer() {
         disposables.add(serverMgr.startServer().subscribe(
             this::updateServers,
             e -> Log.w(TAG, "Failed to start server", e)));
-        return servers;
+        return server;
     }
 
     @NonNull
-    public LiveData<Set<URI>> stopServer(@NonNull URI uri) {
-        disposables.add(serverMgr.stopServer(uri).subscribe(
-            this::updateServers,
-            e -> Log.w(TAG, "Failed to stop server", e)));
-        return servers;
+    public LiveData<URI> stopServer() {
+        final URI uri = server.getValue();
+        if (uri != null) {
+            disposables.add(serverMgr.stopServer(uri).subscribe(
+                this::updateServers,
+                e -> Log.w(TAG, "Failed to stop server", e)));
+        }
+        return server;
     }
 
-    // continue to advertise...
+    // Note: continue to advertise...
     public void cancel() { disposables.clear(); }
 
-    private void updateServers(Set<URI> newServers) {
-        final Set<URI> curServers = servers.getValue();
-        final int curServerCount = (curServers == null) ? 0 : curServers.size();
+    private void updateServers(Collection<URI> newServers) {
+        final URI newServer = (newServers.isEmpty()) ? null : newServers.iterator().next();
+        final URI curServer = server.getValue();
 
-        Log.d(TAG, "Update servers: " + newServers.size() + ", " + curServerCount);
+        Log.d(TAG, "Update server: " + curServer + " => " + newServer);
 
-        if (curServerCount == 0) {
-            if (newServers.isEmpty()) { return; }
-            nearbyMgr.advertise(true);
+        if (curServer == null) {
+            if (newServer != null) { nearbyMgr.advertise(true); }
         }
-        else if (newServers.isEmpty()) {
-            nearbyMgr.advertise(false);
-        }
+        else if (newServers.isEmpty()) { nearbyMgr.advertise(false); }
 
-        servers.setValue(newServers);
+        server.setValue(newServer);
 
         nearbyMgr.update(newServers);
+
+        cancel();
     }
 }

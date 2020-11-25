@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.couchbase.android.listsync.db.Db;
+import com.couchbase.android.listsync.util.StringUtils;
 
 
 @Singleton
@@ -34,6 +35,8 @@ public class LoginViewModel extends ViewModel {
     private static final String TAG = "LoginVM";
 
     public static final String STATUS_OK = "OK";
+
+    private static final String ILLEGAL_USERNAME_CHARS = "\"*./:<>?\\|";
 
 
     @NonNull
@@ -49,6 +52,13 @@ public class LoginViewModel extends ViewModel {
     @SuppressLint("CheckResult")
     @NonNull
     public LiveData<String> login(@NonNull String user, @NonNull String pwd) {
+        if (StringUtils.containsChar(user, ILLEGAL_USERNAME_CHARS)) {
+            throw new IllegalArgumentException(String.format(
+                "Username '%s' contains illegal an illegal character (%s)",
+                user,
+                ILLEGAL_USERNAME_CHARS));
+        }
+
         login.setValue(null);
 
         db.openDb(user, pwd)

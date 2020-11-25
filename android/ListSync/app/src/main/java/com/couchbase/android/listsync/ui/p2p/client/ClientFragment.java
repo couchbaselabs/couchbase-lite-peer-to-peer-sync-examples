@@ -33,12 +33,15 @@ import org.jetbrains.annotations.Nullable;
 
 import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.FragmentClientBinding;
+import com.couchbase.android.listsync.db.Db;
 import com.couchbase.android.listsync.ui.p2p.P2PAdapter;
 import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 
 public final class ClientFragment extends P2PFragment {
+    private static final String DB_PATH = "/" + Db.DB_NAME;
+
     @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
@@ -76,7 +79,6 @@ public final class ClientFragment extends P2PFragment {
         };
         binding.host.addTextChangedListener(buttonEnabler);
         binding.port.addTextChangedListener(buttonEnabler);
-        binding.database.addTextChangedListener(buttonEnabler);
 
         adapter = P2PAdapter.setup(getActivity(), binding.clients, this::enableStopButton);
 
@@ -100,7 +102,7 @@ public final class ClientFragment extends P2PFragment {
     private void enableStopButton() { binding.stop.setEnabled(adapter.getSelection() != null); }
 
     private void enableStartButton() {
-        binding.start.setEnabled((binding.host.length() > 2) && (getPort() > 0) && (binding.database.length() > 2));
+        binding.start.setEnabled((binding.host.length() > 2) && (getPort() > 0));
     }
 
     private void startClient() {
@@ -129,7 +131,6 @@ public final class ClientFragment extends P2PFragment {
     private void clear() {
         binding.host.setText("");
         binding.port.setText("");
-        binding.database.setText("");
         enableStartButton();
     }
 
@@ -138,16 +139,7 @@ public final class ClientFragment extends P2PFragment {
         try {
             final Editable host = binding.host.getText();
             if (host == null) { return null; }
-            final Editable dbName = binding.database.getText();
-            if (dbName == null) { return null; }
-            return new URI(
-                ClientViewModel.SCHEME_WSS,
-                null,
-                host.toString(),
-                getPort(),
-                "/" + dbName.toString(),
-                null,
-                null);
+            return new URI(ClientViewModel.SCHEME_WSS, null, host.toString(), getPort(), DB_PATH, null, null);
         }
         catch (URISyntaxException e) {
             Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
@@ -183,7 +175,7 @@ public final class ClientFragment extends P2PFragment {
         }
 
         final String path = uri.getPath();
-        if (path.lastIndexOf('/') != 0) {
+        if (!DB_PATH.equals(path)) {
             final String msg = getString(R.string.bad_path, path);
             Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
             return;
@@ -192,7 +184,6 @@ public final class ClientFragment extends P2PFragment {
         // the port and host should be ok?
         binding.host.setText(uri.getHost());
         binding.port.setText(String.valueOf(uri.getPort()));
-        binding.database.setText(path.substring(1));
 
         enableStartButton();
     }

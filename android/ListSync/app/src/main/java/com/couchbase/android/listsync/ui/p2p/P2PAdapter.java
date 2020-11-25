@@ -55,18 +55,12 @@ public class P2PAdapter extends RecyclerView.Adapter<P2PAdapter.ConnectionViewHo
             if (uri == null) {
                 bindings.host.setText("");
                 bindings.port.setText("");
-                bindings.database.setText("");
                 bindings.url.setText("");
                 return;
             }
 
-            String dbName = uri.getPath();
-            final int i = dbName.indexOf('/');
-            if (i >= 0) { dbName = dbName.substring(i + 1); }
-
             bindings.host.setText(uri.getHost());
             bindings.port.setText(String.valueOf(uri.getPort()));
-            bindings.database.setText(dbName);
             bindings.url.setText(uri.toString());
         }
 
