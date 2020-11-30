@@ -77,7 +77,7 @@ image::ios-demo.gif[alt=peer to peer sync,width=640,height=480]
 +
 [source,bash]
 ----
-git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-websocket-samples/
+git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-examples
 ----
 
 - The app project does not come bundled with the Couchbase Lite framework. Run the script to pull down the framework
