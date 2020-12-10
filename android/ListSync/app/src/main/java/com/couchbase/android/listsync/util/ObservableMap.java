@@ -1,9 +1,11 @@
 package com.couchbase.android.listsync.util;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -27,23 +29,43 @@ public class ObservableMap<K, V> {
         synchronized (observers) { observers.remove(observer); }
     }
 
+    public int size() {
+        synchronized (content) { return content.size(); }
+    }
+
+    public V get(K key) {
+        synchronized (content) { return content.get(key); }
+    }
+
     public void put(K key, V value) {
         final Set<K> keySet;
         synchronized (content) {
             content.put(key, value);
-            keySet = content.keySet();
+            keySet = getKeysLocked();
+        }
+        notifyObservers(keySet);
+    }
+
+    public void replace(K key, V value) {
+        final Set<K> keySet;
+        synchronized (content) {
+            if (!content.containsKey(key)) { return; }
+            content.remove(key);
+            content.put(key, value);
+            keySet = getKeysLocked();
         }
         notifyObservers(keySet);
     }
 
     public V remove(K key) {
         final V value;
-        final Set<K> keySet;
+        Set<K> keySet = null;
         synchronized (content) {
+            final boolean found = content.containsKey(key);
             value = content.remove(key);
-            keySet = content.keySet();
+            if (found) { keySet = getKeysLocked(); }
         }
-        notifyObservers(keySet);
+        if (keySet != null) { notifyObservers(keySet); }
         return value;
     }
 
@@ -54,4 +76,6 @@ public class ObservableMap<K, V> {
             }
         }
     }
+
+    private Set<K> getKeysLocked() { return new HashSet<>(content.keySet()); }
 }

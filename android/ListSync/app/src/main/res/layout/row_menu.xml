@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/row_height"
+    android:layout_margin="@dimen/frame_margin"
+    >
+
+    <TextView
+        android:id="@+id/host"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/port"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:singleLine="true"
+        android:ellipsize="end"
+        style="@style/Text.Small"
+        />
+
+    <TextView
+        android:id="@+id/port"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/host"
+        app:layout_constraintStart_toEndOf="@+id/host"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        android:layout_marginEnd="@dimen/button_margin"
+        android:gravity="center_horizontal"
+        style="@style/Text.Small"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintGuide_percent="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/stop"
+        android:orientation="vertical"
+        />
+
+    <LinearLayout
+        android:id="@+id/start"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/stop"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@color/khaki"
+        >
+
+        <ImageView
+            android:layout_height="@dimen/icon_size"
+            android:layout_width="@dimen/icon_size"
+            android:layout_margin="@dimen/frame_margin"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_start"
+            app:tint="@color/red_A100"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Text.Tiny.Caps"
+            android:text="@string/start"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/stop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/start"
+        app:layout_constraintEnd_toStartOf="@+id/delete"
+        android:layout_marginStart="@dimen/hairline"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@color/khaki"
+        >
+
+        <ImageView
+            android:layout_height="@dimen/icon_size"
+            android:layout_width="@dimen/icon_size"
+            android:layout_margin="@dimen/frame_margin"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_stop"
+            app:tint="@color/red_A100"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Text.Tiny.Caps"
+            android:text="@string/stop"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/delete"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/stop"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/hairline"
+        android:orientation="vertical"
+        android:background="@color/khaki"
+        >
+
+        <ImageView
+            android:layout_height="@dimen/icon_size"
+            android:layout_width="@dimen/icon_size"
+            android:layout_margin="@dimen/frame_margin"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/red_A100"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            style="@style/Text.Tiny.Caps"
+            android:text="@string/delete"
+            />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

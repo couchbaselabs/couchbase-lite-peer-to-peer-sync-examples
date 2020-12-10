@@ -23,7 +23,7 @@ import java.util.Objects;
 import com.couchbase.lite.Blob;
 
 
-public final class Produce {
+public final class Produce implements Named {
     @NonNull
     private final String name;
     @Nullable

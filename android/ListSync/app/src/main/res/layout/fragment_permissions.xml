@@ -20,6 +20,7 @@
         android:layout_margin="100dp"
         android:text="@string/perms_request"
         android:visibility="invisible"
+        android:gravity="start"
         style="@style/Text.Bright"
         />
 

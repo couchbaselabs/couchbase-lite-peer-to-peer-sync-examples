@@ -73,6 +73,6 @@ public class LoginViewModel extends ViewModel {
 
     private void onLogin(@NonNull String user, @NonNull String message) {
         login.setValue(message);
-        Log.d(TAG, "login @" + user + ": " + message);
+        Log.d(TAG, "Login @" + user + ": " + message);
     }
 }

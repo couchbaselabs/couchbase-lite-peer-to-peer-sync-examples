@@ -20,17 +20,6 @@ import androidx.annotation.NonNull;
 import java.net.URI;
 
 
-public class Listener implements Named {
-
-    @NonNull
-    private final URI uri;
-
-    public Listener(@NonNull URI uri) { this.uri = uri; }
-
-    @NonNull
-    public URI getUri() { return uri; }
-
-    @NonNull
-    @Override
-    public String getName() { return uri.toString(); }
+public class Listener extends Endpoint {
+    public Listener(@NonNull URI uri) { super(uri); }
 }

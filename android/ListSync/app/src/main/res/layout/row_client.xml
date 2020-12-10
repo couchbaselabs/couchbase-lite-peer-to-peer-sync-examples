@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/row_height"
     android:layout_margin="@dimen/frame_margin"
     >
 
@@ -33,6 +33,7 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/host"
         app:layout_constraintStart_toEndOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_horizontal"
         style="@style/Text.Small"
         />
 
@@ -43,10 +44,20 @@
         app:layout_constraintTop_toBottomOf="@+id/host"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         android:layout_marginTop="@dimen/frame_margin"
-        android:textColor="@color/mid_grey"
-        style="@style/Text.Small"
+        style="@style/Text.Small.Light"
+        />
+
+    <TextView
+        android:id="@+id/state"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/url"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_horizontal"
+        style="@style/Text.Small.Caps"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

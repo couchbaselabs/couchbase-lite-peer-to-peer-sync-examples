@@ -100,7 +100,7 @@ public final class NearbyServer extends BaseNearby {
 
         if (!advertise) {
             nearby.stopAdvertising();
-            Log.i(TAG, "advertising started: " + user + "@" + pkgName);
+            Log.i(TAG, "Advertising started: " + user + "@" + pkgName);
             return;
         }
 

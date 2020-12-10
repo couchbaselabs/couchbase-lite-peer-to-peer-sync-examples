@@ -40,7 +40,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:inputType="numberDecimal"
         android:focusedByDefault="false"
-        style="@style/Text.Small.Bottom"
+        android:gravity="bottom"
+        style="@style/Text.Small"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

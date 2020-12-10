@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pale_yellow"
+    android:background="@color/khaki"
     tools:context="com.couchbase.android.listsync.ui.login.LoginActivity"
     >
 

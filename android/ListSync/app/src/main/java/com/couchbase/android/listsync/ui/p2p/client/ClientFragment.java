@@ -23,18 +23,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.couchbase.android.listsync.R;
 import com.couchbase.android.listsync.databinding.FragmentClientBinding;
 import com.couchbase.android.listsync.db.Db;
-import com.couchbase.android.listsync.ui.p2p.P2PAdapter;
+import com.couchbase.android.listsync.model.Client;
 import com.couchbase.android.listsync.ui.p2p.P2PFragment;
 import com.couchbase.lite.URLEndpointListenerConfiguration;
 
@@ -55,17 +54,16 @@ public final class ClientFragment extends P2PFragment {
     @SuppressFBWarnings("NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     @SuppressWarnings("NotNullFieldNotInitialized")
     @NonNull
-    private P2PAdapter adapter;
+    private ClientAdapter adapter;
 
     @NonNull
-    public View onCreateView(@NotNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle state) {
         viewModel = getViewModel(ClientViewModel.class);
 
         binding = FragmentClientBinding.inflate(inflater, container, false);
         final View root = binding.getRoot();
 
         binding.start.setOnClickListener(v -> startClient());
-        binding.stop.setOnClickListener(v -> stopClient());
 
         final TextWatcher buttonEnabler = new TextWatcher() {
             @Override
@@ -80,7 +78,12 @@ public final class ClientFragment extends P2PFragment {
         binding.host.addTextChangedListener(buttonEnabler);
         binding.port.addTextChangedListener(buttonEnabler);
 
-        adapter = P2PAdapter.setup(getActivity(), binding.clients, this::enableStopButton);
+        adapter = ClientAdapter.setup(
+            getActivity(),
+            binding.clients,
+            this::restartClient,
+            this::stopClient,
+            this::deleteClient);
 
         initializeReplicatorUri();
 
@@ -90,16 +93,16 @@ public final class ClientFragment extends P2PFragment {
     @Override
     public void onStart() {
         super.onStart();
+        adapter.showMenu(-1);
         viewModel.getClients().observe(this, adapter::populate);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        adapter.showMenu(-1);
         viewModel.cancel();
     }
-
-    private void enableStopButton() { binding.stop.setEnabled(adapter.getSelection() != null); }
 
     private void enableStartButton() {
         binding.start.setEnabled((binding.host.length() > 2) && (getPort() > 0));
@@ -119,13 +122,19 @@ public final class ClientFragment extends P2PFragment {
         viewModel.startClient(uri);
     }
 
-    private void stopClient() {
-        final URI uri = adapter.getSelection();
-        if (uri == null) { return; }
+    private void restartClient(@Nullable Client client) {
+        if (client == null) { return; }
+        viewModel.restartClient(client);
+    }
 
-        viewModel.stopClient(uri);
+    private void stopClient(@Nullable Client client) {
+        if (client == null) { return; }
+        viewModel.stopClient(client);
+    }
 
-        adapter.clearSelection();
+    private void deleteClient(@Nullable Client client) {
+        if (client == null) { return; }
+        viewModel.deleteClient(client);
     }
 
     private void clear() {
@@ -188,7 +197,7 @@ public final class ClientFragment extends P2PFragment {
         enableStartButton();
     }
 
-    @NotNull
+    @NonNull
     private Integer getPort() {
         try {
             final Editable portStr = binding.port.getText();

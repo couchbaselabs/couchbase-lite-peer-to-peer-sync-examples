@@ -34,5 +34,15 @@
         In order to discover nearby devices, you must allow the use Bluetooth, Wifi and Coarse Location
     </string>
     <string name="nearby_not_available">Device discovery disabled</string>
+    <string name="client_state">Client state</string>
+
+    <string name="state_connecting">Connecting</string>
+    <string name="state_busy">Busy</string>
+    <string name="state_idle">Idle</string>
+    <string name="state_offline">Offline</string>
+    <string name="state_stopped">Stopped</string>
+    <string name="stop">Stop</string>
+    <string name="delete">Delete</string>
+    <string name="start">Start</string>
 
 </resources>

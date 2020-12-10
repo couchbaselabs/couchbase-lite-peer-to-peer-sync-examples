@@ -16,37 +16,39 @@
 package com.couchbase.android.listsync.model;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.net.URI;
 
 
-public final class Device implements Named {
+public class Endpoint implements Comparable<Endpoint>, Named {
     @NonNull
-    private final String id;
-    @NonNull
-    private final String name;
+    protected final URI uri;
 
-    public Device(@NonNull String id, @NonNull String name) {
-        this.id = id;
-        this.name = name;
+    public Endpoint(@NonNull URI uri) { this.uri = uri; }
+
+    @NonNull
+    @Override
+    public String getName() { return uri.toString(); }
+
+    @NonNull
+    public URI getUri() { return uri; }
+
+    @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
+    @Override
+    public int compareTo(@Nullable Endpoint o) {
+        if (o == null) { throw new IllegalStateException("Endpoint is null in compare"); }
+        return uri.compareTo(((Endpoint) o).uri);
     }
 
-    @NonNull
-    public String getId() { return id; }
-
-    @NonNull
-    public String getName() { return name; }
-
-    @NonNull
     @Override
-    public String toString() { return "Device{" + name + ", " + id + "}"; }
+    public int hashCode() { return uri.hashCode(); }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
-        return id.equals(((Device) o).id);
+        return uri.equals(((Endpoint) o).uri);
     }
-
-    @Override
-    public int hashCode() { return id.hashCode(); }
 }
 

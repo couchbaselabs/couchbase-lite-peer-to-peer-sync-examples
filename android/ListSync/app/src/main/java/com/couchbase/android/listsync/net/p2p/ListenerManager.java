@@ -45,7 +45,7 @@ import com.couchbase.lite.URLEndpointListenerConfiguration;
 
 @Singleton
 public final class ListenerManager {
-    private static final String TAG = "SYNC";
+    private static final String TAG = "LISTENERS";
 
     @NonNull
     private final Executor syncExecutor = Executors.newSingleThreadExecutor();
@@ -97,7 +97,7 @@ public final class ListenerManager {
 
         final URLEndpointListener listener = new URLEndpointListener(config);
 
-        Log.i(TAG, "Starting server @" + config);
+        Log.i(TAG, "Starting listener @" + config);
         listener.start();
 
         final URI uri = listener.getUrls().get(0);
@@ -113,7 +113,7 @@ public final class ListenerManager {
             Log.w(TAG, "Attempt to stop non-existent listener: " + uri);
         }
         else {
-            Log.i(TAG, "Stopping server @" + listener.getConfig());
+            Log.i(TAG, "Stopping listener @" + listener.getConfig());
             listener.stop();
         }
 

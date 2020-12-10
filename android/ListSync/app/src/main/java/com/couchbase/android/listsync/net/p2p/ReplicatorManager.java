@@ -37,17 +37,19 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import com.couchbase.android.listsync.db.Db;
+import com.couchbase.android.listsync.model.Client;
 import com.couchbase.android.listsync.util.ObservableMap;
 import com.couchbase.lite.AbstractReplicator;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Replicator;
+import com.couchbase.lite.ReplicatorChange;
 import com.couchbase.lite.ReplicatorConfiguration;
 import com.couchbase.lite.URLEndpoint;
 
 
 @Singleton
 public final class ReplicatorManager {
-    private static final String TAG = "SYNC";
+    private static final String TAG = "REPLICATORS";
 
     @NonNull
     private final Executor syncExecutor = Executors.newSingleThreadExecutor();
@@ -56,7 +58,7 @@ public final class ReplicatorManager {
 
     @NonNull
     @GuardedBy("replicators")
-    private final ObservableMap<URI, Replicator> replicators = new ObservableMap<>();
+    private final ObservableMap<Client, Replicator> replicators = new ObservableMap<>();
 
     @NonNull
     private final Db dbMgr;
@@ -73,9 +75,32 @@ public final class ReplicatorManager {
             .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Completable restartClient(Client client) {
+        return Completable
+            .fromRunnable(() -> restartClientAsync(client))
+            .subscribeOn(syncScheduler)
+            .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @UiThread
     @NonNull
-    public Observable<Set<URI>> observeClients() {
-        return Observable.<Set<URI>>create(emitter -> {
+    public Completable stopClient(@NonNull Client client) {
+        return Completable
+            .fromRunnable(() -> stopClientAsync(client))
+            .subscribeOn(syncScheduler)
+            .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Completable deleteClient(Client client) {
+        return Completable
+            .fromRunnable(() -> deleteClientAsync(client))
+            .subscribeOn(syncScheduler)
+            .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @NonNull
+    public Observable<Set<Client>> observeClients() {
+        return Observable.<Set<Client>>create(emitter -> {
             replicators.addObserver(emitter);
             emitter.setDisposable(new Disposable() {
                 @Override
@@ -89,60 +114,60 @@ public final class ReplicatorManager {
             .observeOn(AndroidSchedulers.mainThread());
     }
 
-    @UiThread
-    @NonNull
-    public Completable stopClient(@NonNull URI uri) {
-        return Completable
-            .fromRunnable(() -> stopClientAsync(uri))
-            .subscribeOn(syncScheduler)
-            .observeOn(AndroidSchedulers.mainThread());
+    void onReplicatorStateChange(@NonNull URI uri, @NonNull Replicator repl, @NonNull ReplicatorChange change) {
+        final Replicator.Status status = change.getStatus();
+
+        final CouchbaseLiteException err = status.getError();
+        if (err != null) { Log.w(TAG, "Replicator error: " + uri, err); }
+
+        final AbstractReplicator.ActivityLevel state = status.getActivityLevel();
+        Log.i(TAG, "Replicator in state " + state + ": " + uri);
+
+        replicators.replace(new Client(uri, state), repl);
     }
 
     @WorkerThread
     private void startClientAsync(@NonNull URI uri) {
+        replicators.put(new Client(uri, AbstractReplicator.ActivityLevel.STOPPED), null);
+
         final ReplicatorConfiguration config = dbMgr.getReplicatorConfig(new URLEndpoint(uri));
         config.setContinuous(true);
         config.setReplicatorType(ReplicatorConfiguration.ReplicatorType.PUSH_AND_PULL);
         config.setAcceptOnlySelfSignedServerCertificate(true);
 
         final Replicator replicator = new Replicator(config);
-
-        replicator.addChangeListener(
-            syncExecutor,
-            change -> {
-                final Replicator.Status status = change.getStatus();
-
-                final CouchbaseLiteException err = status.getError();
-                if (err != null) { Log.w(TAG, "Replicator error: " + uri, err); }
-
-                final AbstractReplicator.ActivityLevel state = status.getActivityLevel();
-                Log.i(TAG, "Replicator in state " + state + ": " + uri);
-                switch (state) {
-                    case CONNECTING:
-                    case IDLE:
-                    case BUSY:
-                        replicators.put(uri, replicator);
-                        break;
-
-                    case STOPPED:
-                    case OFFLINE:
-                        replicators.remove(uri);
-                        break;
-                }
-            });
+        replicator.addChangeListener(syncExecutor, change -> onReplicatorStateChange(uri, replicator, change));
 
         replicator.start(false);
     }
 
-    @WorkerThread
-    private void stopClientAsync(@NonNull URI uri) {
-        final Replicator replicator = replicators.remove(uri);
+    private void restartClientAsync(Client client) {
+        final Replicator replicator = replicators.get(client);
         if (replicator == null) {
-            Log.w(TAG, "Attempt to stop non-existent replicator: " + uri);
+            Log.w(TAG, "Attempt to restart non-existent replicator for: " + client);
+            return;
         }
-        else {
-            Log.i(TAG, "Stopping client @" + replicator.getConfig());
-            replicator.stop();
+
+        Log.i(TAG, "Restarting replicator @" + replicator.getConfig() + " for " + client);
+        replicator.start(false);
+    }
+
+    @WorkerThread
+    private void stopClientAsync(@NonNull Client client) {
+        final Replicator replicator = replicators.get(client);
+        if (replicator == null) {
+            Log.w(TAG, "Attempt to stop non-existent replicator for: " + client);
+            return;
         }
+
+        Log.i(TAG, "Stopping replicator @" + replicator.getConfig() + " for " + client);
+        replicator.stop();
+    }
+
+    private void deleteClientAsync(Client client) {
+        final Replicator replicator = replicators.remove(client);
+        if (replicator == null) { return; }
+        Log.i(TAG, "Deleted replicator  @" + replicator.getConfig() + " for " + client);
+        replicator.stop();
     }
 }

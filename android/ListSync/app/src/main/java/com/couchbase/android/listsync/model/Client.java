@@ -17,36 +17,37 @@ package com.couchbase.android.listsync.model;
 
 import androidx.annotation.NonNull;
 
+import java.net.URI;
+import java.util.Objects;
 
-public final class Device implements Named {
-    @NonNull
-    private final String id;
-    @NonNull
-    private final String name;
+import com.couchbase.lite.AbstractReplicator;
 
-    public Device(@NonNull String id, @NonNull String name) {
-        this.id = id;
-        this.name = name;
+
+public class Client extends Endpoint {
+    @NonNull
+    private final AbstractReplicator.ActivityLevel activityLevel;
+
+    public Client(@NonNull URI uri, @NonNull AbstractReplicator.ActivityLevel activityLevel) {
+        super(uri);
+        this.activityLevel = activityLevel;
     }
 
     @NonNull
-    public String getId() { return id; }
-
-    @NonNull
-    public String getName() { return name; }
+    public AbstractReplicator.ActivityLevel getActivityLevel() { return activityLevel; }
 
     @NonNull
     @Override
-    public String toString() { return "Device{" + name + ", " + id + "}"; }
+    public String toString() { return "Client{" + activityLevel + " @" + uri + "}"; }
+
+    @Override
+    public int hashCode() { return Objects.hash(uri); }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
-        return id.equals(((Device) o).id);
+        if (o == null) { return false; }
+        if (!(o instanceof Client)) { return false; }
+        final Client client = (Client) o;
+        return uri.equals(client.uri);
     }
-
-    @Override
-    public int hashCode() { return id.hashCode(); }
 }
-

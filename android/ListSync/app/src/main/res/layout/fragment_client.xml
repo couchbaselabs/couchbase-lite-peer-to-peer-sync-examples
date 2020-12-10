@@ -63,26 +63,13 @@
     <Button
         android:id="@+id/start"
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/host"
         app:layout_constraintBottom_toTopOf="@+id/clients"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/stop"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/textbox_pad"
         android:text="@string/start_client"
         style="@style/ListSync.Button.Start"
-        android:enabled="false"
-        />
-
-    <Button
-        android:id="@+id/stop"
-        android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/start"
-        app:layout_constraintStart_toEndOf="@+id/start"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/stop_client"
-        style="@style/ListSync.Button.Stop"
         android:enabled="false"
         />
 

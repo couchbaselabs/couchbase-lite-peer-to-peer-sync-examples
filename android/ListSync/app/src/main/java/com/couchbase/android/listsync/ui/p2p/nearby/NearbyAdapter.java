@@ -76,7 +76,7 @@ public class NearbyAdapter<T extends Named> extends RecyclerView.Adapter<NearbyA
 
         final NearbyAdapter<S> adapter = new NearbyAdapter<>(
             onSelectionChange,
-            ctxt.getResources().getColor(R.color.pale_yellow)
+            ctxt.getResources().getColor(R.color.khaki)
         );
         listView.setAdapter(adapter);
 

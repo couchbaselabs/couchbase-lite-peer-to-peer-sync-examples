@@ -26,6 +26,8 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import com.couchbase.android.listsync.ui.p2p.client.ClientAdapter;
+
 
 public class ListSync extends Application implements HasActivityInjector {
     @SuppressWarnings({"WeakerAccess", "NotNullFieldNotInitialized"})
@@ -38,6 +40,8 @@ public class ListSync extends Application implements HasActivityInjector {
         super.onCreate();
 
         DaggerAppFactory.builder().create(this).inject(this);
+
+        ClientAdapter.init(this);
     }
 
     @NonNull

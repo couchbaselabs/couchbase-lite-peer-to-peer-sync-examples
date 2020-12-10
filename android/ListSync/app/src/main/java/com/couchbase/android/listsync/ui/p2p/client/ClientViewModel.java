@@ -29,6 +29,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 
+import com.couchbase.android.listsync.model.Client;
 import com.couchbase.android.listsync.net.p2p.ReplicatorManager;
 
 
@@ -40,33 +41,45 @@ public class ClientViewModel extends ViewModel {
 
 
     @NonNull
-    private final MutableLiveData<Set<URI>> clients = new MutableLiveData<>();
+    private final MutableLiveData<Set<Client>> clients = new MutableLiveData<>();
 
     @NonNull
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     @NonNull
-    private final ReplicatorManager sync;
+    private final ReplicatorManager replMgr;
 
     @Inject
-    public ClientViewModel(@NonNull ReplicatorManager sync) { this.sync = sync; }
+    public ClientViewModel(@NonNull ReplicatorManager replMgr) { this.replMgr = replMgr; }
 
     @NonNull
-    public LiveData<Set<URI>> getClients() {
-        disposables.add(sync.observeClients().subscribe(clients::setValue));
+    public LiveData<Set<Client>> getClients() {
+        disposables.add(replMgr.observeClients().subscribe(clients::setValue));
         return clients;
     }
 
     public void startClient(@NonNull URI uri) {
-        disposables.add(sync.startClient(uri).subscribe(
+        disposables.add(replMgr.startClient(uri).subscribe(
             () -> Log.i(TAG, "Client started @" + uri),
             e -> Log.w(TAG, "Failed to start client @" + uri, e)));
     }
 
-    public void stopClient(@NonNull URI uri) {
-        disposables.add(sync.stopClient(uri).subscribe(
-            () -> Log.i(TAG, "Client stopped @" + uri),
-            e -> Log.w(TAG, "Failed to stop client @" + uri, e)));
+    public void restartClient(@NonNull Client client) {
+        disposables.add(replMgr.restartClient(client).subscribe(
+            () -> Log.i(TAG, "Client restarted @" + client),
+            e -> Log.w(TAG, "Failed to restart client @" + client, e)));
+    }
+
+    public void stopClient(@NonNull Client client) {
+        disposables.add(replMgr.stopClient(client).subscribe(
+            () -> Log.i(TAG, "Client stopped @" + client),
+            e -> Log.w(TAG, "Failed to stop client @" + client, e)));
+    }
+
+    public void deleteClient(@NonNull Client client) {
+        disposables.add(replMgr.deleteClient(client).subscribe(
+            () -> Log.i(TAG, "Client deleted @" + client),
+            e -> Log.w(TAG, "Failed to delete client @" + client, e)));
     }
 
     public void cancel() { disposables.clear(); }
