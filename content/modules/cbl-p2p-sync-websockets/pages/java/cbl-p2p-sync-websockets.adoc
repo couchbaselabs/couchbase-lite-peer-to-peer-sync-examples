@@ -1,4 +1,4 @@
-= Getting Started with Peer-to-Peer Sync on Java
+= Getting Started with Peer-to-Peer Sync on Java/Android
 :source-highlighter: coderay
 :coderay-css: style
 :imagesdir: ../../assets
@@ -48,11 +48,11 @@ This tutorial assumes familiarity with building swift apps with Xcode and with C
 * If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the link:https://docs.couchbase.com/couchbase-lite/2.7/swift.html[Getting Started] guides
 
 
-* iOS (Xcode 11.4+)
-** Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
+* Android Studio 4.1+
+** Download a recent version from the link:https://developer.android.com/studio/[Android Developer]
 
-* Wi-Fi network that the peers can communicate over
-** You could run your peers in multiple simulators. But if you were running the app on real devices, then you will need to ensure that the devices are on the same WiFi network
+* A Wi-Fi network over which peers can communicate
+** You can also run your peers in multiple simulators. Unless you use real devices connected to a single local-area, the device discovery feature may not work
 
 == App Overview
 This is a simple inventory app that can be used as a link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#passive-peer[passive] or link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/refer-glossary.html#active-peer[active peer].
@@ -61,7 +61,7 @@ The app uses a local database that is pre-populated with data. There is no Sync 
 
 When used as a passive peer :-
 
-* Users log in and start websockets listener for the couchbase lite database. A service corresponding to the listener is advertised over Bonjour.
+* Users log in and start websockets listeners for a couchbase lite database. Listeners are advertised on the local network using Android's Nearby.
 * View the status of connected clients
 * Directly sync data with connected clients
 

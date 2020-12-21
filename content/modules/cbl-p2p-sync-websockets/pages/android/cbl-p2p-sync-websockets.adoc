@@ -29,14 +29,13 @@ Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https
 
 This tutorial will demonstrate how to -
 
-* Use link:https://developer.apple.com/documentation/foundation/netservice[NetService] for peer discovery (i.e.to advertise and discover services/devices )
 * Configure a websockets listener to listen to incoming requests. We will walk through various TLS modes and client authentication modes.
 * Start a bi-directional replication from active peer.
 * Sync data between connected peers
 
 Throughout this tutorial, the terms "passive peer" and "server" will be used interchangeably to refer to the peer on which the websockets listener is started. The "active peer" and "client" will be used interchangeably to refer to the peer on which the replicator is initialized.
 
-We will be using a simple inventory app in swift as an example to demonstrate the peer-to-peer functionality.
+We will be using a simple inventory app written in Java, as an example to demonstrate the peer-to-peer functionality.
 ====
 You can learn more about Couchbase Lite https://docs.couchbase.com/couchbase-lite/2.7/introduction.html[here]
 ====

@@ -1,0 +1,17 @@
+# OSX
+.DS_Store
+
+# Gradle
+/local.properties
+.gradle
+
+# NDK
+.externalNativeBuild
+.cxx
+local.properties
+
+# Studio
+*.iml
+/.idea
+/build
+/captures

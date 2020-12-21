@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">ListSync</string>
+
+    <!-- Login page -->
+    <string name="inventory_tracker">Content Tracker</string>
+    <string name="username">User Name</string>
+    <string name="password">Password</string>
+    <string name="login">Sign In</string>
+
+    <!-- In Season page -->
+    <string name="in_season">What\'s in Season?</string>
+    <string name="logout">Logout</string>
+
+    <!-- P2P page -->
+    <string name="p2p">p2p</string>
+    <string name="title_passive">Passive</string>
+    <string name="title_nearby">Nearby</string>
+    <string name="title_active">Active</string>
+    <string name="start_server">Start\nListener</string>
+    <string name="stop_server">Stop\nListener</string>
+    <string name="start_client">Start\nReplicator</string>
+    <string name="stop_client">Stop\nReplicator</string>
+    <string name="label_nearby_devices">Nearby Devices:</string>
+    <string name="label_nearby_listeners">Listeners:</string>
+    <string name="host">Host:</string>
+    <string name="port">Port:</string>
+    <string name="database">Database:</string>
+
+    <string name="bad_port">You must specify a port 0 &lt; port &lt;= 65535</string>
+    <string name="bad_scheme">URL scheme "%1$s" is not valid. Valid schemes are "ws" and "wss"</string>
+    <string name="bad_suffix">Extraneous URI content ignored: "%1$s"</string>
+    <string name="bad_path">Unrecognized database path: "%1$s"</string>
+    <string name="perms_request">
+        In order to discover nearby devices, you must allow the use Bluetooth, Wifi and Coarse Location
+    </string>
+    <string name="nearby_not_available">Device discovery disabled</string>
+    <string name="client_state">Client state</string>
+
+    <string name="state_connecting">Connecting</string>
+    <string name="state_busy">Busy</string>
+    <string name="state_idle">Idle</string>
+    <string name="state_offline">Offline</string>
+    <string name="state_stopped">Stopped</string>
+    <string name="stop">Stop</string>
+    <string name="delete">Delete</string>
+    <string name="start">Start</string>
+
+</resources>
