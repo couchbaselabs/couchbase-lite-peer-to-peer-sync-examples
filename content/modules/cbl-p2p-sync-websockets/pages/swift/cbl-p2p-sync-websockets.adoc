@@ -23,12 +23,11 @@ This tutorial uses a simple inventory tracker app to demonstrate the peer-to-pee
 
 == Introduction
 
-Couchbase Lite 2.8 release supports out-of-the-box support for secure link:https://docs.couchbase.com/couchbase-lite/2.8/swift/learn/swift-landing-p2psync.html[Peer-to-Peer Sync], over websockets, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point (i.e. you do not need a Sync Gateway or Couchbase Server to get peer-to-peer database sync going)
-
+Couchbase Lite 2.8 release supports out-of-the-box support for secure https://docs.couchbase.com/couchbase-lite/current/swift/learn/swift-landing-p2psync.html[Peer-to-Peer Sync], over websockets, between Couchbase Lite enabled clients in IP-based networks without the need for a centralized control point (i.e. you do not need a Sync Gateway or Couchbase Server to get peer-to-peer database sync going).
 
 This tutorial will demonstrate how to -
 
-* Use link:https://developer.apple.com/documentation/foundation/netservice[NetService] for peer discovery (i.e.to advertise and discover services/devices )
+* Use https://developer.apple.com/documentation/foundation/netservice[NetService] for peer discovery (i.e.to advertise and discover services/devices )
 * Configure a websockets listener to listen to incoming requests. We will walk through various TLS modes and client authentication modes.
 * Start a bi-directional replication from active peer.
 * Sync data between connected peers
@@ -43,16 +42,16 @@ You can learn more about Couchbase Lite https://docs.couchbase.com/couchbase-lit
 == Prerequisites
 This tutorial assumes familiarity with building swift apps with Xcode and with Couchbase Lite.
 
-* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the link:https://docs.couchbase.com/couchbase-lite/2.8/swift/start/swift-gs-install.html[Getting Started] guides
+* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the https://docs.couchbase.com/couchbase-lite/current/swift/start/swift-gs-install.html[Getting Started] guides
 
 * iOS (Xcode 11.4+)
-** Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
+** Download latest version from the https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
 
 * Wi-Fi network that the peers can communicate over
 ** You could run your peers in multiple simulators. But if you were running the app on real devices, then you will need to ensure that the devices are on the same WiFi network
 
 == App Overview
-This is a simple inventory app that can be used as a link:https://docs.couchbase.com/couchbase-lite/2.8/swift/advance/swift-p2psync-websocket-using-passive.html[passive] or link:https://docs.couchbase.com/couchbase-lite/2.8/swift/advance/swift-p2psync-websocket-using-active.html[active peer].
+This is a simple inventory app that can be used as a https://docs.couchbase.com/couchbase-lite/current/swift/advance/swift-p2psync-websocket-using-passive.html[passive] or https://docs.couchbase.com/couchbase-lite/current/swift/advance/swift-p2psync-websocket-using-active.html[active peer].
 
 The app uses a local database that is pre-populated with data. There is no Sync Gateway or Couchbase Server installed.
 
@@ -110,7 +109,7 @@ image::swift-project-explorer.png[alt=xcode project explorer,width=640,height=48
 
 * `samplelist.json` : JSON data that is loaded into the local Couchbase Lite database. It includes the data for a single document. See <<Data Model>>
 * `userallowlist.json` : List of valid client users (and passwords) in the system. This list is looked up when the server tries to authenticate credentials associated with incoming connection request.
-* `listener-cert-pkey.p12` : This is link:https://en.wikipedia.org/wiki/PKCS_12[PKCS12] file archive that includes a public key cert corresponding to the listener and associated private key. The cert is a sample cert that was generated using link:https://www.openssl.org[OpenSSL] tool.
+* `listener-cert-pkey.p12` : This is https://en.wikipedia.org/wiki/PKCS_12[PKCS12] file archive that includes a public key cert corresponding to the listener and associated private key. The cert is a sample cert that was generated using https://www.openssl.org[OpenSSL] tool.
 * `listener-pinned-cert.cer` : This is the public key listener cert (the same cert that is embedded in the `listener-cert-pkey.p12` file) in DER encoded format. This cert is pinned on the client replicator and is used for validating server cert during connection setup
 
 == Data Model
@@ -220,9 +219,9 @@ include::example$code-samples.swift[tags=StartListener]
 ----
 
 === Advertising Listener Service
-In the app, we use link:https://developer.apple.com/documentation/foundation/netservice[NetService] to advertise the websockets listener service listening at the specified listener port. This aspect of the app has nothing to do with Couchbase Lite. In your production app, you can use any suitable mechanism including using a well known URL to advertise your service that active clients can be pre-configured to connect to.
+In the app, we use https://developer.apple.com/documentation/foundation/netservice[NetService] to advertise the websockets listener service listening at the specified listener port. This aspect of the app has nothing to do with Couchbase Lite. In your production app, you can use any suitable mechanism including using a well known URL to advertise your service that active clients can be pre-configured to connect to.
 
-* Open the *ServiceAdvertiser.swift* file and look for `ServiceAdvertiser` class. Here, we advertise a link:https://developer.apple.com/bonjour/[Bonjour] service with service type of _`_cblistservicesync._tcp`_
+* Open the *ServiceAdvertiser.swift* file and look for `ServiceAdvertiser` class. Here, we advertise a https://developer.apple.com/bonjour/[Bonjour] service with service type of _`_cblistservicesync._tcp`_
 
 [source,swift]
 ----
@@ -259,9 +258,9 @@ image::ios-passive-start-listener.gif[alt=server websockets listener login scree
 We will walk through the steps of using the app in active peer mode
 
 === Discovering Listeners
-In the app, we use link:https://developer.apple.com/documentation/foundation/netservice[NetService]  to browse for devices that are advertising services with name _`_cblistservicesync._tcp`_. This aspect of the app has nothing to do with Couchbase Lite. In your production app, you could launch your listener at well known URL well and pre-configure your active peer to connect to the URL.
+In the app, we use https://developer.apple.com/documentation/foundation/netservice[NetService]  to browse for devices that are advertising services with name _`_cblistservicesync._tcp`_. This aspect of the app has nothing to do with Couchbase Lite. In your production app, you could launch your listener at well known URL well and pre-configure your active peer to connect to the URL.
 
-* Open the *ServiceBrowser.swift* file and look for `ServiceBrowser` class. Here, we browse for a service with service type of _`_cblistservicesync._tcp`_ using link:https://developer.apple.com/bonjour/[Bonjour]
+* Open the *ServiceBrowser.swift* file and look for `ServiceBrowser` class. Here, we browse for a service with service type of _`_cblistservicesync._tcp`_ using https://developer.apple.com/bonjour/[Bonjour]
 
 [source,swift]
 ----
@@ -271,7 +270,7 @@ Explore the content in the `ServiceBrowser.swift`. It includes implementation of
 
 
 === Initializing and Starting Replication
-Initialilzing a replicator for peer-to-peer sync is fundamentally the same as the case if the Couchbase Lite client were to link:https://staging.couchbase.com/couchbase-lite/2.8/swift/learn/swift-replication.html#starting-a-replication[sync] with a remote Sync Gateway.
+Initialilzing a replicator for peer-to-peer sync is fundamentally the same as the case if the Couchbase Lite client were to https://staging.couchbase.com/couchbase-lite/current/swift/learn/swift-replication.html#starting-a-replication[sync] with a remote Sync Gateway.
 
 * Open the *DatabaseManager.swift* file and locate the `startP2PReplicationWithUserDatabaseToRemotePeer()` method. If you have been using Couchbase Lite to sync data with Sync Gateway, this code should seem very familiar. In this function, we initialize a bi-directional replication to the listener peer in continuous mode. We also register a Replication Listener to be notified of status to the replication status.
 
@@ -344,7 +343,7 @@ Once the connection is established between the peers, you can start syncing. Cou
 * Start the listener on one of the app instances. You could also have multiple listeners.
 * Connect the other instances of the app to the listener
 * Tap on the "List" tab
-* Edit the quanity or image on any one of the instances
+* Edit the quantity or image on any one of the instances
 * Watch it sync automatically to other connected clients
 
 image::ios-sync.gif[alt=server websockets listener login screen,width=600,height=320]
@@ -360,6 +359,6 @@ This tutorial walked you through an example of how to directly synchronize data 
 
 === Further Reading
 
-Complete documentation is available link:https://docs.couchbase.com/couchbase-lite/2.8/swift/learn/swift-landing-p2psync.html[here]
+Complete documentation is available https://docs.couchbase.com/couchbase-lite/current/swift/learn/swift-landing-p2psync.html[here]
 
 
