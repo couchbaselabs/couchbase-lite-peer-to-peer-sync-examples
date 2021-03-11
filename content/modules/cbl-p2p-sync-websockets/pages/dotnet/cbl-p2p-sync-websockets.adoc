@@ -86,7 +86,7 @@ image::xamarin-demo.gif[alt=peer to peer sync,width=640,height=480]
 +
 [source,bash]
 ----
-git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-websocket-samples/
+git clone https://github.com/couchbaselabs/couchbase-lite-peer-to-peer-sync-examples
 ----
 
 [#tryit5]
