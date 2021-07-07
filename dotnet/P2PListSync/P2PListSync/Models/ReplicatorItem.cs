@@ -98,7 +98,7 @@ namespace P2PListSync.Models
 
             Uri host = new Uri(PeerEndpointString);
             var dbUrl = new Uri(host, _db.Name);
-            var replicatorConfig = new ReplicatorConfiguration(_db, new URLEndpoint(dbUrl));
+            var replicatorConfig = new ReplicatorConfiguration(_db, new URLEndpoint(dbUrl)); // <1>
             replicatorConfig.ReplicatorType = ReplicatorType.PushAndPull;
             replicatorConfig.Continuous = true;
 
@@ -106,7 +106,7 @@ namespace P2PListSync.Models
 
                 // Explicitly allows self signed certificates. By default, only
                 // CA signed cert is allowed
-                switch (CoreApp.ListenerCertValidationMode) {
+                switch (CoreApp.ListenerCertValidationMode) { // <2>
                     case LISTENER_CERT_VALIDATION_MODE.SKIP_VALIDATION:
                         // Use acceptOnlySelfSignedServerCertificate set to true to only accept self signed certs.
                         // There is no cert validation
@@ -140,17 +140,17 @@ namespace P2PListSync.Models
 
             if (CoreApp.RequiresUserAuth) {
                 var user = CoreApp.CurrentUser;
-                replicatorConfig.Authenticator = new BasicAuthenticator(user.Username, user.Password);
+                replicatorConfig.Authenticator = new BasicAuthenticator(user.Username, user.Password); // <3>
             }
 
-            _repl = new Replicator(replicatorConfig);
+            _repl = new Replicator(replicatorConfig); // <4>
             _listenerToken = _repl.AddChangeListener(ReplicationStatusUpdate);
         }
 
         public void ExecuteStartReplicatorCommand()
         {
             if (!IsStarted) {
-                _repl.Start();
+                _repl.Start(); // <5>
                 //end::StartReplication[]
                 IsStarted = true;
             } else {

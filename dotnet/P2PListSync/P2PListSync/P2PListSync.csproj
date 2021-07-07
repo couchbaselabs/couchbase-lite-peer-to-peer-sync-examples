@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />
-    <PackageReference Include="Couchbase.Lite.Enterprise" Version="2.8.0" />
+    <PackageReference Include="Couchbase.Lite.Enterprise" Version="2.8.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>

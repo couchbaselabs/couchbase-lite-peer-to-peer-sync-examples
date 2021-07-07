@@ -101,7 +101,7 @@ namespace P2PListSync.ViewModels
                     Debug.WriteLine($"Fail starting listener : {ex}");
                     return;
                 }
-                
+
                 IsListening = true;
                 Broadcast();
                 ListenerStatus = $"Listening on {_urlEndpointListener.Urls[0]}";
@@ -118,11 +118,11 @@ namespace P2PListSync.ViewModels
         internal void CreateListener()
         {
             //tag::InitListener[]
-            var listenerConfig = new URLEndpointListenerConfiguration(_db);
+            var listenerConfig = new URLEndpointListenerConfiguration(_db); // <1>
             listenerConfig.NetworkInterface = GetLocalIPv4(NetworkInterfaceType.Wireless80211) ?? GetLocalIPv4(NetworkInterfaceType.Ethernet);
             listenerConfig.Port = 0; // Dynamic port
 
-            switch (CoreApp.ListenerTLSMode) {
+            switch (CoreApp.ListenerTLSMode) { // <2>
                 //tag::TLSDisabled[]
                 case LISTENER_TLS_MODE.DISABLED:
                     listenerConfig.DisableTLS = true;
@@ -149,9 +149,9 @@ namespace P2PListSync.ViewModels
                     break;
             }
 
-            listenerConfig.EnableDeltaSync = true;
+            listenerConfig.EnableDeltaSync = true; // <3>
 
-            if (CoreApp.RequiresUserAuth) {
+            if (CoreApp.RequiresUserAuth) { // <4>
                 listenerConfig.Authenticator = new ListenerPasswordAuthenticator((sender, username, password) =>
                 {
                     // ** This is only a sample app to use an existing users credential shared cross platforms.
@@ -228,7 +228,7 @@ namespace P2PListSync.ViewModels
         #endregion
 
         #region Broadcast
-        //tag::StartAdvertiser
+        //tag::StartAdvertiser[]
         public void Broadcast()
         {
             if (!IsListening)
@@ -243,21 +243,21 @@ namespace P2PListSync.ViewModels
                 socket.Close();
             }
         }
-        //end::StartAdvertiser
+        //end::StartAdvertiser[]
         #endregion
 
         private string GetLocalIPv4(NetworkInterfaceType type)
-        {  
+        {
             string output = null;
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces()) 
-            {  
-                if (item.NetworkInterfaceType == type && item.OperationalStatus == OperationalStatus.Up) {   
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == type && item.OperationalStatus == OperationalStatus.Up) {
                     IPInterfaceProperties adapterProperties = item.GetIPProperties();
-                    if (adapterProperties.GatewayAddresses.FirstOrDefault() != null) {   
-                        foreach (UnicastIPAddressInformation ip in adapterProperties.UnicastAddresses) {   
+                    if (adapterProperties.GatewayAddresses.FirstOrDefault() != null) {
+                        foreach (UnicastIPAddressInformation ip in adapterProperties.UnicastAddresses) {
                             if (ip.Address.AddressFamily == AddressFamily.InterNetwork) {
                                 output = ip.Address.ToString();
-                                break;  
+                                break;
                             }
                         }
                     }
