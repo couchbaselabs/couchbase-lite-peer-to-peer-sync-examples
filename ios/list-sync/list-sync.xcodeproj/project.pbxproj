@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -33,11 +33,11 @@
 		5F44DEF32460B70300B251F7 /* PresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEF22460B70300B251F7 /* PresenterProtocol.swift */; };
 		5F44DEF52460B85800B251F7 /* CustomListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEF42460B85800B251F7 /* CustomListTableViewCell.swift */; };
 		5F44DEF72460B89500B251F7 /* CustomListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F44DEF62460B89500B251F7 /* CustomListTableViewCell.xib */; };
+		5F7108742798821A0053BAE1 /* CouchbaseLiteSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7108712798820B0053BAE1 /* CouchbaseLiteSwift.xcframework */; };
+		5F7108752798821A0053BAE1 /* CouchbaseLiteSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7108712798820B0053BAE1 /* CouchbaseLiteSwift.xcframework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5F7DB712249AC7C30018229F /* listener-cert-pkey.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 5F7DB710249AC7C30018229F /* listener-cert-pkey.p12 */; };
 		5F7DB713249AC7C30018229F /* listener-pinned-cert.cer in Resources */ = {isa = PBXBuildFile; fileRef = 5F7DB711249AC7C30018229F /* listener-pinned-cert.cer */; };
 		5F8273A72504355000D4C514 /* userallowlist.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F8273A62504355000D4C514 /* userallowlist.json */; };
-		5F9E7781249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */; };
-		5F9E7782249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,7 +57,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5F9E7782249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Embed Frameworks */,
+				5F7108752798821A0053BAE1 /* CouchbaseLiteSwift.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,10 +95,10 @@
 		5F44DEF22460B70300B251F7 /* PresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterProtocol.swift; sourceTree = "<group>"; };
 		5F44DEF42460B85800B251F7 /* CustomListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomListTableViewCell.swift; sourceTree = "<group>"; };
 		5F44DEF62460B89500B251F7 /* CustomListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomListTableViewCell.xib; sourceTree = "<group>"; };
+		5F7108712798820B0053BAE1 /* CouchbaseLiteSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CouchbaseLiteSwift.xcframework; sourceTree = "<group>"; };
 		5F7DB710249AC7C30018229F /* listener-cert-pkey.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "listener-cert-pkey.p12"; sourceTree = "<group>"; };
 		5F7DB711249AC7C30018229F /* listener-pinned-cert.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "listener-pinned-cert.cer"; sourceTree = "<group>"; };
 		5F8273A62504355000D4C514 /* userallowlist.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = userallowlist.json; sourceTree = "<group>"; };
-		5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = iOS/CouchbaseLiteSwift.framework; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F9E7781249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Frameworks */,
+				5F7108742798821A0053BAE1 /* CouchbaseLiteSwift.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +123,7 @@
 		5F44DE9A245C62E500B251F7 = {
 			isa = PBXGroup;
 			children = (
+				5F7108712798820B0053BAE1 /* CouchbaseLiteSwift.xcframework */,
 				5F44DEA5245C62E500B251F7 /* list-sync */,
 				5F44DEBE245C62E600B251F7 /* list-syncTests */,
 				5F44DEA4245C62E500B251F7 /* Products */,
@@ -141,7 +142,6 @@
 		5F44DEA5245C62E500B251F7 /* list-sync */ = {
 			isa = PBXGroup;
 			children = (
-				5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */,
 				5F7DB7052499CE5F0018229F /* resources */,
 				5F44DEA6245C62E500B251F7 /* AppDelegate.swift */,
 				5F44DEB1245C62E600B251F7 /* Assets.xcassets */,
