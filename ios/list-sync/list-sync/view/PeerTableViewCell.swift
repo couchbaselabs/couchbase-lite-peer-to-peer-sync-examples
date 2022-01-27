@@ -14,6 +14,7 @@ enum PeerConnectionStatus {
     case Disconnected
     case Busy
     case Error
+    case Unknown
 }
 class PeerTableViewCell: UITableViewCell {
     
@@ -74,6 +75,9 @@ class PeerTableViewCell: UITableViewCell {
         case .Busy:
             self.statusLabel.text = "Busy".uppercased()
             self.statusLabel.textColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1)
+        case .Unknown:
+                self.statusLabel.text = "Unknown".uppercased()
+                self.statusLabel.textColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         }
         self.layoutIfNeeded()
     }

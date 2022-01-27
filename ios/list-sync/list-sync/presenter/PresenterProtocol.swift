@@ -11,14 +11,14 @@ import UIKit
 
 // MVP pattern
 // The View COntroller or view that handles presentation of data must implement this protocol
-public protocol PresentingViewProtocol: class {
+public protocol PresentingViewProtocol: AnyObject {
     func dataStartedLoading()
     func dataFinishedLoading()
     func showAlertWithTitle(_ title:String?, message:String)
 }
 
 // All Presenters must implement this protocol
-public protocol PresenterProtocol: class {
+public protocol PresenterProtocol: AnyObject {
     func attachPresentingView(_ view:PresentingViewProtocol)
     func detachPresentingView(_ view:PresentingViewProtocol)
 }
