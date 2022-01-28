@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4990B774279960490011D027 /* CouchbaseLiteSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4990B773279960490011D027 /* CouchbaseLiteSwift.xcframework */; };
+		4990B775279960490011D027 /* CouchbaseLiteSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4990B773279960490011D027 /* CouchbaseLiteSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5F312B492465B6F8002497F4 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F312B482465B6F8002497F4 /* SpinnerViewController.swift */; };
 		5F385C1724895A53000CE14D /* samplelist.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F385C1624895A53000CE14D /* samplelist.json */; };
 		5F385C1924897574000CE14D /* SampleFileLoaderUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F385C1824897574000CE14D /* SampleFileLoaderUtils.swift */; };
@@ -65,6 +67,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4990B773279960490011D027 /* CouchbaseLiteSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CouchbaseLiteSwift.xcframework; sourceTree = "<group>"; };
 		5F312B482465B6F8002497F4 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		5F385C1624895A53000CE14D /* samplelist.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = samplelist.json; sourceTree = "<group>"; };
 		5F385C1824897574000CE14D /* SampleFileLoaderUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleFileLoaderUtils.swift; sourceTree = "<group>"; };
@@ -120,6 +123,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4990B772279960490011D027 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4990B773279960490011D027 /* CouchbaseLiteSwift.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5F44DE9A245C62E500B251F7 = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +138,7 @@
 				5F44DEA5245C62E500B251F7 /* list-sync */,
 				5F44DEBE245C62E600B251F7 /* list-syncTests */,
 				5F44DEA4245C62E500B251F7 /* Products */,
+				4990B772279960490011D027 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -286,7 +298,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
-				LastUpgradeCheck = 1140;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Couchbase Inc.";
 				TargetAttributes = {
 					5F44DEA2245C62E500B251F7 = {
@@ -434,6 +446,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -494,6 +507,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -534,7 +548,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/list-sync/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -558,7 +572,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/list-sync/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

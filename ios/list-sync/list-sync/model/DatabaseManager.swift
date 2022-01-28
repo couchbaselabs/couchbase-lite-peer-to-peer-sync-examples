@@ -243,7 +243,7 @@ extension DatabaseManager {
     fileprivate func deregisterForUserDatabaseChanges() {
         // Add database change listener
         print(#function)
-        guard let db = _userDb else {
+        guard _userDb != nil else {
             return
         }
         if let userDbChangeListenerToken = self._userDbChangeListenerToken {
@@ -497,6 +497,9 @@ extension DatabaseManager {
                        print("Completed syncing documents")
                         handler(PeerConnectionStatus.Error)
             
+                       @unknown default:
+                           print("Failed syncing documents")
+                           handler(PeerConnectionStatus.Unknown)
                    }
                    
                    if s.progress.completed == s.progress.total {
