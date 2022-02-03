@@ -119,17 +119,22 @@ namespace P2PListSync.ViewModels
         private async Task<bool> ExecuteSaveDocumentsCommand()
         {
             if (DocsChangeIndexes.Count > 0) {
-                using (var doc = _db.GetDocument(CoreApp.DocId))
-                using (var mdoc = doc.ToMutable())
-                using (var listItems = mdoc.GetArray(CoreApp.ArrKey)) {
-                    foreach (var index in DocsChangeIndexes) {
+                //using (var doc = _db.GetDocument(CoreApp.DocId))
+                //using (var mdoc = doc.ToMutable())
+                //using (var listItems = mdoc.GetArray(CoreApp.ArrKey))
+                //{
+                var doc = _db.GetDocument(CoreApp.DocId);
+                var mdoc = doc.ToMutable();
+                var listItems = mdoc.GetArray(CoreApp.ArrKey);
+
+                foreach (var index in DocsChangeIndexes) {
                         var item = Items[index];
                         var dictObj = listItems.GetDictionary(item.Index);
                         dictObj.SetString("key", item.Name);
                         dictObj.SetInt("value", item.Quantity);
                         var blob = new Blob("image/png", item.ImageByteArray);
                         dictObj.SetBlob("image", blob);
-                    }
+                    //}
 
                     _db.Save(mdoc);
                 }
@@ -158,10 +163,14 @@ namespace P2PListSync.ViewModels
 
         public async Task<bool> AddItemAsync(SeasonalItem item)
         {
-            using (var doc = _db.GetDocument(CoreApp.DocId))
-            using (var mdoc = doc.ToMutable())
-            using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
-                var dictObj = new MutableDictionaryObject();
+            //using (var doc = _db.GetDocument(CoreApp.DocId))
+            //using (var mdoc = doc.ToMutable())
+            //using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
+            var doc = _db.GetDocument(CoreApp.DocId);
+            var mdoc = doc.ToMutable();
+            var listItems = mdoc.GetArray(CoreApp.ArrKey);
+
+            var dictObj = new MutableDictionaryObject();
                 dictObj.SetString("key", item.Name);
                 dictObj.SetInt("value", item.Quantity);
                 var blob = new Blob("image/png", item.ImageByteArray);
@@ -171,36 +180,44 @@ namespace P2PListSync.ViewModels
                 _db.Save(mdoc);
 
                 _items.Add(_items.Count + 1, item);
-            }
+            //}
 
             return await Task.FromResult(true);
         }
 
         public async Task<bool> UpdateItemAsync(SeasonalItem item)
         {
-            using (var doc = _db.GetDocument(CoreApp.DocId))
-            using (var mdoc = doc.ToMutable())
-            using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
-                var dictObj = listItems.GetDictionary(item.Index);
+            //using (var doc = _db.GetDocument(CoreApp.DocId))
+            //using (var mdoc = doc.ToMutable())
+            //using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
+            var doc = _db.GetDocument(CoreApp.DocId);
+            var mdoc = doc.ToMutable();
+            var listItems = mdoc.GetArray(CoreApp.ArrKey);
+
+            var dictObj = listItems.GetDictionary(item.Index);
                 dictObj.SetString("key", item.Name);
                 dictObj.SetInt("value", item.Quantity);
                 var blob = new Blob("image/png", item.ImageByteArray);
                 dictObj.SetBlob("image", blob);
 
                 _db.Save(mdoc);
-            }
+            //}
 
             return await Task.FromResult(true);
         }
 
         public async Task<bool> DeleteItemAsync(int index)
         {
-            using (var doc = _db.GetDocument(CoreApp.DocId))
-            using (var mdoc = doc.ToMutable())
-            using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
-                listItems.RemoveAt(index);
+            //using (var doc = _db.GetDocument(CoreApp.DocId))
+            //using (var mdoc = doc.ToMutable())
+            //using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
+            var doc = _db.GetDocument(CoreApp.DocId);
+            var mdoc = doc.ToMutable();
+            var listItems = mdoc.GetArray(CoreApp.ArrKey);
+
+            listItems.RemoveAt(index);
                 _db.Save(mdoc);
-            }
+            //}
 
             _items.Remove(index);
 
