@@ -37,7 +37,7 @@ You do not need a Sync Gateway or Couchbase Server to get peer-to-peer database 
 We will be using a simple inventory app as an example to demonstrate the peer-to-peer functionality, including:
 
 * How to use a UDP type socket to listen on a specified port for peer discovery.
-Broadcast it's own IP address over UDP type socket. +
+Broadcast it's own IP address over UDP type socket. 
 
 * How to configure a websockets listener to listen to incoming requests.
 We will walk through various TLS modes and client authentication modes.
@@ -163,7 +163,7 @@ The cert is a sample cert that was generated using
 https://www.openssl.org[OpenSSL]
 tool.
 
-* `listener-pinned-cert.cer` :+
+* `listener-pinned-cert.cer` : +
 This is the public key listener cert (the same cert that is embedded in the `listener-cert-pkey.p12` file) in DER encoded format.
 This cert is pinned on the client replicator and is used for validating server cert during connection setup.
 
@@ -251,8 +251,8 @@ include::example$code-samples.cs[tags=InitListener, indent=0]
 
 <1> Initialize the `URLEndpointListenerConfiguration` for the specified database.
 There is a listener for a given database.
-You can specify a port to be associated with the listener.
-In our app, we let Couchbase Lite choose the port.
+You can specify a port to be associated with the listener, or let Couchbase Lite choose the port.
+We have hard-coded 35262.
 
 <2> This is where we configure the TLS mode.
 In the app, we have a flag named `ListenerTLSMode` that allows the app to switch between the various modes.
@@ -595,7 +595,7 @@ IMPORTANT: Sync will not work between two emulators. At least one app must be ru
 
 When starting a listener on Android emulator and trying to connect it from a device or iOS simulator on localhost, the following steps must be followed:
 
-. Hard-code a port so you know what EP to use
+. Hard-code a port so you know what endpoint to use
 . Start the App on your device or iOS simulator
 . Start an Android emulator from Visual Studio's device manager
 . Use ADB bridge to set port forwarding using hard-coded port number
