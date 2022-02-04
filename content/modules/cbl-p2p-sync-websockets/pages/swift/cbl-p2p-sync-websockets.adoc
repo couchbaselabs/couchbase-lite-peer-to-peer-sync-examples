@@ -117,7 +117,7 @@ Run the script to pull down the framework
 [source,bash]
 ----
 cd /path/to/cloned/repo/couchbase-lite-peer-to-peer-sync-examples/ios/list-sync
-sh install_11.sh
+sh install_12.sh
 ----
 
 
