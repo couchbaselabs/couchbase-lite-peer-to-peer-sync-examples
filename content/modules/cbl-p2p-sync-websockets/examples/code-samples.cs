@@ -1,5 +1,85 @@
 The complete C#/.Net code samples from which these samples are extracted can be found in the /dotnet directory at the top-level of this repo.
-Extracted Date: Thu Nov 19 16:54:24 GMT 2020
+Extracted Date: Fri Feb  4 09:24:13 GMT 2022
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/.NETStandard,Version=v2.0.AssemblyAttributes.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/P2PListSync.AssemblyInfo.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/App.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/Views/ListenerPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/Views/MenuPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/Views/LoginPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/Views/SeasonalItemsPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/Views/ListenersBrowserPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/Views/MainPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.0/Views/SettingsPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/.NETStandard,Version=v2.1.AssemblyAttributes.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/P2PListSync.AssemblyInfo.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/App.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/Views/ListenerPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/Views/MenuPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/Views/LoginPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/Views/SeasonalItemsPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/Views/ListenersBrowserPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/Views/MainPage.xaml.g.cs
+//
+
+//
+// Tags from P2PListSync/obj/Debug/netstandard2.1/Views/SettingsPage.xaml.g.cs
+//
 
 //
 // Tags from P2PListSync/ViewModels/ListenerViewModel.cs
@@ -14,7 +94,8 @@ Extracted Date: Thu Nov 19 16:54:24 GMT 2020
             //tag::InitListener[]
             var listenerConfig = new URLEndpointListenerConfiguration(_db); // <1>
             listenerConfig.NetworkInterface = GetLocalIPv4(NetworkInterfaceType.Wireless80211) ?? GetLocalIPv4(NetworkInterfaceType.Ethernet);
-            listenerConfig.Port = 0; // Dynamic port
+            //listenerConfig.Port = 0; // Dynamic port
+            listenerConfig.Port = 35262; // Fixed port
 
             switch (CoreApp.ListenerTLSMode) { // <2>
                 //tag::TLSDisabled[]
