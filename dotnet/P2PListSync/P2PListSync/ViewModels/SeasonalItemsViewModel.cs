@@ -163,9 +163,6 @@ namespace P2PListSync.ViewModels
 
         public async Task<bool> AddItemAsync(SeasonalItem item)
         {
-            //using (var doc = _db.GetDocument(CoreApp.DocId))
-            //using (var mdoc = doc.ToMutable())
-            //using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
             var doc = _db.GetDocument(CoreApp.DocId);
             var mdoc = doc.ToMutable();
             var listItems = mdoc.GetArray(CoreApp.ArrKey);
@@ -180,16 +177,11 @@ namespace P2PListSync.ViewModels
                 _db.Save(mdoc);
 
                 _items.Add(_items.Count + 1, item);
-            //}
-
             return await Task.FromResult(true);
         }
 
         public async Task<bool> UpdateItemAsync(SeasonalItem item)
         {
-            //using (var doc = _db.GetDocument(CoreApp.DocId))
-            //using (var mdoc = doc.ToMutable())
-            //using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
             var doc = _db.GetDocument(CoreApp.DocId);
             var mdoc = doc.ToMutable();
             var listItems = mdoc.GetArray(CoreApp.ArrKey);
@@ -201,23 +193,17 @@ namespace P2PListSync.ViewModels
                 dictObj.SetBlob("image", blob);
 
                 _db.Save(mdoc);
-            //}
-
             return await Task.FromResult(true);
         }
 
         public async Task<bool> DeleteItemAsync(int index)
         {
-            //using (var doc = _db.GetDocument(CoreApp.DocId))
-            //using (var mdoc = doc.ToMutable())
-            //using (MutableArrayObject listItems = mdoc.GetArray(CoreApp.ArrKey)) {
             var doc = _db.GetDocument(CoreApp.DocId);
             var mdoc = doc.ToMutable();
             var listItems = mdoc.GetArray(CoreApp.ArrKey);
 
             listItems.RemoveAt(index);
                 _db.Save(mdoc);
-            //}
 
             _items.Remove(index);
 
