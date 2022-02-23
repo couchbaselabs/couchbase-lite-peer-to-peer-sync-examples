@@ -30,8 +30,8 @@ https://docs.couchbase.com/couchbase-lite/current/swift/learn/swift-landing-p2ps
 This tutorial assumes familiarity with building swift apps with Xcode and with Couchbase Lite.
 
 * If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you follow the
-https://docs.couchbase.com/couchbase-lite/2./swift.html[Getting Started]
-guides
+https://docs.couchbase.com/couchbase-lite/current/swift/gs-install.html[Getting Started]
+guide
 
 
 * iOS (Xcode 12.5+)
