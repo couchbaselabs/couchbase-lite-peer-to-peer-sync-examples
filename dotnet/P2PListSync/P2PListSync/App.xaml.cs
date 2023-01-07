@@ -12,6 +12,7 @@ using Xamarin.Forms.Xaml;
 using P2PListSync.Views;
 using Couchbase.Lite;
 using Couchbase.Lite.Logging;
+using P2PListSync.Services;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace P2PListSync
@@ -30,6 +31,9 @@ namespace P2PListSync
             }
 
             CoreApp.LoadAndInitDB();
+
+            DependencyService.Register<SeasonalDataStore>();
+
             CoreApp.RequiresUserAuth = true;
 
             if (CoreApp.RequiresUserAuth) {

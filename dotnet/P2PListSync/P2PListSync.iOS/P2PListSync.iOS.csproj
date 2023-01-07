@@ -136,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Couchbase.Lite.Enterprise.Support.iOS">
-      <Version>3.0.0</Version>
+      <Version>3.1.0-b0149</Version>
     </PackageReference>
     <PackageReference Include="SimpleInjector">
       <Version>5.3.3</Version>

@@ -17,24 +17,22 @@ using Xamarin.Forms.Xaml;
 namespace P2PListSync.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainPage : MasterDetailPage
+    public partial class MainPage : FlyoutPage
     {
         Dictionary<int, NavigationPage> MenuPages = new Dictionary<int, NavigationPage>();
         public MainPage()
         {
             InitializeComponent();
 
-            MasterBehavior = MasterBehavior.Popover;
+            FlyoutLayoutBehavior = FlyoutLayoutBehavior.Popover;
 
             MenuPages.Add((int)MenuItemType.SeasonalItemsList, (NavigationPage)Detail);
         }
 
         public async Task NavigateFromMenu(int id)
         {
-            if (!MenuPages.ContainsKey(id))
-            {
-                switch (id)
-                {
+            if (!MenuPages.ContainsKey(id)) {
+                switch (id) {
                     case (int)MenuItemType.SeasonalItemsList:
                         MenuPages.Add(id, new NavigationPage(new SeasonalItemsPage()));
                         break;
@@ -53,10 +51,9 @@ namespace P2PListSync.Views
                 }
             }
 
-            var newPage = MenuPages[id];
+            NavigationPage newPage = MenuPages[id];
 
-            if (newPage != null && Detail != newPage)
-            {
+            if (newPage != null && Detail != newPage) {
                 Detail = newPage;
 
                 if (Device.RuntimePlatform == Device.Android)

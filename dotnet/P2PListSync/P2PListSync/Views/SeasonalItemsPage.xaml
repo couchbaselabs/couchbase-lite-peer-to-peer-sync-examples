@@ -2,12 +2,14 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="P2PListSync.Views.SeasonalItemsPage"
-              Title="{Binding Title}"
-             xmlns:local="clr-namespace:P2PListSync.Utils"
+             Title="{Binding Title}" 
+             xmlns:local="clr-namespace:P2PListSync.ViewModels" 
+             xmlns:util="clr-namespace:P2PListSync.Utils"  
+             xmlns:model="clr-namespace:P2PListSync.Models"  
              x:Name="BrowseItemsPage">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <local:ByteArrayToImageConverter x:Key="ImageSourceConverter" />
+            <util:ByteArrayToImageConverter x:Key="ImageSourceConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
@@ -26,21 +28,16 @@
             </ToolbarItem.Icon>
         </ToolbarItem>
     </ContentPage.ToolbarItems>
-    <ScrollView>
-        <StackLayout>
-            <ListView x:Name="ItemsListView"
+    <RefreshView Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+
+        <CollectionView x:Name="ItemsListView"
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"
-                HasUnevenRows="true"
-                RefreshCommand="{Binding LoadItemsCommand}"
-                IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                CachingStrategy="RecycleElement"
                 SelectionMode="None">
-                <ListView.ItemTemplate>
+            <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <Grid Padding="5" Margin="5">
+
+                    <Grid Padding="5" Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="80*" />
@@ -55,23 +52,22 @@
                                         <TapGestureRecognizer Tapped="OnImageTapped" />
                                     </Image.GestureRecognizers>
                                 </Image>
-                                <Entry Text="{Binding Value.Name}" 
+                        <Entry Text="{Binding Value.Name}" 
                                        TextChanged="OnNameChanged"
                                        Grid.Column="1"
                                        FontSize="Small"
                                        HorizontalOptions="Fill"
                                        VerticalOptions="FillAndExpand"/>
-                                <Entry Text="{Binding Value.Quantity}" 
+                        <Entry Text="{Binding Value.Quantity}" 
                                        TextChanged="OnQuantityChanged"
                                        Grid.Column="2"
                                        FontSize="Small"
                                        HorizontalOptions="Fill"
                                        VerticalOptions="FillAndExpand"/>
                             </Grid>
-                        </ViewCell>
+
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
-    </ScrollView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+    </RefreshView>
 </ContentPage>

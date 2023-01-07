@@ -27,7 +27,7 @@ namespace P2PListSync.Models
         #endregion
 
         #region Variables
-        private Database _db = CoreApp.DB;
+        private Collection _col = CoreApp.COLL;
         private ListenerToken _listenerToken;
         private Replicator _repl;
         private bool _disposedValue;
@@ -49,7 +49,7 @@ namespace P2PListSync.Models
 
         public string ListenerEndpointString
         {
-            get { return CoreApp.ListenerTLSMode == 0 ? $"ws://{ListenerEndpoint}/{CoreApp.DB.Name}" : $"wss://{ListenerEndpoint}/{CoreApp.DB.Name}"; }
+            get { return CoreApp.ListenerTLSMode == 0 ? $"ws://{ListenerEndpoint}/{CoreApp.DbName}" : $"wss://{ListenerEndpoint}/{CoreApp.DbName}"; }
         }
 
         private bool _isStarted = false;
@@ -97,8 +97,8 @@ namespace P2PListSync.Models
             }
 
             Uri host = new Uri(PeerEndpointString);
-            var dbUrl = new Uri(host, _db.Name);
-            var replicatorConfig = new ReplicatorConfiguration(_db, new URLEndpoint(dbUrl)); // <1>
+            Uri dbUrl = new Uri(host, _col.Name);
+            ReplicatorConfiguration replicatorConfig = new ReplicatorConfiguration(new URLEndpoint(dbUrl)); // <1>
             replicatorConfig.ReplicatorType = ReplicatorType.PushAndPull;
             replicatorConfig.Continuous = true;
 
@@ -122,7 +122,7 @@ namespace P2PListSync.Models
                         // Enable cert pinning to only allow certs that match pinned cert
 
                         try {
-                            var pinnedCert = LoadSelfSignedCertForListenerFromBundle();
+                            X509Certificate2 pinnedCert = LoadSelfSignedCertForListenerFromBundle();
                             replicatorConfig.PinnedServerCertificate = pinnedCert;
                         } catch (Exception ex) {
                             Debug.WriteLine($"Failed to load server cert to pin. Will proceed without pinning. {ex}");
@@ -139,7 +139,7 @@ namespace P2PListSync.Models
             }
 
             if (CoreApp.RequiresUserAuth) {
-                var user = CoreApp.CurrentUser;
+                User user = CoreApp.CurrentUser;
                 replicatorConfig.Authenticator = new BasicAuthenticator(user.Username, user.Password); // <3>
             }
 
@@ -179,8 +179,8 @@ namespace P2PListSync.Models
 
         private X509Certificate2 LoadSelfSignedCertForListenerFromBundle()
         {
-            using (var cert = ResourceLoader.GetEmbeddedResourceStream(typeof(ListenerViewModel).GetTypeInfo().Assembly, $"{ListenerPinnedCertFile}.cer")) {
-                using (var ms = new MemoryStream()) {
+            using (Stream cert = ResourceLoader.GetEmbeddedResourceStream(typeof(ListenerViewModel).GetTypeInfo().Assembly, $"{ListenerPinnedCertFile}.cer")) {
+                using (MemoryStream ms = new MemoryStream()) {
                     cert.CopyTo(ms);
                     return new X509Certificate2(ms.ToArray());
                 }

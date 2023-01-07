@@ -60,10 +60,14 @@ namespace P2PListSync
 
         public static bool IsDebugging { get; set; }
 
-        public static Database DB { get; private set; }
+        private static Database DB { get; set; }
+
+        public static Collection COLL { get; private set; }
+
         internal static string DBPath => Path.Combine(Path.GetTempPath().Replace("cache", "files"), "CouchbaseLite");
         
         public static List<User> AllowedUsers { get; private set; }
+
         public static User CurrentUser { get; set; }
 
         /// <summary>
@@ -85,7 +89,7 @@ namespace P2PListSync
         internal static List<User> LoadUserAllowList()
         {
             AllowedUsers = new List<User>();
-            var userAllowList = ResourceLoader.GetEmbeddedResourceString(typeof(CoreApp).GetTypeInfo().Assembly, "userallowlist.json");
+            string userAllowList = ResourceLoader.GetEmbeddedResourceString(typeof(CoreApp).GetTypeInfo().Assembly, "userallowlist.json");
             AllowedUsers = JsonConvert.DeserializeObject<List<User>>(userAllowList);
             return AllowedUsers;
         }
@@ -96,12 +100,13 @@ namespace P2PListSync
             //Database.Delete(DbName, DBPath); 
             //tag::OpenOrCreateDatabase[]
             if (!Database.Exists(DbName, DBPath)) {
-                using (var dbZip = new ZipArchive(ResourceLoader.GetEmbeddedResourceStream(typeof(CoreApp).GetTypeInfo().Assembly, $"{DbName}.cblite2.zip"))) {
+                using (ZipArchive dbZip = new ZipArchive(ResourceLoader.GetEmbeddedResourceStream(typeof(CoreApp).GetTypeInfo().Assembly, $"{DbName}.cblite2.zip"))) {
                     dbZip.ExtractToDirectory(DBPath);
                 }
             }
 
             DB = new Database(DbName, new DatabaseConfiguration() { Directory = DBPath });
+            COLL = DB.GetDefaultCollection();
             //end::OpenOrCreateDatabase[]
         }
         #endregion

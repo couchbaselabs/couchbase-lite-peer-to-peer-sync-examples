@@ -7,15 +7,20 @@
 //  Copyright © 2020 Couchbase Inc. All rights reserved.
 //
 
+using P2PListSync.Models;
+using P2PListSync.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Xamarin.Forms;
 
 namespace P2PListSync.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        public IDataStore<SeasonalItem> DataStore => DependencyService.Get<IDataStore<SeasonalItem>>();
+
         bool isBusy = false;
         public bool IsBusy
         {

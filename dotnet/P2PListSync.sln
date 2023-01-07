@@ -1,14 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1267
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P2PListSync.iOS", "P2PListSync\P2PListSync.iOS\P2PListSync.iOS.csproj", "{F7E8526B-5C0B-4246-8557-D4F5225A252C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P2PListSync", "P2PListSync\p2pListSync\P2PListSync.csproj", "{8FDF3EFF-2DA5-4558-B1CB-0F7ECA7F4B59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P2PListSync.Android", "P2PListSync\P2PListSync.Android\P2PListSync.Android.csproj", "{DE1643F6-81DC-401A-8E86-8C8678003CCD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P2PListSync.UWP", "p2pListSync\p2pListSync.UWP\P2PListSync.UWP.csproj", "{03E9BAF5-8965-426C-9283-C09B85D7E0F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5AB2CD18-04E5-4F04-BEF2-9959FEE86653}"
 	ProjectSection(SolutionItems) = preProject
@@ -38,6 +36,7 @@ Global
 		{F7E8526B-5C0B-4246-8557-D4F5225A252C}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
 		{F7E8526B-5C0B-4246-8557-D4F5225A252C}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{F7E8526B-5C0B-4246-8557-D4F5225A252C}.Debug|x64.ActiveCfg = Debug|iPhone
+		{F7E8526B-5C0B-4246-8557-D4F5225A252C}.Debug|x64.Build.0 = Debug|iPhone
 		{F7E8526B-5C0B-4246-8557-D4F5225A252C}.Debug|x86.ActiveCfg = Debug|iPhone
 		{F7E8526B-5C0B-4246-8557-D4F5225A252C}.Release|Any CPU.ActiveCfg = Release|iPhone
 		{F7E8526B-5C0B-4246-8557-D4F5225A252C}.Release|ARM.ActiveCfg = Release|iPhone
@@ -107,30 +106,6 @@ Global
 		{DE1643F6-81DC-401A-8E86-8C8678003CCD}.Release|x86.ActiveCfg = Release|Any CPU
 		{DE1643F6-81DC-401A-8E86-8C8678003CCD}.Release|x86.Build.0 = Release|Any CPU
 		{DE1643F6-81DC-401A-8E86-8C8678003CCD}.Release|x86.Deploy.0 = Release|Any CPU
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|ARM.ActiveCfg = Debug|ARM
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|ARM.Build.0 = Debug|ARM
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|ARM.Deploy.0 = Debug|ARM
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|iPhone.ActiveCfg = Debug|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|iPhoneSimulator.ActiveCfg = Debug|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|x64.ActiveCfg = Debug|x64
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|x64.Build.0 = Debug|x64
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|x64.Deploy.0 = Debug|x64
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|x86.ActiveCfg = Debug|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|x86.Build.0 = Debug|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Debug|x86.Deploy.0 = Debug|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|Any CPU.ActiveCfg = Release|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|ARM.ActiveCfg = Release|ARM
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|ARM.Build.0 = Release|ARM
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|ARM.Deploy.0 = Release|ARM
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|iPhone.ActiveCfg = Release|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|iPhoneSimulator.ActiveCfg = Release|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|x64.ActiveCfg = Release|x64
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|x64.Build.0 = Release|x64
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|x64.Deploy.0 = Release|x64
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|x86.ActiveCfg = Release|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|x86.Build.0 = Release|x86
-		{03E9BAF5-8965-426C-9283-C09B85D7E0F6}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

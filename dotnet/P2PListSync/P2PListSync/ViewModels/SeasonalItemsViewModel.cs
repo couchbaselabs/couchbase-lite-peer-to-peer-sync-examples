@@ -19,16 +19,17 @@ using P2PListSync.Utils;
 using System.IO;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace P2PListSync.ViewModels
 {
     public class SeasonalItemsViewModel : BaseViewModel
     {
-        private Database _db = CoreApp.DB;
+        private Collection _col = CoreApp.COLL;
 
         public HashSet<int> DocsChangeIndexes { get; set; }
 
-        public Command LoadItemsCommand { get; set; }
+        public Command LoadItemsCommand { get; }
 
         public Command SaveDocumentsCommand { get; set; }
 
@@ -47,18 +48,18 @@ namespace P2PListSync.ViewModels
             Title = "What's in Season?";
             Items = new ObservableConcurrentDictionary<int, SeasonalItem>();
             DocsChangeIndexes = new HashSet<int>();
-            LoadItemsCommand = new Command(() => ExecuteLoadItemsCommand());
+            LoadItemsCommand = new Command(async() => await ExecuteLoadItemsCommand());
             SaveDocumentsCommand = new Command(async () => await ExecuteSaveDocumentsCommand());
 
             //tag::LoadData[]
             var q = QueryBuilder.Select(SelectResult.All())
-                .From(DataSource.Database(_db))
+                .From(DataSource.Collection(_col))
                 .Where(Meta.ID.EqualTo(Expression.String(CoreApp.DocId)))
                 .AddChangeListener((sender, args) =>
                 {
                     var allResult = args.Results.AllResults();
                     var result = allResult[0];
-                    var dict = result[CoreApp.DB.Name].Dictionary;
+                    var dict = result[CoreApp.DbName].Dictionary;
                     var arr = dict.GetArray(CoreApp.ArrKey);
 
                     if (arr.Count < Items.Count)
@@ -91,22 +92,15 @@ namespace P2PListSync.ViewModels
             //end::LoadData[]
         }
 
-        private void ExecuteLoadItemsCommand()
+        private async Task ExecuteLoadItemsCommand()
         {
-            if (IsBusy)
-                return;
-
             IsBusy = true;
 
             try {
-                using(var dict = _db.GetDocument(CoreApp.DocId)) {
-                    var arr = dict.GetArray(CoreApp.ArrKey);
-                    for(int i = 0; i< arr.Count; i++) {
-                        DictionaryObject d = arr.GetDictionary(i);
-                        _items[i].Name = d.GetString("key");
-                        _items[i].Quantity = d.GetInt("value");
-                        _items[i].ImageByteArray = d.GetBlob("image")?.Content;
-                    }
+                Items = new ObservableConcurrentDictionary<int, SeasonalItem>();
+                var items = await DataStore.GetItemsAsync(true);
+                for(var item = 0; item < items.Count(); item++) {
+                    Items.Add(item, items.ElementAt(item));
                 }
 
             } catch (Exception ex) {
@@ -116,27 +110,27 @@ namespace P2PListSync.ViewModels
             }
         }
 
+        public void OnAppearing()
+        {
+            IsBusy = true;
+        }
+
         private async Task<bool> ExecuteSaveDocumentsCommand()
         {
             if (DocsChangeIndexes.Count > 0) {
-                //using (var doc = _db.GetDocument(CoreApp.DocId))
-                //using (var mdoc = doc.ToMutable())
-                //using (var listItems = mdoc.GetArray(CoreApp.ArrKey))
-                //{
-                var doc = _db.GetDocument(CoreApp.DocId);
-                var mdoc = doc.ToMutable();
-                var listItems = mdoc.GetArray(CoreApp.ArrKey);
-
-                foreach (var index in DocsChangeIndexes) {
+                using (var doc = _col.GetDocument(CoreApp.DocId))
+                using (var mdoc = doc.ToMutable()) {
+                    var listItems = mdoc.GetArray(CoreApp.ArrKey);
+                    foreach (var index in DocsChangeIndexes) {
                         var item = Items[index];
                         var dictObj = listItems.GetDictionary(item.Index);
                         dictObj.SetString("key", item.Name);
                         dictObj.SetInt("value", item.Quantity);
                         var blob = new Blob("image/png", item.ImageByteArray);
                         dictObj.SetBlob("image", blob);
-                    //}
+                    }
 
-                    _db.Save(mdoc);
+                    _col.Save(mdoc);
                 }
 
                 DocsChangeIndexes.Clear();
@@ -163,47 +157,47 @@ namespace P2PListSync.ViewModels
 
         public async Task<bool> AddItemAsync(SeasonalItem item)
         {
-            var doc = _db.GetDocument(CoreApp.DocId);
+            var doc = _col.GetDocument(CoreApp.DocId);
             var mdoc = doc.ToMutable();
             var listItems = mdoc.GetArray(CoreApp.ArrKey);
 
             var dictObj = new MutableDictionaryObject();
-                dictObj.SetString("key", item.Name);
-                dictObj.SetInt("value", item.Quantity);
-                var blob = new Blob("image/png", item.ImageByteArray);
-                dictObj.SetBlob("image", blob);
+            dictObj.SetString("key", item.Name);
+            dictObj.SetInt("value", item.Quantity);
+            var blob = new Blob("image/png", item.ImageByteArray);
+            dictObj.SetBlob("image", blob);
 
-                listItems.AddDictionary(dictObj);
-                _db.Save(mdoc);
+            listItems.AddDictionary(dictObj);
+            _col.Save(mdoc);
 
-                _items.Add(_items.Count + 1, item);
+            _items.Add(_items.Count + 1, item);
             return await Task.FromResult(true);
         }
 
         public async Task<bool> UpdateItemAsync(SeasonalItem item)
         {
-            var doc = _db.GetDocument(CoreApp.DocId);
+            var doc = _col.GetDocument(CoreApp.DocId);
             var mdoc = doc.ToMutable();
             var listItems = mdoc.GetArray(CoreApp.ArrKey);
 
             var dictObj = listItems.GetDictionary(item.Index);
-                dictObj.SetString("key", item.Name);
-                dictObj.SetInt("value", item.Quantity);
-                var blob = new Blob("image/png", item.ImageByteArray);
-                dictObj.SetBlob("image", blob);
+            dictObj.SetString("key", item.Name);
+            dictObj.SetInt("value", item.Quantity);
+            var blob = new Blob("image/png", item.ImageByteArray);
+            dictObj.SetBlob("image", blob);
 
-                _db.Save(mdoc);
+            _col.Save(mdoc);
             return await Task.FromResult(true);
         }
 
         public async Task<bool> DeleteItemAsync(int index)
         {
-            var doc = _db.GetDocument(CoreApp.DocId);
+            var doc = _col.GetDocument(CoreApp.DocId);
             var mdoc = doc.ToMutable();
             var listItems = mdoc.GetArray(CoreApp.ArrKey);
 
             listItems.RemoveAt(index);
-                _db.Save(mdoc);
+            _col.Save(mdoc);
 
             _items.Remove(index);
 

@@ -41,7 +41,7 @@ namespace P2PListSync.ViewModels
         private X509Store _store;
 
         //db
-        private Database _db = CoreApp.DB;
+        private Collection _col = CoreApp.COLL;
         #endregion
 
         #region Properties
@@ -118,7 +118,7 @@ namespace P2PListSync.ViewModels
         internal void CreateListener()
         {
             //tag::InitListener[]
-            var listenerConfig = new URLEndpointListenerConfiguration(_db); // <1>
+            URLEndpointListenerConfiguration listenerConfig = new URLEndpointListenerConfiguration(new List<Collection> { _col }); // <1>
             listenerConfig.NetworkInterface = GetLocalIPv4(NetworkInterfaceType.Wireless80211) ?? GetLocalIPv4(NetworkInterfaceType.Ethernet);
             //listenerConfig.Port = 0; // Dynamic port
             listenerConfig.Port = 35262; // Fixed port
@@ -157,7 +157,7 @@ namespace P2PListSync.ViewModels
                 {
                     // ** This is only a sample app to use an existing users credential shared cross platforms.
                     //    Developers should use SecureString password properly.
-                    var found = CoreApp.AllowedUsers.Where(u => username == u.Username && new NetworkCredential(string.Empty, password).Password == u.Password).SingleOrDefault();
+                    Models.User found = CoreApp.AllowedUsers.Where(u => username == u.Username && new NetworkCredential(string.Empty, password).Password == u.Password).SingleOrDefault();
                     return found != null;
                 });
             }
@@ -172,7 +172,7 @@ namespace P2PListSync.ViewModels
                 return null;
             }
 
-            var status = _urlEndpointListener.Status;
+            ConnectionStatus status = _urlEndpointListener.Status;
             return $"There are {status.ConnectionCount} Connectioned clients of which {status.ActiveConnectionCount} are active.";
         }
 
@@ -181,15 +181,15 @@ namespace P2PListSync.ViewModels
         {
             using (_store = new X509Store(StoreName.My)) {
                 // Check if identity exists, use the id if it is.
-                var id = TLSIdentity.GetIdentity(_store, label, null);
+                TLSIdentity id = TLSIdentity.GetIdentity(_store, label, null);
                 if (id != null) {
                     return id;
                 }
 
                 try {
                     byte[] data = null;
-                    using (var stream = ResourceLoader.GetEmbeddedResourceStream(typeof(ListenerViewModel).GetTypeInfo().Assembly, $"{ListenerCertKeyP12File}.p12")) {
-                        using (var reader = new BinaryReader(stream)) {
+                    using (Stream stream = ResourceLoader.GetEmbeddedResourceStream(typeof(ListenerViewModel).GetTypeInfo().Assembly, $"{ListenerCertKeyP12File}.p12")) {
+                        using (BinaryReader reader = new BinaryReader(stream)) {
                             data = reader.ReadBytes((int)stream.Length);
                         }
                     }
@@ -207,7 +207,7 @@ namespace P2PListSync.ViewModels
         {
             using (_store = new X509Store(StoreName.My)) {
                 // Check if identity exists, use the id if it is.
-                var id = TLSIdentity.GetIdentity(_store, label, null);
+                TLSIdentity id = TLSIdentity.GetIdentity(_store, label, null);
                 if (id != null) {
                     return id;
                 }
@@ -235,10 +235,10 @@ namespace P2PListSync.ViewModels
             if (!IsListening)
                 return;
 
-            using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp)) {
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp)) {
                 socket.EnableBroadcast = true;
-                var group = new IPEndPoint(IPAddress.Broadcast, CoreApp.UdpPort);
-                var hi = Encoding.ASCII.GetBytes($"{CoreApp.Guid}:{_urlEndpointListener.Urls[0].Host}:{_urlEndpointListener.Port}");
+                IPEndPoint group = new IPEndPoint(IPAddress.Broadcast, CoreApp.UdpPort);
+                byte[] hi = Encoding.ASCII.GetBytes($"{CoreApp.Guid}:{_urlEndpointListener.Urls[0].Host}:{_urlEndpointListener.Port}");
                 socket.SendTo(hi, group);
 
                 socket.Close();
@@ -289,13 +289,13 @@ namespace P2PListSync.ViewModels
 
         private void PrintTLSIdentity(TLSIdentity id)
         {
-            var certs = id.Certs;
+            X509Certificate2Collection certs = id.Certs;
             if(certs == null) {
                 Debug.WriteLine("No certs to print.");
                 return;
             }
 
-            foreach(var x509 in certs) {
+            foreach(X509Certificate2 x509 in certs) {
                 //Print to console information contained in the certificate.
                 Debug.WriteLine("{0}Subject: {1}{0}", Environment.NewLine, x509.Subject);
                 Debug.WriteLine("{0}Issuer: {1}{0}", Environment.NewLine, x509.Issuer);

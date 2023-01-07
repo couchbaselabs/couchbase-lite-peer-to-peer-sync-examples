@@ -42,6 +42,7 @@ namespace P2PListSync.Views
         private void OnQuantityChanged(object sender, TextChangedEventArgs e)
         {
             var value = sender as Entry;
+            if (value.BindingContext == null) return;
             var item = ((KeyValuePair<int, SeasonalItem>)value.BindingContext).Value;
 
             var oldValue = e.OldTextValue;
@@ -57,6 +58,7 @@ namespace P2PListSync.Views
         private void OnNameChanged(object sender, TextChangedEventArgs e)
         {
             var value = sender as Entry;
+            if (value.BindingContext == null) return;
             var item = ((KeyValuePair<int, SeasonalItem>)value.BindingContext).Value;
 
             var oldValue = e.OldTextValue;
@@ -67,6 +69,12 @@ namespace P2PListSync.Views
             }
 
             changedIndexes.Add(item.Index);
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            viewModel.OnAppearing();
         }
     }
 }
