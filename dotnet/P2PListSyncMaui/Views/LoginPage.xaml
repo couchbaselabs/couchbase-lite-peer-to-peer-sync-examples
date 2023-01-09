@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="P2PListSync.Views.LoginPage">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="StartAndExpand" Padding="5,20,5,5" Margin="5">
+            <Label Text="Inventory Tracker" FontSize="Large" HorizontalOptions="CenterAndExpand" />
+            <Entry x:Name="usernameEntry" Placeholder="username" Keyboard="Plain"/>
+            <Entry x:Name="passwordEntry" IsPassword="true" Placeholder="password" />
+            <Button Text="Sign In" Clicked="OnLoginButtonClicked" />
+            <Label x:Name="messageLabel" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
