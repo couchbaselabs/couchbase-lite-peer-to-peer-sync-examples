@@ -53,7 +53,7 @@ namespace P2PListSync.ViewModels
 
             //tag::LoadData[]
             var q = QueryBuilder.Select(SelectResult.All())
-                .From(DataSource.Collection(_col))
+                .From(DataSource.Collection(_col).As(CoreApp.DbName))
                 .Where(Meta.ID.EqualTo(Expression.String(CoreApp.DocId)))
                 .AddChangeListener((sender, args) =>
                 {

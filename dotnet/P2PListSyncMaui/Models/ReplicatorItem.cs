@@ -140,6 +140,7 @@ namespace P2PListSync.Models
                 replicatorConfig.Authenticator = new BasicAuthenticator(user.Username, user.Password); // <3>
             }
 
+            replicatorConfig.AddCollection(_col); // <3.5> ******* NEW in CBL 3.1 Collection
             _repl = new Replicator(replicatorConfig); // <4>
             _listenerToken = _repl.AddChangeListener(ReplicationStatusUpdate);
         }

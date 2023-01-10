@@ -41,8 +41,7 @@ namespace P2PListSync.Views
         {
             var value = sender as Entry;
             if (value.BindingContext == null) return;
-            var item = ((KeyValuePair<int, SeasonalItem>)value.BindingContext).Value;
-
+            var item = (SeasonalItem)value.BindingContext;
             var oldValue = e.OldTextValue;
             var newValue = e.NewTextValue;
 
@@ -57,7 +56,7 @@ namespace P2PListSync.Views
         {
             var value = sender as Entry;
             if (value.BindingContext == null) return;
-            var item = ((KeyValuePair<int, SeasonalItem>)value.BindingContext).Value;
+            var item = (SeasonalItem)value.BindingContext;
 
             var oldValue = e.OldTextValue;
             var newValue = e.NewTextValue;
@@ -68,11 +67,5 @@ namespace P2PListSync.Views
 
             changedIndexes.Add(item.Index);
         }
-
-        //protected override void OnAppearing()
-        //{
-        //    base.OnAppearing();
-        //    viewModel.OnAppearing();
-        //}
     }
 }

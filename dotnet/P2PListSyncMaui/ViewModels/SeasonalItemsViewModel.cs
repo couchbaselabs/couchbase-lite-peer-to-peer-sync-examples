@@ -71,12 +71,12 @@ namespace P2PListSync.ViewModels
                         var cnt = item.GetInt("value");
                         var image = item.GetBlob("image");
 
-                        if (Items.ContainsKey(i)) {
-                            Items[i].Name = name;
-                            Items[i].Quantity = cnt;
-                            Items[i].ImageByteArray = image?.Content;
+                        if (_items.ContainsKey(i)) {
+                            _items[i].Name = name;
+                            _items[i].Quantity = cnt;
+                            _items[i].ImageByteArray = image?.Content;
 
-                            await DataStore.UpdateItemAsync(Items[i]);
+                            await DataStore.UpdateItemAsync(_items[i]);
                         } else {
                             var seasonalItem = new SeasonalItem {
                                 Index = i,
@@ -86,7 +86,7 @@ namespace P2PListSync.ViewModels
                             };
 
                             await DataStore.AddItemAsync(seasonalItem);
-                            Items.Add(i, seasonalItem);
+                            _items.Add(i, seasonalItem);
                         }
                     });
                 });
@@ -113,11 +113,6 @@ namespace P2PListSync.ViewModels
             } finally {
                 IsBusy = false;
             }
-        }
-
-        public void OnAppearing()
-        {
-            IsBusy = true;
         }
 
         private async Task<bool> ExecuteSaveDocumentsCommand()

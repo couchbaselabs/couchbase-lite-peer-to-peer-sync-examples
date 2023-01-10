@@ -28,20 +28,20 @@
             </ToolbarItem.Icon-->
         </ToolbarItem>
     </ContentPage.ToolbarItems>
-    <RefreshView Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+    <RefreshView x:DataType="local:SeasonalItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <CollectionView x:Name="ItemsListView"
-                ItemsSource="{Binding Items}"
+                ItemsSource="{Binding Items.Values}"
                 VerticalOptions="FillAndExpand"
                 SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Padding="5" Margin="5">
+                    <Grid Padding="5" Margin="5"  x:DataType="model:SeasonalItem">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="80*" />
                             <ColumnDefinition Width="20*" />
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding Value.ImageByteArray, Converter={StaticResource ImageSourceConverter}}"
+                        <Image Source="{Binding ImageByteArray, Converter={StaticResource ImageSourceConverter}}"
                                        Aspect="AspectFill" 
                                        HeightRequest="52"
                                        WidthRequest="52"
@@ -50,13 +50,13 @@
                                 <TapGestureRecognizer Tapped="OnImageTapped" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Entry Text="{Binding Value.Name}" 
+                        <Entry Text="{Binding Name}" 
                                        TextChanged="OnNameChanged"
                                        Grid.Column="1"
                                        FontSize="Small"
                                        HorizontalOptions="Fill"
                                        VerticalOptions="FillAndExpand"/>
-                        <Entry Text="{Binding Value.Quantity}" 
+                        <Entry Text="{Binding Quantity}" 
                                        TextChanged="OnQuantityChanged"
                                        Grid.Column="2"
                                        FontSize="Small"
