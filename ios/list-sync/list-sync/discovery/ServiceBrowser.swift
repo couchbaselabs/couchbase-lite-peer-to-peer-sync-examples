@@ -9,7 +9,7 @@
 import Foundation
 
 typealias PeerHost = String
-protocol ServiceBrowserDelegate : class {
+protocol ServiceBrowserDelegate : AnyObject {
     func onPeerDiscovered(_ peer:PeerHost?,  error:Any?)
     func onPeerRemoved(_ peer:PeerHost)
  }

@@ -11,9 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />
-    <PackageReference Include="Couchbase.Lite.Enterprise" Version="2.8.0" />
+    <PackageReference Include="Couchbase.Lite.Enterprise" Version="3.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="SimpleInjector" Version="5.3.3" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="userdb.cblite2.zip" />
@@ -23,6 +24,8 @@
     <None Remove="listener-self-signed-cert.p12" />
     <None Remove="pinned-invalid-listener-cert.cer" />
     <None Remove="pinned-listener-self-signed-cert.cer" />
+    <None Remove="SimpleInjector" />
+    <None Remove="Xamarin.Forms" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="userdb.cblite2.zip" />
@@ -37,5 +40,8 @@
     <EmbeddedResource Update="Views\SettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\.editorconfig" />
   </ItemGroup>
 </Project>

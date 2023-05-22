@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4990B774279960490011D027 /* CouchbaseLiteSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4990B773279960490011D027 /* CouchbaseLiteSwift.xcframework */; };
+		4990B775279960490011D027 /* CouchbaseLiteSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4990B773279960490011D027 /* CouchbaseLiteSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5F312B492465B6F8002497F4 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F312B482465B6F8002497F4 /* SpinnerViewController.swift */; };
 		5F385C1724895A53000CE14D /* samplelist.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F385C1624895A53000CE14D /* samplelist.json */; };
 		5F385C1924897574000CE14D /* SampleFileLoaderUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F385C1824897574000CE14D /* SampleFileLoaderUtils.swift */; };
@@ -33,11 +35,11 @@
 		5F44DEF32460B70300B251F7 /* PresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEF22460B70300B251F7 /* PresenterProtocol.swift */; };
 		5F44DEF52460B85800B251F7 /* CustomListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DEF42460B85800B251F7 /* CustomListTableViewCell.swift */; };
 		5F44DEF72460B89500B251F7 /* CustomListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F44DEF62460B89500B251F7 /* CustomListTableViewCell.xib */; };
+		5F7108742798821A0053BAE1 /* CouchbaseLiteSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7108712798820B0053BAE1 /* CouchbaseLiteSwift.xcframework */; };
+		5F7108752798821A0053BAE1 /* CouchbaseLiteSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7108712798820B0053BAE1 /* CouchbaseLiteSwift.xcframework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5F7DB712249AC7C30018229F /* listener-cert-pkey.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 5F7DB710249AC7C30018229F /* listener-cert-pkey.p12 */; };
 		5F7DB713249AC7C30018229F /* listener-pinned-cert.cer in Resources */ = {isa = PBXBuildFile; fileRef = 5F7DB711249AC7C30018229F /* listener-pinned-cert.cer */; };
 		5F8273A72504355000D4C514 /* userallowlist.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F8273A62504355000D4C514 /* userallowlist.json */; };
-		5F9E7781249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */; };
-		5F9E7782249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,7 +59,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5F9E7782249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Embed Frameworks */,
+				5F7108752798821A0053BAE1 /* CouchbaseLiteSwift.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,6 +67,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4990B773279960490011D027 /* CouchbaseLiteSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CouchbaseLiteSwift.xcframework; sourceTree = "<group>"; };
 		5F312B482465B6F8002497F4 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		5F385C1624895A53000CE14D /* samplelist.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = samplelist.json; sourceTree = "<group>"; };
 		5F385C1824897574000CE14D /* SampleFileLoaderUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleFileLoaderUtils.swift; sourceTree = "<group>"; };
@@ -95,10 +98,10 @@
 		5F44DEF22460B70300B251F7 /* PresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterProtocol.swift; sourceTree = "<group>"; };
 		5F44DEF42460B85800B251F7 /* CustomListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomListTableViewCell.swift; sourceTree = "<group>"; };
 		5F44DEF62460B89500B251F7 /* CustomListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomListTableViewCell.xib; sourceTree = "<group>"; };
+		5F7108712798820B0053BAE1 /* CouchbaseLiteSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CouchbaseLiteSwift.xcframework; sourceTree = "<group>"; };
 		5F7DB710249AC7C30018229F /* listener-cert-pkey.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "listener-cert-pkey.p12"; sourceTree = "<group>"; };
 		5F7DB711249AC7C30018229F /* listener-pinned-cert.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "listener-pinned-cert.cer"; sourceTree = "<group>"; };
 		5F8273A62504355000D4C514 /* userallowlist.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = userallowlist.json; sourceTree = "<group>"; };
-		5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = iOS/CouchbaseLiteSwift.framework; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F9E7781249E2391003C6EB1 /* CouchbaseLiteSwift.framework in Frameworks */,
+				5F7108742798821A0053BAE1 /* CouchbaseLiteSwift.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,12 +123,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4990B772279960490011D027 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4990B773279960490011D027 /* CouchbaseLiteSwift.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5F44DE9A245C62E500B251F7 = {
 			isa = PBXGroup;
 			children = (
+				5F7108712798820B0053BAE1 /* CouchbaseLiteSwift.xcframework */,
 				5F44DEA5245C62E500B251F7 /* list-sync */,
 				5F44DEBE245C62E600B251F7 /* list-syncTests */,
 				5F44DEA4245C62E500B251F7 /* Products */,
+				4990B772279960490011D027 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -141,7 +154,6 @@
 		5F44DEA5245C62E500B251F7 /* list-sync */ = {
 			isa = PBXGroup;
 			children = (
-				5F9E777F249E2380003C6EB1 /* CouchbaseLiteSwift.framework */,
 				5F7DB7052499CE5F0018229F /* resources */,
 				5F44DEA6245C62E500B251F7 /* AppDelegate.swift */,
 				5F44DEB1245C62E600B251F7 /* Assets.xcassets */,
@@ -286,7 +298,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
-				LastUpgradeCheck = 1140;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Couchbase Inc.";
 				TargetAttributes = {
 					5F44DEA2245C62E500B251F7 = {
@@ -434,6 +446,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -494,6 +507,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -534,7 +548,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/list-sync/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -558,7 +572,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/list-sync/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

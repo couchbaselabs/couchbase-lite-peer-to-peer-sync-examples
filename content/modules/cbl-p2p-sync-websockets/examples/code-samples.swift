@@ -1,14 +1,6 @@
 Complete Swift code samples from which these are extracted can be found in the /ios directory at the top-level of this repo.
 
 //
-// Tags from list-sync/view/PeerTableViewCell.swift
-//
-
-//
-// Tags from list-sync/view/CustomListTableViewCell.swift
-//
-
-//
 // Tags from list-sync/presenter/ListPresenter.swift
 //
             //tag::livequerybuilder[]
@@ -93,13 +85,76 @@ Complete Swift code samples from which these are extracted can be found in the /
     //end::StartAdvertiser[]
 
 //
+// Tags from list-sync/view controllers/ListViewController.swift
+//
+
+//
+// Tags from list-sync/view controllers/PassiveViewController.swift
+//
+
+//
+// Tags from list-sync/view controllers/LoginViewController.swift
+//
+
+//
+// Tags from list-sync/view controllers/ActiveViewController.swift
+//
+
+//
+// Tags from list-sync/utilities/SpinnerViewController.swift
+//
+
+//
+// Tags from list-sync/utilities/DictionaryExtensions.swift
+//
+
+//
+// Tags from list-sync/utilities/CustomErrors.swift
+//
+
+//
+// Tags from list-sync/utilities/Notifications.swift
+//
+
+//
+// Tags from list-sync/utilities/UIViewControllerExtensions.swift
+//
+
+//
+// Tags from list-sync/utilities/SampleFileLoaderUtils.swift
+//
+
+//
+// Tags from list-sync/model/ListRecord.swift
+//
+//tag::ListRecord[]
+let kListRecordDocumentType = "list"
+typealias ListRecords = [ListRecord]
+typealias ListItem = (image:Data?,key:String?,value:Any?)
+struct ListRecord : CustomStringConvertible{
+    let type = kListRecordDocumentType
+    var items:[ListItem]
+    
+    var description: String {
+        guard  items.count > 0 else  {
+            return "No items in list"
+        }
+        for item in items {
+            return "key = \(String(describing: item.key)), value = \(String(describing: item.value))"
+        }
+        return "No items in list"
+    }
+}
+//end::ListRecord[]
+
+//
 // Tags from list-sync/model/DatabaseManager.swift
 //
         //tag::ListenerTLSTestMode[]
-        fileprivate let listenerTLSSupportMode:ListenerTLSTestMode = .TLSWithBundledCert
+        fileprivate let listenerTLSSupportMode:ListenerTLSTestMode = .TLSWithAnonymousAuth
         //end::ListenerTLSTestMode[]
         //tag::ListenerValidationTestMode[]
-         fileprivate let listenerCertValidationMode:ListenerCertValidationTestMode = .TLSEnableValidationWithCertPinning
+         fileprivate let listenerCertValidationMode:ListenerCertValidationTestMode = .TLSSkipValidation
         //end::ListenerValidationTestMode[]
         //tag::OpenOrCreateDatabase[]
         var exists = false
@@ -115,7 +170,7 @@ Complete Swift code samples from which these are extracted can be found in the /
         //end::OpenOrCreateDatabase[]
         //tag::InitListener[]
         // Include websockets listener initializer code
-        let listenerConfig = URLEndpointListenerConfiguration(database: db) // <1>
+        var listenerConfig = URLEndpointListenerConfiguration(database: db) // <1>
         
         // Configure the appropriate auth test mode
         switch listenerTLSSupportMode { //<2>
@@ -226,12 +281,20 @@ Complete Swift code samples from which these are extracted can be found in the /
         //tag::StartReplication[]
         if replicatorForUserDb == nil {
             // Start replicator to connect to the URLListenerEndpoint
-            guard let targetUrl = URL(string: "wss://\(peer)/\(kUserDBName)") else {
+            var target = URL(string: "wss://\(peer)/\(kUserDBName)")
+            switch listenerTLSSupportMode {
+            case .TLSDisabled:
+                target = URL(string: "ws://\(peer)/\(kUserDBName)")
+            default:
+                target = URL(string: "wss://\(peer)/\(kUserDBName)")
+            }
+            guard let targetUrl = target else {
                 throw ListDocError.URLInvalid
             }
-
+            print("\(#function) with \(targetUrl)")
+         
             
-            let config = ReplicatorConfiguration.init(database: userDb, target: URLEndpoint.init(url:targetUrl)) //<1>
+            var config = ReplicatorConfiguration.init(database: userDb, target: URLEndpoint.init(url:targetUrl)) //<1>
 
             config.replicatorType = .pushAndPull
             config.continuous =  true
@@ -247,10 +310,10 @@ Complete Swift code samples from which these are extracted can be found in the /
                                 
                 
                 case .TLSEnableValidationWithCertPinning:
-                    // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
-                    // Self signed certs will fail validation
+                    // Set acceptOnlySelfSignedServerCertificate set to false if you are using CA signed certs
+                    // Set acceptOnlySelfSignedServerCertificate when listener is setup with self signed certs
                    
-                    config.acceptOnlySelfSignedServerCertificate = false
+                    config.acceptOnlySelfSignedServerCertificate = true // since app is bundled with self signed cert
                     
                     // Enable cert pinning to only allow certs that match pinned cert
                     
@@ -304,68 +367,13 @@ Complete Swift code samples from which these are extracted can be found in the /
         //end::LoadData[]
 
 //
-// Tags from list-sync/model/ListRecord.swift
+// Tags from list-sync/view/CustomListTableViewCell.swift
 //
-//tag::ListRecord[]
-let kListRecordDocumentType = "list"
-typealias ListRecords = [ListRecord]
-typealias ListItem = (image:Data?,key:String?,value:Any?)
-struct ListRecord : CustomStringConvertible{
-    let type = kListRecordDocumentType
-    var items:[ListItem]
-    
-    var description: String {
-        guard  items.count > 0 else  {
-            return "No items in list"
-        }
-        for item in items {
-            return "key = \(String(describing: item.key)), value = \(String(describing: item.value))"
-        }
-        return "No items in list"
-    }
-}
-//end::ListRecord[]
+
+//
+// Tags from list-sync/view/PeerTableViewCell.swift
+//
 
 //
 // Tags from list-sync/AppDelegate.swift
-//
-
-//
-// Tags from list-sync/utilities/DictionaryExtensions.swift
-//
-
-//
-// Tags from list-sync/utilities/SpinnerViewController.swift
-//
-
-//
-// Tags from list-sync/utilities/UIViewControllerExtensions.swift
-//
-
-//
-// Tags from list-sync/utilities/CustomErrors.swift
-//
-
-//
-// Tags from list-sync/utilities/SampleFileLoaderUtils.swift
-//
-
-//
-// Tags from list-sync/utilities/Notifications.swift
-//
-
-//
-// Tags from list-sync/view controllers/ActiveViewController.swift
-//
-
-//
-// Tags from list-sync/view controllers/PassiveViewController.swift
-//
-
-//
-// Tags from list-sync/view controllers/ListViewController.swift
-//
-
-//
-// Tags from list-sync/view controllers/LoginViewController.swift
 //

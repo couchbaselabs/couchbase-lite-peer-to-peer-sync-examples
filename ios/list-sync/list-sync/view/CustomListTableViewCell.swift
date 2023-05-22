@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-protocol CustomListItemEntryProtocol:class {
+protocol CustomListItemEntryProtocol:AnyObject {
     func onUploadImageForCell(_ cell:CustomListTableViewCell)
     func onUpdateTextForCell(_ cell:CustomListTableViewCell)
 }

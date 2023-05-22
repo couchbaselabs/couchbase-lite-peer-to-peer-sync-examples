@@ -13,17 +13,24 @@ import MultipeerConnectivity
 // Switch between these various modes to try various auth types
 fileprivate enum ListenerTLSTestMode {
         case TLSDisabled
-        case TLSWithAnonymousAuth
-        case TLSWithBundledCert // Bring your own cert (self-signed or CA)
-        case TLSWithGeneratedSelfSignedCert // Use convenience API to generate cert
+        case TLSWithAnonymousAuth // Use built-in self signed cert
+        case TLSWithBundledCert // Bring your own cert (self-signed or CA). App is bundled with self signed cert
+        case TLSWithGeneratedSelfSignedCert // Use convenience API to generate a self signed cert instead of generating separately and bundling
 }
 
 // Switch between these various modes to try various auth types
 fileprivate enum ListenerCertValidationTestMode {
-        case TLSSkipValidation
-        case TLSEnableValidation // Used for CA cert validation
-        case TLSEnableValidationWithCertPinning // Use for self signed cert
+        case TLSSkipValidation // Skip validation of listener cert. Use if TLS is disabled or using self signed cert
+        case TLSEnableValidation // Use only if listener is setup with CA signed cert
+        case TLSEnableValidationWithCertPinning // Use if app is bundled with self signed or CA signed cert
 }
+
+///////// Recommended combination of flags ////////////
+// ListenerTLSTestMode.TLSDisabled <->ListenerCertValidationTestMode.TLSSkipValidation
+// ListenerTLSTestMode.TLSWithAnonymousAuth <-> ListenerCertValidationTestMode.TLSSkipValidation
+// ListenerTLSTestMode.TLSWithBundledCert <-> ListenerCertValidationTestMode.TLSEnableValidationWithCertPinning
+// ListenerTLSTestMode.TLSWithGeneratedSelfSignedCert <-> ListenerCertValidationTestMode.TLSSkipValidation
+
 
 class DatabaseManager {
     
@@ -54,12 +61,12 @@ class DatabaseManager {
      
         // Switch between listener auth modes.
         //tag::ListenerTLSTestMode[]
-        fileprivate let listenerTLSSupportMode:ListenerTLSTestMode = .TLSWithBundledCert
+        fileprivate let listenerTLSSupportMode:ListenerTLSTestMode = .TLSWithAnonymousAuth
         //end::ListenerTLSTestMode[]
     
-        // Skip validation for self signed certs
+        // Set TLSSkipValidation when using self signed certs on listener or TLS is disabled
         //tag::ListenerValidationTestMode[]
-         fileprivate let listenerCertValidationMode:ListenerCertValidationTestMode = .TLSEnableValidationWithCertPinning
+         fileprivate let listenerCertValidationMode:ListenerCertValidationTestMode = .TLSSkipValidation
         //end::ListenerValidationTestMode[]
 
         /// Public Access
@@ -117,7 +124,7 @@ extension DatabaseManager {
     // Open or create User specific database.
     func openOrCreateDatabaseForUser(_ user:String, password:String, handler:(_ exists:Bool, _ error:Error?)->Void) throws {
   
-        let options = DatabaseConfiguration()
+        var options = DatabaseConfiguration()
         guard let defaultDBPath = _applicationSupportDirectory else {
             fatalError("Could not open Application Support Directory for app!")
         }
@@ -236,7 +243,7 @@ extension DatabaseManager {
     fileprivate func deregisterForUserDatabaseChanges() {
         // Add database change listener
         print(#function)
-        guard let db = _userDb else {
+        guard _userDb != nil else {
             return
         }
         if let userDbChangeListenerToken = self._userDbChangeListenerToken {
@@ -263,7 +270,7 @@ extension DatabaseManager {
     
         //tag::InitListener[]
         // Include websockets listener initializer code
-        let listenerConfig = URLEndpointListenerConfiguration(database: db) // <1>
+        var listenerConfig = URLEndpointListenerConfiguration(database: db) // <1>
         
         // Configure the appropriate auth test mode
         switch listenerTLSSupportMode { //<2>
@@ -354,7 +361,6 @@ extension DatabaseManager {
 extension DatabaseManager {
        
     func startP2PReplicationWithUserDatabaseToRemotePeer(_ peer:PeerHost, handler:@escaping(_ status:PeerConnectionStatus)->Void) throws{
-        print("\(#function) with wss://\(peer)/\(kUserDBName)")
         guard let userDb = _userDb else {
              throw ListDocError.DatabaseNotInitialized
             
@@ -369,12 +375,20 @@ extension DatabaseManager {
         //tag::StartReplication[]
         if replicatorForUserDb == nil {
             // Start replicator to connect to the URLListenerEndpoint
-            guard let targetUrl = URL(string: "wss://\(peer)/\(kUserDBName)") else {
+            var target = URL(string: "wss://\(peer)/\(kUserDBName)")
+            switch listenerTLSSupportMode {
+            case .TLSDisabled:
+                target = URL(string: "ws://\(peer)/\(kUserDBName)")
+            default:
+                target = URL(string: "wss://\(peer)/\(kUserDBName)")
+            }
+            guard let targetUrl = target else {
                 throw ListDocError.URLInvalid
             }
-
+            print("\(#function) with \(targetUrl)")
+         
             
-            let config = ReplicatorConfiguration.init(database: userDb, target: URLEndpoint.init(url:targetUrl)) //<1>
+            var config = ReplicatorConfiguration.init(database: userDb, target: URLEndpoint.init(url:targetUrl)) //<1>
 
             config.replicatorType = .pushAndPull
             config.continuous =  true
@@ -390,10 +404,10 @@ extension DatabaseManager {
                                 
                 
                 case .TLSEnableValidationWithCertPinning:
-                    // Use acceptOnlySelfSignedServerCertificate set to false to only accept CA signed certs
-                    // Self signed certs will fail validation
+                    // Set acceptOnlySelfSignedServerCertificate set to false if you are using CA signed certs
+                    // Set acceptOnlySelfSignedServerCertificate when listener is setup with self signed certs
                    
-                    config.acceptOnlySelfSignedServerCertificate = false
+                    config.acceptOnlySelfSignedServerCertificate = true // since app is bundled with self signed cert
                     
                     // Enable cert pinning to only allow certs that match pinned cert
                     
@@ -483,6 +497,9 @@ extension DatabaseManager {
                        print("Completed syncing documents")
                         handler(PeerConnectionStatus.Error)
             
+                       @unknown default:
+                           print("Failed syncing documents")
+                           handler(PeerConnectionStatus.Unknown)
                    }
                    
                    if s.progress.completed == s.progress.total {
@@ -512,7 +529,7 @@ extension DatabaseManager {
 extension DatabaseManager {
     func createIdentityWithCertLabel(_ label:String)->TLSIdentity? {
         do {
-            var identity = try TLSIdentity.identity(withLabel: label)
+            var identity = try? TLSIdentity.identity(withLabel: label)
             if identity != nil {
                 return identity
             }
@@ -632,7 +649,7 @@ extension DatabaseManager {
          do {
 
                 // Check if identity exists in keychain. If so use that
-                if let identity = try TLSIdentity.identity(withLabel: label) {
+                if let identity = try? TLSIdentity.identity(withLabel: label) {
                   print("An identity with label : \(label) already exists in keychain")
                   return identity
                 }
